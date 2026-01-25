@@ -20,35 +20,35 @@ public class JsonHelper {
 	private static final Gson GSON = new GsonBuilder().create();
 
 	public static boolean hasString(JsonObject object, String element) {
-		return !hasPrimitive(object, element) ? false : object.getAsJsonPrimitive(element).isString();
+		return hasPrimitive(object, element) && object.getAsJsonPrimitive(element).isString();
 	}
 
 	public static boolean isString(JsonElement element) {
-		return !element.isJsonPrimitive() ? false : element.getAsJsonPrimitive().isString();
+		return element.isJsonPrimitive() && element.getAsJsonPrimitive().isString();
 	}
 
 	public static boolean hasNumber(JsonObject object, String element) {
-		return !hasPrimitive(object, element) ? false : object.getAsJsonPrimitive(element).isNumber();
+		return hasPrimitive(object, element) && object.getAsJsonPrimitive(element).isNumber();
 	}
 
 	public static boolean hasBoolean(JsonObject object, String element) {
-		return !hasPrimitive(object, element) ? false : object.getAsJsonPrimitive(element).isBoolean();
+		return hasPrimitive(object, element) && object.getAsJsonPrimitive(element).isBoolean();
 	}
 
 	public static boolean isBoolean(JsonElement object) {
-		return !object.isJsonPrimitive() ? false : object.getAsJsonPrimitive().isBoolean();
+		return object.isJsonPrimitive() && object.getAsJsonPrimitive().isBoolean();
 	}
 
 	public static boolean hasArray(JsonObject object, String element) {
-		return !hasElement(object, element) ? false : object.get(element).isJsonArray();
+		return hasElement(object, element) && object.get(element).isJsonArray();
 	}
 
 	public static boolean hasJsonObject(JsonObject object, String element) {
-		return !hasElement(object, element) ? false : object.get(element).isJsonObject();
+		return hasElement(object, element) && object.get(element).isJsonObject();
 	}
 
 	public static boolean hasPrimitive(JsonObject object, String element) {
-		return !hasElement(object, element) ? false : object.get(element).isJsonPrimitive();
+		return hasElement(object, element) && object.get(element).isJsonPrimitive();
 	}
 
 	public static boolean hasElement(JsonObject object, String element) {
@@ -405,8 +405,8 @@ public class JsonHelper {
 			writer.beginObject();
 
 			for(Entry<String, JsonElement> entry : sort(element.getAsJsonObject().entrySet(), comparator)) {
-				writer.name((String)entry.getKey());
-				writeValue(writer, (JsonElement)entry.getValue(), comparator);
+				writer.name(entry.getKey());
+				writeValue(writer, entry.getValue(), comparator);
 			}
 
 			writer.endObject();

@@ -12,12 +12,14 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
+import dev.emi.emi.data.EmiResourceManager;
 import dev.emi.emi.data.EmiResourceReloadListener;
 import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
 import dev.emi.emi.nemi.NemiPlugin;
 import dev.emi.emi.network.*;
 import dev.emi.emi.platform.EmiClient;
 import dev.emi.emi.platform.EmiMain;
+import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadManager;
 import net.minecraft.client.Minecraft;
@@ -42,6 +44,13 @@ import java.io.DataOutputStream;
 public class EmiForge {
 
     @Mod.EventHandler
+    public void preInit(FMLInitializationEvent event) {
+        if (Loader.isModLoaded("NotEnoughItems")) {
+            NemiPlugin.onLoad();
+        }
+    }
+
+    @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         EmiMain.init();
         if (FMLCommonHandler.instance().getSide().isClient()) {
@@ -53,17 +62,16 @@ public class EmiForge {
         });
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
-
-        if (Loader.isModLoaded("NotEnoughItems"))
-            NemiPlugin.onLoad();
     }
 
     @Mod.EventHandler
     public void postInit(FMLInitializationEvent event) {
+        EmiTags.registerTagModels(Minecraft.getMinecraft().getResourceManager(), id -> {});
         EmiPort.registerReloadListeners((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager());
         PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
         PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);
         PacketReader.registerServerPacketReader(EmiNetwork.CHESS, EmiChessPacket.C2S::new);
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(EmiResourceManager.INSTANCE);
     }
 
 //    @SubscribeEvent
@@ -112,8 +120,7 @@ public class EmiForge {
         DataOutputStream dos = new DataOutputStream(baos);
         PacketByteBuf buf = PacketByteBuf.out(dos);
         packet.write(buf);
-        S3FPacketCustomPayload pkt = new S3FPacketCustomPayload(RetroEMI.compactify(packet.getId()), baos.toByteArray());
-        return pkt;
+        return new S3FPacketCustomPayload(RetroEMI.compactify(packet.getId()), baos.toByteArray());
     }
 
     public static final class Client {
