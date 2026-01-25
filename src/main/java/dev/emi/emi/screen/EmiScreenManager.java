@@ -829,8 +829,8 @@ public class EmiScreenManager {
 				context.drawTextWithShadow(EmiPort.literal(warnCount), devTextX, screen.height - 21, color);
 				int width = Math.max(client.fontRenderer.getStringWidth(title.asString()), client.fontRenderer.getStringWidth(warnCount));
 				if (mouseX >= devTextX && mouseX < width + devTextX && mouseY > screen.height - 28) {
-					context.raw().drawTooltip(client.fontRenderer,
-							Stream.concat(Stream.of(" EMI detected some issues, see log for full details"), EmiReloadLog.warnings.stream()).map(s -> {
+					context.raw().drawTooltip(client.fontRenderer, Stream.concat(Stream.of(" EMI detected some issues, see log for full details"),
+							EmiReloadLog.warnings.stream()).map(s -> {
 								String a = s;
 								if (a.length() > 10 && client.fontRenderer.getStringWidth(a) > screen.width - 20) {
 									a = client.fontRenderer.trimStringToWidth(a, screen.width - 30) + "...";
@@ -1177,18 +1177,19 @@ public class EmiScreenManager {
 			// Haha, I'm in danger
 			for (java.lang.reflect.Field f : parent.getClass().getDeclaredFields()) {
 				f.setAccessible(true);
-				if (GuiTextField.class.isAssignableFrom(f.getType())) {
-					try {
-						if (f.get(parent) instanceof GuiTextField wtf) {
-							if (((GuiTextFieldAccessor) wtf).isEnabled() && wtf.isFocused()) {
-								return true;
-							}
-						}
-					} catch (Throwable e) {
-					}
-				}
-			}
-		}
+				if (!GuiTextField.class.isAssignableFrom(f.getType())) {
+                    continue;
+                }
+                try {
+                    if (f.get(parent) instanceof GuiTextField wtf) {
+                        if (((GuiTextFieldAccessor) wtf).isEnabled() && wtf.isFocused()) {
+                            return true;
+                        }
+                    }
+                } catch (Throwable e) {
+                }
+            }
+        }
 		return false;
 	}
 
