@@ -1,5 +1,6 @@
 package net.minecraft.util;
 
+import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.platform.forge.EmiAgnosForge;
 import dev.emi.emi.runtime.EmiLog;
 
@@ -58,6 +59,22 @@ public class Utils {
         boolean bl = Duration.between(instant, Instant.now()).toMillis() > 500L;
         if (!bl) {
             EmiLog.warn(message);
+        }
+
+    }
+
+    public static void error(String message) {
+        EmiLog.error(message);
+        if (EmiAgnos.isDevelopmentEnvironment()) {
+            pause(message);
+        }
+
+    }
+
+    public static void error(String message, Throwable throwable) {
+        EmiLog.error(message, throwable);
+        if (EmiAgnos.isDevelopmentEnvironment()) {
+            pause(message);
         }
 
     }

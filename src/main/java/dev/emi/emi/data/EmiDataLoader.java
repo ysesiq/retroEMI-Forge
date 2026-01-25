@@ -1,73 +1,64 @@
 package dev.emi.emi.data;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.ResourceLocation;
 
-public class EmiDataLoader<T> {
-    private static final Gson GSON = new Gson();
-    private final String path;
-    private final Supplier<T> baseSupplier;
-    private final DataConsumer<T> prepare;
-    private final Consumer<T> apply;
+public class EmiDataLoader<T>
+		implements EmiResourceReloadListener {
+	private static final Gson GSON = new Gson();
+	private final ResourceLocation id;
+	private final String path;
+	private final Supplier<T> baseSupplier;
+	private final DataConsumer<T> prepare;
+	private final Consumer<T> apply;
 
-    public EmiDataLoader(String path, Supplier<T> baseSupplier,
-                         DataConsumer<T> prepare, Consumer<T> apply) {
-        this.path = path;
-        this.baseSupplier = baseSupplier;
-        this.prepare = prepare;
-        this.apply = apply;
-    }
+	public EmiDataLoader(ResourceLocation id, String path, Supplier<T> baseSupplier,
+			DataConsumer<T> prepare, Consumer<T> apply) {
+		this.id = id;
+		this.path = path;
+		this.baseSupplier = baseSupplier;
+		this.prepare = prepare;
+		this.apply = apply;
+	}
 
-    public T prepare(IResourceManager manager) {
-        T t = baseSupplier.get();
-        Collection<String> domains = manager.getResourceDomains();
-
-        for (String domain : domains) {
+//	@Override
+	public T prepare(IResourceManager manager) {
+		T t = baseSupplier.get();
+		for (ResourceLocation id : EmiPort.findResources(manager, path, i -> i.endsWith(".json"))) {
+            if (!id.getResourceDomain().equals("emi")) {
+                continue;
+            }
             try {
-                String resourcePath = path.endsWith(".json") ? path : path + ".json";
-                ResourceLocation location = new ResourceLocation(domain, resourcePath);
+                for (Object resource : manager.getAllResources(id)) {
+                    InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream((IResource) resource));
+                    JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
+                    prepare.accept(t, json, id);
 
-                List<IResource> resources = manager.getAllResources(location);
-
-                for (IResource resource : resources) {
-                    try (InputStream stream = resource.getInputStream();
-                         InputStreamReader reader = new InputStreamReader(stream)) {
-
-                        JsonObject json = GSON.fromJson(reader, JsonObject.class);
-                        ResourceLocation id = new ResourceLocation(domain, resourcePath);
-
-                        if (!domain.equals("emi")) {
-                            continue;
-                        }
-
-                        prepare.accept(t, json, id);
-                    } catch (Exception e) {
-                        EmiLog.error("Error loading data in " + domain + ":" + resourcePath, e);
-                    }
                 }
-            } catch (IOException e) {
-                EmiLog.error("Error accessing resources in domain: " + domain, e);
+            } catch (Exception e) {
+                EmiLog.error("Error loading data for " + this.id + " in " + id, e);
             }
         }
-
-        return t;
-    }
+		return t;
+	}
 
     public void apply(T t) {
         apply.accept(t);
     }
+
+	@Override
+	public ResourceLocation getEmiId() {
+		return id;
+	}
 
     public void load(IResourceManager manager) {
         T data = prepare(manager);

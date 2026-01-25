@@ -39,6 +39,26 @@ public class RecipeDefaultLoader implements EmiResourceReloadListener, IResource
 		BoM.setDefaults(defaults);
 	}
 
+//    @Override
+    protected RecipeDefaults prepare(IResourceManager manager) {
+        RecipeDefaults defaults = new RecipeDefaults();
+        for (ResourceLocation id : EmiPort.findResources(manager, "recipe/defaults", i -> i.endsWith(".json"))) {
+            if (!id.getResourceDomain().equals("emi")) {
+                continue;
+            }
+            try {
+                for (Object resource : manager.getAllResources(id)) {
+                    InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream((IResource) resource));
+                    JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
+                    loadDefaults(defaults, json);
+                }
+            } catch (Exception e) {
+                EmiLog.error("Error loading recipe default file " + id, e);
+            }
+        }
+        return defaults;
+    }
+
 	@Override
 	public ResourceLocation getEmiId() {
 		return ID;

@@ -25,10 +25,10 @@ public class EmiTagExclusionsLoader implements EmiResourceReloadListener, IResou
 	@Override
 	public void onResourceManagerReload(IResourceManager manager) {
 		TagExclusions exclusions = new TagExclusions();
-//		for (ResourceLocation id : EmiPort.findResources(manager, "tag/exclusions", i -> i.endsWith(".json"))) {
-//			if (!id.getResourceDomain().equals("emi")) {
-//				continue;
-//			}
+		for (ResourceLocation id : EmiPort.findResources(manager, "tag/exclusions", i -> i.endsWith(".json"))) {
+			if (!id.getResourceDomain().equals("emi")) {
+				continue;
+			}
 			try {
 				for (Object o : manager.getAllResources(new ResourceLocation("emi", "tag/exclusions/emi.json"))) {
                     IResource resource = (IResource) o;
@@ -65,7 +65,7 @@ public class EmiTagExclusionsLoader implements EmiResourceReloadListener, IResou
 			} catch (Exception e) {
 				EmiLog.error("Error loading tag exclusions", e);
 			}
-//		}
+		}
 		EmiTags.exclusions = exclusions;
 	}
 

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RetroEMIForge.iml" filepath="$PROJECT_DIR$/.idea/modules/RetroEMIForge.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/RetroEMIForge.api.iml" filepath="$PROJECT_DIR$/.idea/modules/RetroEMIForge.api.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/RetroEMIForge.ideVirtualMain.iml" filepath="$PROJECT_DIR$/.idea/modules/RetroEMIForge.ideVirtualMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/RetroEMIForge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/RetroEMIForge.main.iml" />

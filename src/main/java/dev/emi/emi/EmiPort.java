@@ -1,26 +1,33 @@
 package dev.emi.emi;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
+import java.nio.file.*;
+import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glEnable;
 
+import com.google.common.base.Joiner;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.api.stack.Comparison;
+import dev.emi.emi.data.EmiResourceManager;
 import dev.emi.emi.data.EmiTagExclusionsLoader;
 import dev.emi.emi.data.RecipeDefaultLoader;
+import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -44,45 +51,60 @@ import net.minecraftforge.fluids.FluidRegistry;
  */
 public final class EmiPort {
 
-	public static MutableText literal(String s) {
-		return Text.literal(s);
-	}
+    public static MutableText literal(String s) {
+        return Text.literal(s);
+    }
 
-	public static MutableText literal(String s, Formatting formatting) {
-		return Text.literal(s).formatted(formatting);
-	}
+    public static MutableText literal(String s, Formatting formatting) {
+        return Text.literal(s).formatted(formatting);
+    }
 
-	public static MutableText literal(String s, Formatting... formatting) {
-		return Text.literal(s).formatted(formatting);
-	}
+    public static MutableText literal(String s, Formatting... formatting) {
+        return Text.literal(s).formatted(formatting);
+    }
 
-	public static MutableText literal(String s, Style style) {
-		return Text.literal(s).setStyle(style);
-	}
+    public static MutableText literal(String s, Style style) {
+        return Text.literal(s).setStyle(style);
+    }
 
-	public static MutableText translatable(String s) {
-		return Text.translatable(s);
-	}
+    public static MutableText translatable(String s) {
+        return Text.translatable(s);
+    }
 
-	public static MutableText translatable(String s, Formatting formatting) {
-		return Text.translatable(s).formatted(formatting);
-	}
+    public static MutableText translatable(String s, Formatting formatting) {
+        return Text.translatable(s).formatted(formatting);
+    }
 
-	public static MutableText translatable(String s, Object... objects) {
-		return Text.translatable(s, objects);
-	}
+    public static MutableText translatable(String s, Object... objects) {
+        return Text.translatable(s, objects);
+    }
 
-	public static MutableText append(MutableText text, Text appended) {
-		return text.append(appended);
-	}
+    public static MutableText append(MutableText text, Text appended) {
+        return text.append(appended);
+    }
 
-	public static OrderedText ordered(Text text) {
-		return text.asOrderedText();
-	}
+    public static OrderedText ordered(Text text) {
+        return text.asOrderedText();
+    }
 
-//	public static Collection<ResourceLocation> findResources(IResourceManager manager, String prefix, Predicate<String> pred) {
-//		return manager.findResources(prefix, i -> pred.test(i.toString())).keySet();
-//	}
+    public static Collection<ResourceLocation> findResources(IResourceManager manager, String directoryPath, Predicate<String> fileNamePredicate) {
+        List<ResourceLocation> resources = new ArrayList<>();
+
+        for (Object o : manager.getResourceDomains()) {
+            String namespace = (String) o;
+            try {
+                ResourceLocation location = new ResourceLocation(namespace, directoryPath);
+                String fileName = directoryPath.substring(directoryPath.lastIndexOf('/') + 1);
+
+                if (fileNamePredicate == null || fileNamePredicate.test(fileName)) {
+                    resources.add(location);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        return resources;
+    }
 
 	public static InputStream getInputStream(IResource resource) {
 		try {
@@ -97,7 +119,7 @@ public final class EmiPort {
 //		return new BannerPatternsComponent.Builder().addAll(patterns).add(bannerRegistry.getEntry(random.nextInt(bannerRegistry.size())).get(),
 //			DyeColor.values()[random.nextInt(DyeColor.values().length)]).build();
 //	}
-//
+
 	public static boolean canTallFlowerDuplicate(BlockTallGrass tallFlowerBlock) {
 		try {
 			return tallFlowerBlock.canBlockStay(null, 0, 0, 0);
@@ -105,7 +127,7 @@ public final class EmiPort {
 			return false;
 		}
 	}
-//
+
 //	public static void setShader(VertexBuffer buf, Matrix4f mat) {
 //		buf.bind();
 //		buf.draw(mat, RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
@@ -199,7 +221,7 @@ public final class EmiPort {
 
 	public static ResourceLocation id(String id) {
 		if (id.contains(":")) {
-			String[] parts = id.split(":");
+			String[] parts = id.split(":", 2);
 			String mod = parts[0];//Avoid mods being forced to lowercase and not being able to get them
 			String name = parts[1];
 			return new ResourceLocation(mod, name);
