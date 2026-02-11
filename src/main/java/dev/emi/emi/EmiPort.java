@@ -9,13 +9,12 @@ import java.util.stream.Stream;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glEnable;
 
+import com.rewindmc.retroemi.EmiResourceManager;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.api.stack.Comparison;
-import dev.emi.emi.data.EmiTagExclusionsLoader;
-import dev.emi.emi.data.RecipeDefaultLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
@@ -44,59 +43,45 @@ import net.minecraftforge.fluids.FluidRegistry;
  */
 public final class EmiPort {
 
-    public static MutableText literal(String s) {
-        return Text.literal(s);
-    }
+	public static MutableText literal(String s) {
+		return Text.literal(s);
+	}
 
-    public static MutableText literal(String s, Formatting formatting) {
-        return Text.literal(s).formatted(formatting);
-    }
+	public static MutableText literal(String s, Formatting formatting) {
+		return Text.literal(s).formatted(formatting);
+	}
 
-    public static MutableText literal(String s, Formatting... formatting) {
-        return Text.literal(s).formatted(formatting);
-    }
+	public static MutableText literal(String s, Formatting... formatting) {
+		return Text.literal(s).formatted(formatting);
+	}
 
-    public static MutableText literal(String s, Style style) {
-        return Text.literal(s).setStyle(style);
-    }
+	public static MutableText literal(String s, Style style) {
+		return Text.literal(s).setStyle(style);
+	}
 
-    public static MutableText translatable(String s) {
-        return Text.translatable(s);
-    }
+	public static MutableText translatable(String s) {
+		return Text.translatable(s);
+	}
 
-    public static MutableText translatable(String s, Formatting formatting) {
-        return Text.translatable(s).formatted(formatting);
-    }
+	public static MutableText translatable(String s, Formatting formatting) {
+		return Text.translatable(s).formatted(formatting);
+	}
 
-    public static MutableText translatable(String s, Object... objects) {
-        return Text.translatable(s, objects);
-    }
+	public static MutableText translatable(String s, Object... objects) {
+		return Text.translatable(s, objects);
+	}
 
-    public static MutableText append(MutableText text, Text appended) {
-        return text.append(appended);
-    }
+	public static MutableText append(MutableText text, Text appended) {
+		return text.append(appended);
+	}
 
-    public static OrderedText ordered(Text text) {
-        return text.asOrderedText();
-    }
+	public static OrderedText ordered(Text text) {
+		return text.asOrderedText();
+	}
 
-    public static Collection<ResourceLocation> findResources(IResourceManager manager, String directoryPath, Predicate<String> fileNamePredicate) {
-        List<ResourceLocation> resources = new ArrayList<>();
-
-        for (String namespace : (Set<String>) manager.getResourceDomains()) {
-            try {
-                ResourceLocation location = new ResourceLocation(namespace, directoryPath);
-                String fileName = directoryPath.substring(directoryPath.lastIndexOf('/') + 1);
-
-                if (fileNamePredicate == null || fileNamePredicate.test(fileName)) {
-                    resources.add(location);
-                }
-            } catch (Exception ignored) {
-            }
-        }
-
-        return resources;
-    }
+	public static Collection<ResourceLocation> findResources(IResourceManager manager, String prefix, Predicate<String> pred) {
+		return EmiResourceManager.instance.findResources(manager, prefix, i -> pred.test(i.toString())).keySet();
+	}
 
 	public static InputStream getInputStream(IResource resource) {
 		try {
@@ -133,9 +118,9 @@ public final class EmiPort {
 //		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 //	}
 
-    public static int getGuiScale(Minecraft client) {
-        return new ScaledResolution(client, client.displayWidth, client.displayHeight).getScaleFactor();
-    }
+	public static int getGuiScale(Minecraft client) {
+		return new ScaledResolution(client, client.displayWidth, client.displayHeight).getScaleFactor();
+	}
 
 	public static void setPositionTexShader() {
 		glEnable(GL_TEXTURE_2D);
@@ -170,6 +155,14 @@ public final class EmiPort {
 	}
 
 	public static void focus(TextFieldWidget widget, boolean focused) {
+//		// Also ensure a current focus-element in the screen is cleared if it changes
+//		MinecraftClient client = MinecraftClient.getInstance();
+//		if (client != null && client.currentScreen != null) {
+//			var currentFocus = client.currentScreen.getFocused();
+//			if (!focused && currentFocus == widget || focused && currentFocus != widget) {
+//				client.currentScreen.setFocused(null);
+//			}
+//		}
 		widget.setFocused(focused);
 	}
 
@@ -177,9 +170,9 @@ public final class EmiPort {
 		return getItemRegistry().getKeys().stream().filter(i -> ((Item) Item.itemRegistry.getObject(i)).getCreativeTab() == null);
 	}
 
-    public static ResourceLocation getId(IRecipe recipe) {
-        return SyntheticIdentifier.generateId(recipe);
-    }
+	public static ResourceLocation getId(IRecipe recipe) {
+		return SyntheticIdentifier.generateId(recipe);
+	}
 
 	public static @Nullable IRecipe getRecipe(ResourceLocation id) {
         Minecraft client = Minecraft.getMinecraft();
@@ -190,12 +183,6 @@ public final class EmiPort {
 			}
 		}
 		return null;
-	}
-
-	public static void registerReloadListeners(IReloadableResourceManager manager) {
-		manager.registerReloadListener(new RecipeDefaultLoader());
-//		manager.registerReloadListener(new EmiRemoveFromIndex());
-		manager.registerReloadListener(new EmiTagExclusionsLoader());
 	}
 
 	public static Comparison compareStrict() {

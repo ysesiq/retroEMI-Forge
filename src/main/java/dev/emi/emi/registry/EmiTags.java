@@ -146,7 +146,6 @@ public class EmiTags {
 	public static void registerTagModels(IResourceManager manager, Consumer<ResourceLocation> consumer) {
 		EmiTags.MODELED_TAGS.clear();
 		for (ResourceLocation id : EmiPort.findResources(manager, "models/tag/item", s -> s.endsWith(".json"))) {
-            System.out.println("Registering tag model: " + id);
             String path = id.getResourcePath();
 			path = path.substring(11, path.length() - 5);
 			String[] parts = path.split("/");

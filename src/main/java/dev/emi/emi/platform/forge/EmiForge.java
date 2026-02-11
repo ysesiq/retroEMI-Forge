@@ -10,9 +10,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
-import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
-import dev.emi.emi.data.EmiResourceManager;
 import dev.emi.emi.data.EmiResourceReloadListener;
 import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
 import dev.emi.emi.nemi.NemiPlugin;
@@ -69,11 +67,10 @@ public class EmiForge {
 
     @Mod.EventHandler
     public void postInit(FMLInitializationEvent event) {
-        EmiPort.registerReloadListeners((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager());
+        RetroEMI.registerReloadListeners((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager());
         PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
         PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);
         PacketReader.registerServerPacketReader(EmiNetwork.CHESS, EmiChessPacket.C2S::new);
-        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(EmiResourceManager.INSTANCE);
     }
 
 //    @SubscribeEvent

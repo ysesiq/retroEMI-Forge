@@ -69,8 +69,7 @@ public class EmiRecipes {
             CraftingManager manager = CraftingManager.getInstance();
             recipeIds = Maps.newIdentityHashMap();
             if (manager != null) {
-                for (Object o : manager.getRecipeList()) {
-                    IRecipe entry = (IRecipe) o;
+                for (IRecipe entry : (List<IRecipe>) manager.getRecipeList()) {
                     recipeIds.put(entry, new ResourceLocation(entry.toString()));
                 }
             }
