@@ -1,7 +1,7 @@
 package dev.emi.emi.config;
 
 import dev.emi.emi.EmiPort;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public enum SidebarTheme implements ConfigEnum {
 	TRANSPARENT("transparent", 0, 0),

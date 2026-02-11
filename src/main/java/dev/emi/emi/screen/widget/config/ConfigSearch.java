@@ -4,8 +4,8 @@ import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.widget.TextFieldWidget;
+import shim.net.minecraft.text.Text;
 
 public class ConfigSearch {
 	public final ConfigSearchWidgetField field;

@@ -3,9 +3,9 @@ package dev.emi.emi.api.widget;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.Drawable;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 
 public abstract class Widget implements Drawable {
 

@@ -4,7 +4,7 @@ import dev.emi.emi.chess.EmiChess;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.network.PacketByteBuf;
+import shim.net.minecraft.network.PacketByteBuf;
 
 public abstract class EmiChessPacket implements EmiPacket {
 	protected final String uuid;

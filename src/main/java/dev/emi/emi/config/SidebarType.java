@@ -1,8 +1,8 @@
 package dev.emi.emi.config;
 
 import dev.emi.emi.EmiPort;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 public enum SidebarType implements ConfigEnum {
 	NONE("none", 0, 0),

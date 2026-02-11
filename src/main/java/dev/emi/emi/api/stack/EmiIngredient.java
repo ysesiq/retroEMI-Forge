@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiTagKey;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.registry.tag.TagKey;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.registry.tag.TagKey;
 
 public interface EmiIngredient extends EmiRenderable {
 	public static final int RENDER_ICON = 1;

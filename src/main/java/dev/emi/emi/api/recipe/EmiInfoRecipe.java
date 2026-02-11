@@ -13,8 +13,8 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.OrderedText;
+import shim.net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
 
 public class EmiInfoRecipe implements EmiRecipe {

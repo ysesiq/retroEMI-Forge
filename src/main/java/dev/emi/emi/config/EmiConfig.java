@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -22,7 +22,7 @@ import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.runtime.EmiLog;
-import net.minecraft.client.util.InputUtil;
+import shim.net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Util;
 import com.rewindmc.retroemi.RetroEMI;
 

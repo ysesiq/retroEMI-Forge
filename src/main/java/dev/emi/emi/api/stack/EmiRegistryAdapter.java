@@ -1,7 +1,7 @@
 package dev.emi.emi.api.stack;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.registry.tag.TagKey;
+import shim.net.minecraft.registry.tag.TagKey;
 import org.jetbrains.annotations.ApiStatus;
 
 /**

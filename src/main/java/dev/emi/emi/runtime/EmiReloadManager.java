@@ -1,6 +1,5 @@
 package dev.emi.emi.runtime;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,7 +11,6 @@ import dev.emi.emi.api.EmiInitRegistry;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.bom.BoM;
-import dev.emi.emi.data.EmiData;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.registry.EmiComparisonDefaults;
 import dev.emi.emi.registry.EmiDragDropHandlers;
@@ -30,8 +28,7 @@ import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public class EmiReloadManager {
 	private static int loadedResourcesMask = 0;

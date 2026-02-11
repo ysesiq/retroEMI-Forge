@@ -9,7 +9,7 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.config.FluidUnit;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public class MiscPlugin implements NamedEmiPlugin {
 

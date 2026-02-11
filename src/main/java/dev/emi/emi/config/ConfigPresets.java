@@ -3,7 +3,7 @@ package dev.emi.emi.config;
 import java.util.List;
 
 import com.rewindmc.retroemi.RetroEMI;
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 
 import dev.emi.emi.com.unascribed.qdcss.QDCSS;
 import dev.emi.emi.config.EmiConfig.Comment;
@@ -12,7 +12,7 @@ import dev.emi.emi.config.EmiConfig.ConfigValue;
 import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiInput;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.InputUtil;
+import shim.net.minecraft.client.util.InputUtil;
 
 public class ConfigPresets {
 

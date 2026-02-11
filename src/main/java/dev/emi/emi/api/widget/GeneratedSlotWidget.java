@@ -7,7 +7,7 @@ import dev.emi.emi.api.render.EmiRender;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.runtime.EmiDrawContext;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 
 public class GeneratedSlotWidget extends SlotWidget {
 	private static final int INCREMENT = 1000;

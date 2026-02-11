@@ -9,9 +9,9 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.widget.config.ListWidget.Entry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.Element;
+import shim.net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
 
 public class GroupNameWidget extends Entry {

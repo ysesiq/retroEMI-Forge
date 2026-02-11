@@ -13,8 +13,8 @@ import dev.emi.emi.api.stack.ItemEmiStack;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 public class RemainderTooltipComponent implements EmiTooltipComponent {
 	public List<Remainder> remainders = Lists.newArrayList();

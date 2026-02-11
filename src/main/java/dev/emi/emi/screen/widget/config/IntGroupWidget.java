@@ -8,9 +8,9 @@ import com.google.common.collect.Lists;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.config.IntGroup;
 import dev.emi.emi.screen.ConfigScreen.Mutator;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.Element;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.text.Text;
 
 public class IntGroupWidget extends ConfigEntryWidget {
 	public final IntGroup group;

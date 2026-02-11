@@ -12,7 +12,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 
 public class EmiBrewingRecipe implements EmiRecipe {
 	private static final ResourceLocation BACKGROUND = EmiPort.id("minecraft", "textures/gui/container/brewing_stand.png");

@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
@@ -26,16 +26,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.text.MutableText;
+import shim.net.minecraft.text.OrderedText;
+import shim.net.minecraft.text.Style;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SyntheticIdentifier;
+import shim.net.minecraft.util.SyntheticIdentifier;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 

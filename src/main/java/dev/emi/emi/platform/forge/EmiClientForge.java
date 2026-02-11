@@ -1,6 +1,5 @@
 package dev.emi.emi.platform.forge;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -8,7 +7,6 @@ import dev.emi.emi.screen.EmiScreenBase;
 import dev.emi.emi.screen.EmiScreenManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class EmiClientForge {

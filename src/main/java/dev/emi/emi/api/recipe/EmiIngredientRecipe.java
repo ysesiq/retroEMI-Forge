@@ -10,7 +10,7 @@ import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import dev.emi.emi.bom.BoM;
 import dev.emi.emi.runtime.EmiDrawContext;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 
 /**
  * Represents a recipe that disambiguates an ingredient.

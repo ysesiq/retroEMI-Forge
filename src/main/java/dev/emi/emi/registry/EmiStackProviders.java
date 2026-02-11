@@ -6,10 +6,7 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import dev.emi.emi.EmiPort;
-import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiStackProvider;
-import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.mixin.accessor.GuiContainerAccessor;

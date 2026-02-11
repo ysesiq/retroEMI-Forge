@@ -2,8 +2,8 @@ package dev.emi.emi.api.widget;
 
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.OrderedText;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.text.OrderedText;
 
 public class TextWidget extends Widget {
 	private static final Minecraft CLIENT = Minecraft.getMinecraft();

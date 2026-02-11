@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.screen.ConfigScreen.Mutator;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 public class BooleanWidget extends ConfigEntryWidget {
 	private final Mutator<Boolean> mutator;

@@ -1,6 +1,6 @@
 package dev.emi.emi.runtime;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
 
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -8,10 +8,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.util.math.MatrixStack;
+import shim.net.minecraft.text.OrderedText;
+import shim.net.minecraft.text.Text;
 
 public class EmiDrawContext {
 	private final Minecraft client =  Minecraft.getMinecraft();

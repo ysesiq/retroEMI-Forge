@@ -19,20 +19,20 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.StackBatcher;
 import dev.emi.emi.api.render.EmiRender;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.item.TooltipContext;
+import shim.net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.registry.tag.ItemKey;
+import shim.net.minecraft.registry.tag.ItemKey;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 @ApiStatus.Internal
 public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {

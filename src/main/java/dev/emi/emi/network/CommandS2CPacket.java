@@ -7,7 +7,7 @@ import dev.emi.emi.bom.BoM;
 import dev.emi.emi.registry.EmiCommands;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.network.PacketByteBuf;
+import shim.net.minecraft.network.PacketByteBuf;
 
 public class CommandS2CPacket implements EmiPacket {
 	private final byte type;

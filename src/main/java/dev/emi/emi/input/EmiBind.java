@@ -10,10 +10,10 @@ import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.Lists;
 
 import dev.emi.emi.EmiPort;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.util.InputUtil;
+import shim.net.minecraft.text.MutableText;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 public class EmiBind {
 	public static final EmiBind LEFT_CLICK = new EmiBind("", new EmiBind.ModifiedKey(InputUtil.Type.MOUSE.createFromCode(0), 0));

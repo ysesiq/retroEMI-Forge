@@ -11,8 +11,8 @@ import dev.emi.emi.config.SidebarType;
 import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.screen.EmiScreenManager.SidebarPanel;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 public class SidebarButtonWidget extends SizedButtonWidget {
 	private final SidebarPanel panel;

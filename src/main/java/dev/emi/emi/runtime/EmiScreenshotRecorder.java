@@ -15,7 +15,7 @@ import dev.emi.emi.config.EmiConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.*;
-import net.minecraft.util.Utils;
+import shim.net.minecraft.util.Utils;
 
 public class EmiScreenshotRecorder {
 	private static final String SCREENSHOTS_DIRNAME = "screenshots";

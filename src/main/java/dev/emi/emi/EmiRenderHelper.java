@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraftforge.fluids.Fluid;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.api.EmiApi;
@@ -27,14 +27,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
-import net.minecraft.client.gui.tooltip.TextTooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipPositioner;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vec2i;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
+import shim.net.minecraft.client.gui.tooltip.TextTooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
+import shim.net.minecraft.client.util.math.MatrixStack;
+import shim.net.minecraft.client.util.math.Vec2i;
+import shim.net.minecraft.text.Style;
+import shim.net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
 
 public class EmiRenderHelper {

@@ -25,7 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 import com.rewindmc.retroemi.shim.java.List;
 
 public class EmiRegistryImpl implements EmiRegistry {

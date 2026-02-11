@@ -1,8 +1,8 @@
 package dev.emi.emi.screen.tooltip;
 
 import dev.emi.emi.api.stack.EmiIngredient;
-import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
-import net.minecraft.text.OrderedText;
+import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
+import shim.net.minecraft.text.OrderedText;
 
 public class EmiTextTooltipWrapper extends OrderedTextTooltipComponent {
 	public EmiIngredient stack;

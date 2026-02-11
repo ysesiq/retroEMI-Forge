@@ -13,9 +13,9 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.text.Style;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.Drawable;
+import shim.net.minecraft.text.Style;
 
 public class EmiNameWidget implements Drawable {
 	private static Minecraft client = Minecraft.getMinecraft();

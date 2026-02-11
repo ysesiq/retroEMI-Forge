@@ -24,14 +24,14 @@ import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadLog;
 import dev.emi.emi.screen.EmiScreenManager;
-import net.minecraft.client.search.SuffixArray;
+import shim.net.minecraft.client.search.SuffixArray;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringTranslate;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public class EmiSearch {
 	public static final Pattern TOKENS = Pattern.compile(

@@ -4,7 +4,7 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.platform.EmiAgnos;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectFunction;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public enum FluidUnit implements ConfigEnum {
 	LITERS("liters", a -> EmiPort.translatable("emi.fluid.amount.liters",

@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
-import net.minecraft.network.PacketByteBuf;
+import shim.net.minecraft.network.PacketByteBuf;
 
 public class FillRecipeC2SPacket implements EmiPacket {
 	private final int syncId;

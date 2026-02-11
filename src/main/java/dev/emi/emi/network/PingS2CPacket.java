@@ -4,7 +4,7 @@ import dev.emi.emi.platform.EmiClient;
 import dev.emi.emi.runtime.EmiReloadManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.network.PacketByteBuf;
+import shim.net.minecraft.network.PacketByteBuf;
 
 public class PingS2CPacket implements EmiPacket {
 	private int isServer;

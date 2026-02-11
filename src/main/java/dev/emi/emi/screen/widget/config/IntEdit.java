@@ -8,8 +8,8 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.screen.widget.SizedButtonWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.client.gui.widget.TextFieldWidget;
 
 public class IntEdit {
 	private static final Pattern NUMBER = Pattern.compile("^-?[0-9]*$");

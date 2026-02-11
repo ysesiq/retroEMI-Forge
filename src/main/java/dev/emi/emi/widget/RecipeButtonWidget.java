@@ -8,7 +8,7 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 
 public class RecipeButtonWidget extends Widget {
 	protected final EmiRecipe recipe;

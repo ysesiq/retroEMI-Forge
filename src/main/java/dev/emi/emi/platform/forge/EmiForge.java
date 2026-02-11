@@ -25,7 +25,7 @@ import dev.emi.emi.runtime.EmiReloadManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.PacketByteBuf;
+import shim.net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraftforge.common.MinecraftForge;

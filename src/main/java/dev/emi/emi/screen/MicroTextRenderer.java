@@ -1,7 +1,7 @@
 package dev.emi.emi.screen;
 
 import com.github.bsideup.jabel.Desugar;
-import com.mojang.blaze3d.systems.RenderSystem;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.config.FluidUnit;

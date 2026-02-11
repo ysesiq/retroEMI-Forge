@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import dev.emi.emi.EmiPort;
 import com.rewindmc.retroemi.RetroEMI;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.util.Formatting;
 
 public class EmiTooltip {
 	public static final DecimalFormat TEXT_FORMAT = new DecimalFormat("0.##");

@@ -9,10 +9,10 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.config.SidebarSubpanels;
 import dev.emi.emi.config.SidebarType;
 import dev.emi.emi.screen.ConfigScreen.Mutator;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.client.gui.widget.ClickableWidget;
+import shim.net.minecraft.text.Text;
 
 public class SidebarSubpanelsWidget extends ConfigEntryWidget {
 	private List<ButtonWidget> buttons = Lists.newArrayList();

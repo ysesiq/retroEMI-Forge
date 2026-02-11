@@ -12,8 +12,8 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.TagEmiIngredient;
 import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.JsonHelper;
+import shim.net.minecraft.registry.tag.TagKey;
+import shim.net.minecraft.util.JsonHelper;
 import net.minecraft.util.ResourceLocation;
 
 public class TagEmiIngredientSerializer implements EmiIngredientSerializer<TagEmiIngredient> {

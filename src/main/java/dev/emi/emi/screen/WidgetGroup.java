@@ -25,8 +25,8 @@ import dev.emi.emi.screen.tooltip.EmiTooltip;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import dev.emi.emi.widget.RecipeBackground;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.util.Formatting;
 import net.minecraft.util.ResourceLocation;
 
 public class WidgetGroup implements WidgetHolder {

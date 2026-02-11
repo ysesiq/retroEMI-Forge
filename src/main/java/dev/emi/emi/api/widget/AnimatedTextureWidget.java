@@ -1,7 +1,7 @@
 package dev.emi.emi.api.widget;
 
 import dev.emi.emi.runtime.EmiDrawContext;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.ResourceLocation;
 
 public class AnimatedTextureWidget extends TextureWidget {

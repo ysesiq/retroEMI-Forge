@@ -8,7 +8,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.ListEmiIngredient;
 import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import dev.emi.emi.registry.EmiIngredientSerializers;
-import net.minecraft.util.JsonHelper;
+import shim.net.minecraft.util.JsonHelper;
 
 import java.util.ArrayList;
 import java.util.List;

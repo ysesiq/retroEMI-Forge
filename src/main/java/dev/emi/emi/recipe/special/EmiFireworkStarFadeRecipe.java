@@ -13,10 +13,10 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
 import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.init.Items;
-import net.minecraft.item.DyeItem;
+import shim.net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DyeColor;
+import shim.net.minecraft.util.DyeColor;
 import net.minecraft.util.ResourceLocation;
 
 public class EmiFireworkStarFadeRecipe extends EmiPatternCraftingRecipe {

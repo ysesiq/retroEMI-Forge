@@ -8,18 +8,18 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import dev.emi.emi.input.EmiInput;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ParentElement;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.Drawable;
+import shim.net.minecraft.client.gui.Element;
+import shim.net.minecraft.client.gui.ParentElement;
+import shim.net.minecraft.text.Text;
 
 public class REMIScreen extends GuiScreen implements ParentElement {
 

@@ -1,7 +1,7 @@
 package dev.emi.emi.screen;
 
 import dev.emi.emi.api.stack.EmiIngredient;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 
 public class StackBatcher {
 

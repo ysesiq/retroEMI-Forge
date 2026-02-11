@@ -14,8 +14,8 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.runtime.EmiHistory;
 import dev.emi.emi.widget.RecipeDefaultButtonWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
 
 public class ResolutionButtonWidget extends ButtonWidget {
 	public Supplier<Widget> hoveredWidget;

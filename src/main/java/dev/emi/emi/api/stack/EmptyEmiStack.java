@@ -5,12 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.ApiStatus;
 
 import dev.emi.emi.EmiPort;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;
 

@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -54,12 +54,12 @@ import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StringTranslate;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.client.gui.widget.TextFieldWidget;
+import shim.net.minecraft.client.util.InputUtil;
+import shim.net.minecraft.text.Text;
 
 public class ConfigScreen extends REMIScreen {
 	private static final int maxWidth = 240;

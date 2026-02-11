@@ -9,10 +9,10 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiBind.ModifiedKey;
 import dev.emi.emi.screen.ConfigScreen;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.client.util.InputUtil;
+import shim.net.minecraft.util.Formatting;
 
 public class EmiBindWidget extends ConfigEntryWidget {
 	private final ConfigScreen screen;

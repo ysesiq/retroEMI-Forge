@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public class RegexTooltipQuery extends Query {
 	private final Pattern pattern;

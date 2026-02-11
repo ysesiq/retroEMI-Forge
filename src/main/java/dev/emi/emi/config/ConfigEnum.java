@@ -1,6 +1,6 @@
 package dev.emi.emi.config;
 
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public interface ConfigEnum {
 

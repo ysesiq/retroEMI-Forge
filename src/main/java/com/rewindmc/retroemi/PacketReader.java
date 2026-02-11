@@ -2,7 +2,7 @@ package com.rewindmc.retroemi;
 
 import dev.emi.emi.network.EmiPacket;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.network.PacketByteBuf;
+import shim.net.minecraft.network.PacketByteBuf;
 
 import java.util.HashMap;
 import java.util.Map;

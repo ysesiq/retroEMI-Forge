@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Lists;
@@ -20,12 +20,12 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import com.rewindmc.retroemi.Pair;
 import com.rewindmc.retroemi.RetroEMI;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.widget.TextFieldWidget;
+import shim.net.minecraft.client.util.math.MatrixStack;
+import shim.net.minecraft.text.MutableText;
+import shim.net.minecraft.text.Style;
+import shim.net.minecraft.util.Formatting;
 
 public class EmiSearchWidget extends TextFieldWidget {
 	private static final Pattern ESCAPE = Pattern.compile("\\\\.");

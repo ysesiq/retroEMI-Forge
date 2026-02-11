@@ -3,7 +3,7 @@ package dev.emi.emi.api.widget;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 
 /**
  * Similar to MCMeta animated

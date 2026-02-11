@@ -4,7 +4,7 @@ import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.tooltip.EmiTooltipComponent;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 class ChessTooltipComponent implements EmiTooltipComponent {
 	private final ChessPiece dragged, hovered;

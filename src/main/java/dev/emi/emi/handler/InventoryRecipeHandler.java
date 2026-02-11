@@ -17,8 +17,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.Slot;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.text.Text;
 
 public class InventoryRecipeHandler implements StandardRecipeHandler<ContainerPlayer> {
 	public static final Text TOO_SMALL = EmiPort.translatable("emi.too_small");

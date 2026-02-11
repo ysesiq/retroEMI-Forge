@@ -1,9 +1,9 @@
 package dev.emi.emi.input;
 
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 
 import net.minecraft.util.Util;
-import net.minecraft.client.util.InputUtil;
+import shim.net.minecraft.client.util.InputUtil;
 
 public class EmiInput {
 	public static final int CONTROL_MASK = 1;

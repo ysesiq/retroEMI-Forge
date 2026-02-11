@@ -13,7 +13,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.TagEmiIngredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.registry.tag.TagKey;
+import shim.net.minecraft.registry.tag.TagKey;
 
 public class EmiTagRecipe extends EmiIngredientRecipe {
 	private final List<EmiStack> stacks;

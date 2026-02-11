@@ -12,7 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
-import net.minecraft.util.JsonHelper;
+import shim.net.minecraft.util.JsonHelper;
 
 public class EmiData {
     public static Map<String, EmiRecipeCategoryProperties> categoryPriorities = com.rewindmc.retroemi.shim.java.Map.of();

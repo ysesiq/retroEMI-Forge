@@ -16,8 +16,8 @@ import dev.emi.emi.bom.MaterialTree;
 import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 public class RecipeCostTooltipComponent implements EmiTooltipComponent {
 	private static final Text COST = EmiPort.translatable("emi.cost_per");

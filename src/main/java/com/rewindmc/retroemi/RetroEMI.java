@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import cpw.mods.fml.common.registry.GameData;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -38,10 +38,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringTranslate;
-import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipPositioner;
-import net.minecraft.client.util.math.Vec2i;
+import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
+import shim.net.minecraft.client.util.math.Vec2i;
 
 public class RetroEMI {
 	public static final RetroEMI instance = new RetroEMI();

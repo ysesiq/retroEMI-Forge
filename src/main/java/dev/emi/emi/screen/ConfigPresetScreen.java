@@ -3,7 +3,7 @@ package dev.emi.emi.screen;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 
 import com.rewindmc.retroemi.REMIScreen;
 import dev.emi.emi.EmiPort;
@@ -17,11 +17,11 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.widget.config.EmiNameWidget;
 import dev.emi.emi.screen.widget.config.ListWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.Element;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.text.Text;
 
 public class ConfigPresetScreen extends REMIScreen {
 	private final ConfigScreen last;

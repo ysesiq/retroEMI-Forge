@@ -23,7 +23,7 @@ import dev.emi.emi.data.RecipeDefaults;
 import dev.emi.emi.runtime.EmiPersistentData;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.RetroEMI;
-import net.minecraft.util.JsonHelper;
+import shim.net.minecraft.util.JsonHelper;
 
 public class BoM {
 	private static RecipeDefaults defaults = new RecipeDefaults();

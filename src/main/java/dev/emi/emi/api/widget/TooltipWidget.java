@@ -3,8 +3,8 @@ package dev.emi.emi.api.widget;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 
 public class TooltipWidget extends Widget {
 	private final Bounds bounds;

@@ -15,7 +15,7 @@ import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.util.JsonHelper;
+import shim.net.minecraft.util.JsonHelper;
 import net.minecraft.util.ResourceLocation;
 
 public class EmiTagExclusionsLoader implements EmiResourceReloadListener, IResourceManagerReloadListener {

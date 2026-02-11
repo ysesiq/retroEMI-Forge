@@ -2,7 +2,7 @@ package dev.emi.emi.data;
 
 import com.github.bsideup.jabel.Desugar;
 import dev.emi.emi.api.stack.EmiIngredient;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 import java.util.List;
 

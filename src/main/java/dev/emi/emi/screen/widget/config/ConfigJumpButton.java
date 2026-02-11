@@ -5,8 +5,8 @@ import java.util.List;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.widget.SizedButtonWidget;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.text.Text;
 
 public class ConfigJumpButton extends SizedButtonWidget {
 

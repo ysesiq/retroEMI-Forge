@@ -1,6 +1,6 @@
 package dev.emi.emi.api.render;
 
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 
 /**
  * Provides a method to render something at a position

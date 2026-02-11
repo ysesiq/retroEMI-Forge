@@ -8,7 +8,7 @@ import com.google.common.collect.Maps;
 
 import dev.emi.emi.api.EmiDragDropHandler;
 import dev.emi.emi.api.stack.EmiIngredient;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.GuiScreen;
 
 public class EmiDragDropHandlers {

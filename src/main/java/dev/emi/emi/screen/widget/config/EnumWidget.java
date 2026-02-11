@@ -13,9 +13,9 @@ import dev.emi.emi.screen.ConfigEnumScreen;
 import dev.emi.emi.screen.ConfigScreen;
 import dev.emi.emi.screen.ConfigScreen.Mutator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.widget.ButtonWidget;
+import shim.net.minecraft.text.Text;
 
 public class EnumWidget extends ConfigEntryWidget {
 	private final Mutator<ConfigEnum> mutator;

@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import dev.emi.emi.bom.BoM;
-import net.minecraft.util.JsonHelper;
+import shim.net.minecraft.util.JsonHelper;
 
 public class EmiPersistentData {
 	public static final File FILE = new File("emi.json");

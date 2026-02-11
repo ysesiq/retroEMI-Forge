@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import dev.emi.emi.screen.ConfigScreen.Mutator;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.text.Text;
 
 public class IntWidget extends ConfigEntryWidget {
 	public final IntEdit edit;

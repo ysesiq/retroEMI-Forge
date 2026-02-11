@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.nemi.NemiPlugin;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import com.rewindmc.retroemi.ItemStacks;
@@ -72,7 +72,7 @@ import dev.emi.emi.screen.widget.SizedButtonWidget;
 import dev.emi.emi.search.EmiSearch;
 import net.minecraft.item.Item;
 import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.util.Formatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
@@ -82,12 +82,12 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ParentElement;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.Element;
+import shim.net.minecraft.client.gui.ParentElement;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.widget.TextFieldWidget;
+import shim.net.minecraft.client.util.math.MatrixStack;
+import shim.net.minecraft.text.Text;
 
 public class EmiScreenManager {
 	private static final int PADDING_SIZE = 1;

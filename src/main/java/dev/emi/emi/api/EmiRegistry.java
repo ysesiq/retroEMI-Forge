@@ -17,7 +17,7 @@ import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
 
 public interface EmiRegistry {

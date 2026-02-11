@@ -18,7 +18,7 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.JsonHelper;
+import shim.net.minecraft.util.JsonHelper;
 
 public class RecipeDefaultLoader implements EmiResourceReloadListener, IResourceManagerReloadListener {
 	private static final Gson GSON = new Gson();

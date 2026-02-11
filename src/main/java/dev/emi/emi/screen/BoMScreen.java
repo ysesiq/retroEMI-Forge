@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.glfw.GLFW;
+import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
 
@@ -43,15 +43,15 @@ import dev.emi.emi.runtime.EmiHistory;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import dev.emi.emi.screen.tooltip.RecipeTooltipComponent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.util.MathHelper;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import shim.net.minecraft.client.util.math.MatrixStack;
+import shim.net.minecraft.text.MutableText;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 import com.rewindmc.retroemi.REMIScreen;
 
 public class BoMScreen extends REMIScreen {

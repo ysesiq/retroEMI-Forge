@@ -6,7 +6,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.text.Text;
+import shim.net.minecraft.text.Text;
 
 public class TooltipQuery extends Query {
 	private final Set<EmiStack> valid = Sets.newIdentityHashSet();

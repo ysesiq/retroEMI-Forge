@@ -8,13 +8,13 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.FluidEmiStack;
 import dev.emi.emi.registry.EmiPluginContainer;
-import net.minecraft.client.util.math.MatrixStack;
+import shim.net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.registry.tag.ItemKey;
-import net.minecraft.text.Text;
+import shim.net.minecraft.registry.tag.ItemKey;
+import shim.net.minecraft.text.Text;
 import net.minecraftforge.fluids.Fluid;
 
 public abstract class EmiAgnos {

@@ -2,8 +2,8 @@ package dev.emi.emi.screen.widget.config;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.runtime.EmiDrawContext;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.text.Text;
 
 public class SubGroupNameWidget extends GroupNameWidget {
 	public GroupNameWidget parent;
