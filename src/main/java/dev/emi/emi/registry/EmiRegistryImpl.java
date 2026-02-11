@@ -1,7 +1,6 @@
 package dev.emi.emi.registry;
 
 import java.util.ListIterator;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -27,6 +26,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.text.Text;
+import com.rewindmc.retroemi.shim.java.List;
 
 public class EmiRegistryImpl implements EmiRegistry {
 	private static final Minecraft client = Minecraft.getMinecraft();
@@ -142,7 +142,7 @@ public class EmiRegistryImpl implements EmiRegistry {
 
 	@Override
 	public void addAlias(EmiIngredient stack, Text text) {
-		EmiStackList.registryAliases.add(new EmiAlias.Baked(com.rewindmc.retroemi.shim.java.List.of(stack), com.rewindmc.retroemi.shim.java.List.of(text)));
+		EmiStackList.registryAliases.add(new EmiAlias.Baked(List.of(stack), List.of(text)));
 	}
 
 	@Override

@@ -1,6 +1,9 @@
 package net.minecraft.registry.tag;
 
+import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.BiMap;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import com.rewindmc.retroemi.RetroEMI;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
@@ -9,33 +12,47 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.RegistryNamespaced;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class TagKey<T> {
-    private final ResourceLocation tag;
-    private final Type type;
-
-    public TagKey(ResourceLocation tag, Type type) {
-        this.tag = tag;
-        this.type = type;
-    }
+@Desugar
+public record TagKey<T>(ResourceLocation tag, Type type) {
+    private static final Interner<TagKey<?>> INTERNER = Interners.newWeakInterner();
 
     public static <T> TagKey<T> of(Class<T> type, ResourceLocation tag) {
-        return new TagKey<>(tag, Type.of(type));
+        return (TagKey) INTERNER.intern(new TagKey(tag, Type.of(type)));
     }
 
     public static <T> TagKey<T> of(Type type, ResourceLocation tag) {
-        return new TagKey<>(tag, type);
+        return (TagKey) INTERNER.intern(new TagKey(tag, type));
+    }
+
+    public boolean isOf(RegistryNamespaced registry) {
+        return registry.containsKey(this.tag.getResourcePath());
+    }
+
+    public <E> Optional<TagKey<E>> tryCast(RegistryNamespaced registryRef) {
+        return this.isOf(registryRef) ? Optional.of((TagKey<E>) this) : Optional.empty();
+    }
+
+    public String toString() {
+        String s = String.valueOf(this.type);
+        return "TagKey[" + s + " / " + this.tag + "]";
+    }
+
+    public ResourceLocation id() {
+        return tag;
+    }
+
+    public ResourceLocation registry() {
+        return type.getRegistryName();
     }
 
     public List<T> getAll() {
@@ -88,10 +105,6 @@ public class TagKey<T> {
 
     public Type getType() {
         return type;
-    }
-
-    public ResourceLocation id() {
-        return tag;
     }
 
     private static String convertTag(ResourceLocation tag) {

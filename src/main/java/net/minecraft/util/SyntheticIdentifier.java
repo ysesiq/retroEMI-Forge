@@ -8,7 +8,6 @@ import dev.emi.emi.mixin.accessor.ShapedOreRecipeAccessor;
 import dev.emi.emi.mixin.accessor.ShapedRecipesAccessor;
 import dev.emi.emi.mixin.accessor.ShapelessRecipesAccessor;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;

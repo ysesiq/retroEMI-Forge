@@ -1,5 +1,6 @@
 package dev.emi.emi.runtime;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.opengl.GL11;
 
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -72,8 +73,8 @@ public class EmiDrawContext {
 		tess.draw();
 	}
 
-	public void fill(int x, int y, int w, int h, int color) {
-		Gui.drawRect(x, y, x + w, y + h, color);
+	public void fill(int x, int y, int width, int height, int color) {
+		Gui.drawRect(x, y, x + width, y + height, color);
 	}
 
 	public void drawText(Text text, int x, int y) {
@@ -114,6 +115,22 @@ public class EmiDrawContext {
 
 	public void drawCenteredTextWithShadow(Text text, int x, int y, int color) {
 		client.fontRenderer.drawStringWithShadow(text.asString(), x - client.fontRenderer.getStringWidth(text.asString()) / 2, y, color);
+	}
+
+	public void enableDepthTest() {
+		RenderSystem.enableDepthTest();
+	}
+
+	public void disableDepthTest() {
+		RenderSystem.disableDepthTest();
+	}
+
+	public void enableBlend() {
+		RenderSystem.enableBlend();
+	}
+
+	public void disableBlend() {
+		RenderSystem.disableBlend();
 	}
 
 	public void resetColor() {

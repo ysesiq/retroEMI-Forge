@@ -194,7 +194,7 @@ public class EmiRenderHelper {
 				mutable.add(comp);
 			}
 		}
-		RenderSystem.enableDepthTest();
+        context.enableDepthTest();
 		RenderSystem.disableLighting();
 		EmiPort.setPositionTexShader();
 		context.resetColor();
@@ -256,7 +256,7 @@ public class EmiRenderHelper {
 	}
 
 	public static void renderIngredient(EmiIngredient ingredient, EmiDrawContext context, int x, int y) {
-		RenderSystem.enableDepthTest();
+		context.enableDepthTest();
 		context.push();
 		context.matrices().translate(0, 0, 200);
 		RenderSystem.setShaderTexture(0, EmiRenderHelper.WIDGETS);
@@ -266,7 +266,7 @@ public class EmiRenderHelper {
 
 	public static void renderTag(EmiIngredient ingredient, EmiDrawContext context, int x, int y) {
 		if (ingredient.getEmiStacks().size() > 1) {
-			RenderSystem.enableDepthTest();
+			context.enableDepthTest();
 			context.push();
 			context.matrices().translate(0, 0, 200);
 			context.drawTexture(WIDGETS, x, y + 12, 0, 252, 4, 4);
@@ -283,7 +283,7 @@ public class EmiRenderHelper {
 				} else {
 					context.push();
 					context.matrices().translate(0, 0, 200);
-					RenderSystem.enableDepthTest();
+					context.enableDepthTest();
 					context.drawTexture(WIDGETS, x + 12, y, 4, 252, 4, 4);
 					context.pop();
 				}
@@ -293,7 +293,7 @@ public class EmiRenderHelper {
 	}
 
 	public static void renderCatalyst(EmiIngredient ingredient, EmiDrawContext context, int x, int y) {
-		RenderSystem.enableDepthTest();
+		context.enableDepthTest();
 		context.push();
 		context.matrices().translate(0, 0, 200);
 		context.drawTexture(WIDGETS, x + 12, y, 12, 252, 4, 4);
@@ -304,7 +304,7 @@ public class EmiRenderHelper {
 	public static void renderRecipeFavorite(EmiIngredient ingredient, EmiDrawContext context, int x, int y) {
 		context.push();
 		context.matrices().translate(0, 0, 200);
-		RenderSystem.enableDepthTest();
+		context.enableDepthTest();
 		context.drawTexture(WIDGETS, x + 12, y, 16, 252, 4, 4);
 		context.pop();
 		return;
@@ -362,11 +362,11 @@ public class EmiRenderHelper {
 			context.pop();
 
 			// Force translucency to match that of the recipe background
-			RenderSystem.disableBlend();
+            context.disableBlend();
 			RenderSystem.colorMask(false, false, false, true);
-			RenderSystem.disableDepthTest();
+            context.disableDepthTest();
 			renderRecipeBackground(recipe, context, x, y);
-			RenderSystem.enableDepthTest();
+			context.enableDepthTest();
 			RenderSystem.colorMask(true, true, true, true);
 			// Blend should be off by default
 		} catch (Throwable e) {

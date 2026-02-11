@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import cpw.mods.fml.common.registry.GameData;
-import dev.emi.emi.screen.EmiScreenBase;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import org.lwjgl.input.Keyboard;
@@ -37,7 +36,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.RegistryNamespaced;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;

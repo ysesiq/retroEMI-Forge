@@ -4,5 +4,5 @@ public class TooltipContext {
 
 	public static final boolean BASIC = false;
 	public static final boolean ADVANCED = true;
-	
+
 }

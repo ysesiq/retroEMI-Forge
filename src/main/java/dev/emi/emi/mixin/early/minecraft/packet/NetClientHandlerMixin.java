@@ -2,9 +2,6 @@ package dev.emi.emi.mixin.early.minecraft.packet;
 
 import com.rewindmc.retroemi.PacketReader;
 import dev.emi.emi.network.EmiPacket;
-import dev.emi.emi.platform.EmiClient;
-import dev.emi.emi.runtime.EmiLog;
-import dev.emi.emi.runtime.EmiReloadManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;

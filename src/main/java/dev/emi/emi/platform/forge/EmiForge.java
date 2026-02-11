@@ -35,6 +35,7 @@ import java.io.DataOutputStream;
 
 @Mod(
     modid = "emi",
+    name = "EMI",
     dependencies = """
             required-after:gtnhlib@[0.6.0,);\
             before:unimixins@[0.1,);\
@@ -62,11 +63,12 @@ public class EmiForge {
         });
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
+
+        EmiTags.registerTagModels(Minecraft.getMinecraft().getResourceManager(), id -> {});
     }
 
     @Mod.EventHandler
     public void postInit(FMLInitializationEvent event) {
-        EmiTags.registerTagModels(Minecraft.getMinecraft().getResourceManager(), id -> {});
         EmiPort.registerReloadListeners((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager());
         PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
         PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);

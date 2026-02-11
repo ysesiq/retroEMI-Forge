@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import com.rewindmc.retroemi.REMIScreen;
 import dev.emi.emi.EmiPort;

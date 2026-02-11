@@ -48,7 +48,7 @@ public class ButtonWidget extends Widget {
 		} else if (getBounds().contains(mouseX, mouseY)) {
 			v += this.height;
 		}
-		RenderSystem.enableDepthTest();
+		context.enableDepthTest();
 		context.drawTexture(texture, this.x, this.y, this.u, v, this.width, this.height);
 	}
 

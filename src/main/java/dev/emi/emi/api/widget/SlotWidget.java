@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
@@ -161,7 +160,7 @@ public class SlotWidget extends Widget {
 		context.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 		drawBackground(draw, mouseX, mouseY, delta);
 		drawStack(draw, mouseX, mouseY, delta);
-		RenderSystem.disableDepthTest();
+        context.disableDepthTest();
 		drawOverlay(draw, mouseX, mouseY, delta);
 	}
 

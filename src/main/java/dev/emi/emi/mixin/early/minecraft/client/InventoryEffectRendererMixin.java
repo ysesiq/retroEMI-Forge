@@ -1,5 +1,7 @@
 package dev.emi.emi.mixin.early.minecraft.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.rewindmc.retroemi.RetroEMI;
 import com.rewindmc.retroemi.shim.java.List;
@@ -19,12 +21,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.text.Text;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;;
@@ -39,13 +39,13 @@ public abstract class InventoryEffectRendererMixin extends GuiContainer {
         super(par1Container);
     }
 
-    @Redirect(method = "initGui",
+    @WrapOperation(method = "initGui",
         at = @At(value = "FIELD",
             target = "Lnet/minecraft/client/renderer/InventoryEffectRenderer;guiLeft:I",
             opcode = Opcodes.PUTFIELD
         )
     )
-    private void conNotBeyond(InventoryEffectRenderer inventoryEffectRenderer, int value) {
+    private void conNotBeyond(InventoryEffectRenderer instance, int value, Operation<Void> original) {
         guiLeft = Math.max(guiLeft, EFFECT_WIDTH);
     }
 

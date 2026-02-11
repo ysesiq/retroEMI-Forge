@@ -8,14 +8,14 @@ import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import com.rewindmc.retroemi.shim.java.List;
 
-import java.util.List;
 import java.util.Random;
 
 public class EmiMapCloningRecipe extends EmiPatternCraftingRecipe {
 
 	public EmiMapCloningRecipe(ResourceLocation id) {
-		super(com.rewindmc.retroemi.shim.java.List.of(
+		super(List.of(
 						EmiStack.of(Items.filled_map),
 						EmiStack.of(Items.map)),
 				EmiStack.of(Items.filled_map), id);

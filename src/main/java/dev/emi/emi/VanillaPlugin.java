@@ -68,6 +68,7 @@ import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadLog;
+import dev.emi.emi.runtime.EmiTagKey;
 import dev.emi.emi.stack.serializer.FluidEmiStackSerializer;
 import dev.emi.emi.stack.serializer.ItemEmiStackSerializer;
 import dev.emi.emi.stack.serializer.ListEmiIngredientSerializer;
@@ -131,11 +132,11 @@ public class VanillaPlugin implements EmiPlugin {
 		registry.addIngredientSerializer(ItemEmiStack.class, new ItemEmiStackSerializer());
 		registry.addIngredientSerializer(FluidEmiStack.class, new FluidEmiStackSerializer());
 		registry.addIngredientSerializer(TagEmiIngredient.class, new TagEmiIngredientSerializer());
-        registry.addIngredientSerializer(ListEmiIngredient.class, new ListEmiIngredientSerializer());
+		registry.addIngredientSerializer(ListEmiIngredient.class, new ListEmiIngredientSerializer());
 
-        registry.addRegistryAdapter(EmiRegistryAdapter.simple(ItemKey.class, TagKey.Type.ITEM, (key, nbt, amount) -> EmiStack.of(key.item(), nbt, amount, key.meta())));
-        registry.addRegistryAdapter(EmiRegistryAdapter.simple(Fluid.class, TagKey.Type.FLUID, EmiStack::of));
-    }
+		registry.addRegistryAdapter(EmiRegistryAdapter.simple(ItemKey.class, TagKey.Type.ITEM, (key, nbt, amount) -> EmiStack.of(key.item(), nbt, amount, key.meta())));
+		registry.addRegistryAdapter(EmiRegistryAdapter.simple(Fluid.class, TagKey.Type.FLUID, EmiStack::of));
+	}
 
 	@Override
 	public void register(EmiRegistry registry) {
@@ -157,7 +158,7 @@ public class VanillaPlugin implements EmiPlugin {
 		registry.addWorkstation(ANVIL_REPAIRING, EmiStack.of(new ItemStack(Blocks.anvil, 1, 2)));
 		registry.addWorkstation(BREWING, EmiStack.of(Items.brewing_stand));
 
-        registry.addRecipeHandler(ContainerPlayer.class, new InventoryRecipeHandler());
+		registry.addRecipeHandler(ContainerPlayer.class, new InventoryRecipeHandler());
 		registry.addRecipeHandler(ContainerWorkbench.class, new CraftingRecipeHandler());
 		registry.addRecipeHandler(ContainerFurnace.class, new CookingRecipeHandler<>(SMELTING));
 
@@ -226,14 +227,14 @@ public class VanillaPlugin implements EmiPlugin {
 		registry.setDefaultComparison(Items.potionitem, potionComparison);
 		registry.setDefaultComparison(Items.enchanted_book, EmiPort.compareStrict());
 
-        Set<Item> hiddenItems = Stream.concat(
-            TagKey.of(ItemKey.class, EmiTags.HIDDEN_FROM_RECIPE_VIEWERS).getAll().stream().map(ItemKey::item),
-            EmiPort.getDisabledItems()
-        ).collect(Collectors.toSet());
+		Set<Item> hiddenItems = Stream.concat(
+			EmiTagKey.of(TagKey.Type.ITEM, EmiTags.HIDDEN_FROM_RECIPE_VIEWERS).getAll().stream().map(o -> (Item) o),
+			EmiPort.getDisabledItems()
+		).collect(Collectors.toSet());
 
-        List<Item> dyeableItems = RetroEMI.getAllItems().stream().filter(i -> i instanceof ItemArmor armor && armor.getArmorMaterial() == ItemArmor.ArmorMaterial.CLOTH).collect(Collectors.toList());
+		List<Item> dyeableItems = RetroEMI.getAllItems().stream().filter(i -> i instanceof ItemArmor armor && armor.getArmorMaterial() == ItemArmor.ArmorMaterial.CLOTH).collect(Collectors.toList());
 
-        for (Item i : EmiRepairItemRecipe.TOOLS) {
+		for (Item i : EmiRepairItemRecipe.TOOLS) {
 			if (!hiddenItems.contains(i)) {
 				addRecipeSafe(registry, () -> new EmiRepairItemRecipe(i, synthetic("crafting/repairing", EmiUtil.subId(i))));
 			}
@@ -281,25 +282,25 @@ public class VanillaPlugin implements EmiPlugin {
 			}
 		}
 
-        for (var recipe : ((Map<ItemStack, ItemStack>)FurnaceRecipes.smelting().getSmeltingList()).entrySet()) {
-            ItemStack in = recipe.getKey();
-            ItemStack out = recipe.getValue();
-            String id = in.getUnlocalizedName() + "." + in.getItemDamage() + "/" + out.getUnlocalizedName() + "." + in.getItemDamage();
-            float xp = FurnaceRecipes.smelting().func_151398_b(out);
-            addRecipeSafe(registry, () -> new EmiCookingRecipe(new ResourceLocation("smelting", "furnace/" + id), in, out, xp, SMELTING, 1, false));
-        }
+		for (Map.Entry<ItemStack, ItemStack> recipe : ((Map<ItemStack, ItemStack>)FurnaceRecipes.smelting().getSmeltingList()).entrySet()) {
+			ItemStack in = recipe.getKey();
+			ItemStack out = recipe.getValue();
+			String id = in.getUnlocalizedName() + "." + in.getItemDamage() + "/" + out.getUnlocalizedName() + "." + in.getItemDamage();
+			float xp = FurnaceRecipes.smelting().func_151398_b(out);
+			addRecipeSafe(registry, () -> new EmiCookingRecipe(new ResourceLocation("smelting", "furnace/" + id), in, out, xp, SMELTING, 1, false));
+		}
 
-        safely("repair", () -> addRepair(registry, hiddenItems));
-        safely("brewing", () -> EmiAgnos.addBrewingRecipes(registry));
-        safely("world interaction", () -> addWorldInteraction(registry, hiddenItems, dyeableItems));
-        safely("fuel", () -> addFuel(registry, hiddenItems));
+		safely("repair", () -> addRepair(registry, hiddenItems));
+		safely("brewing", () -> EmiAgnos.addBrewingRecipes(registry));
+		safely("world interaction", () -> addWorldInteraction(registry, hiddenItems, dyeableItems));
+		safely("fuel", () -> addFuel(registry, hiddenItems));
 
-        for (TagKey<?> key : EmiTags.TAGS) {
-            if (new TagEmiIngredient(key, 1).getEmiStacks().size() > 1) {
-                addRecipeSafe(registry, () -> new EmiTagRecipe(key));
-            }
-        }
-    }
+		for (EmiTagKey<?> key : EmiTags.TAGS) {
+			if (new TagEmiIngredient(key.raw(), 1).getEmiStacks().size() > 1) {
+				addRecipeSafe(registry, () -> new EmiTagRecipe(key.raw()));
+			}
+		}
+	}
 
     private static void addRepair(EmiRegistry registry, Set<Item> hiddenItems) {
         List<Enchantment> targetedEnchantments = Lists.newArrayList();
@@ -438,9 +439,9 @@ public class VanillaPlugin implements EmiPlugin {
 			.output(EmiStack.of(Blocks.obsidian))
 			.build());
 
-        for (var entry : FluidContainerRegistry.getRegisteredFluidContainerData()) {
+        for (FluidContainerRegistry.FluidContainerData entry : FluidContainerRegistry.getRegisteredFluidContainerData()) {
 			Fluid fluid = entry.fluid.getFluid();
-			if (entry.emptyContainer.getUnlocalizedName() == Items.bucket.getUnlocalizedName()) {
+			if (Objects.equals(entry.emptyContainer.getUnlocalizedName(), Items.bucket.getUnlocalizedName())) {
 				ItemStack bucket = entry.filledContainer;
 				addRecipeSafe(registry, () -> basicWorld(EmiStack.of(Items.bucket), EmiStack.of(fluid, FluidUnit.BUCKET), EmiStack.of(bucket),
 						synthetic("emi", "bucket_filling/" + EmiUtil.subId(fluid)), false));
@@ -476,9 +477,9 @@ public class VanillaPlugin implements EmiPlugin {
 		compressRecipesToTags(fuelMap.keySet().stream().collect(Collectors.toSet()), (a, b) -> {
 			return Integer.compare(fuelMap.get(a), fuelMap.get(b));
 		}, tag -> {
-			EmiIngredient stack = EmiIngredient.of(tag);
+			EmiIngredient stack = EmiIngredient.of(tag.raw());
 			Item item = stack.getEmiStacks().get(0).getItemStack().getItem();
-			int time = fuelMap.get(item);
+			int time = fuelMap.get(ItemKey.of(stack.getEmiStacks().get(0).getItemStack()));
 			registry.addRecipe(new EmiFuelRecipe(stack, time, synthetic("fuel/tag", EmiUtil.subId(tag.id()))));
 		}, item -> {
 			if (!hiddenItems.contains(item.item())) {
@@ -488,10 +489,10 @@ public class VanillaPlugin implements EmiPlugin {
 		});
 	}
 
-	private static void compressRecipesToTags(Set<ItemKey> stacks, Comparator<ItemKey> comparator, Consumer<TagKey<ItemKey>> tagConsumer, Consumer<ItemKey> itemConsumer) {
+	private static void compressRecipesToTags(Set<ItemKey> stacks, Comparator<ItemKey> comparator, Consumer<EmiTagKey<ItemKey>> tagConsumer, Consumer<ItemKey> itemConsumer) {
 		Set<ItemKey> handled = Sets.newHashSet();
 		outer:
-		for (TagKey<ItemKey> key : (List<TagKey<ItemKey>>) (List<?>) EmiTags.getTags(TagKey.Type.ITEM)) {
+		for (EmiTagKey<ItemKey> key : (List<EmiTagKey<ItemKey>>) (List<?>) EmiTags.getTags(TagKey.Type.ITEM)) {
 			List<ItemKey> items = key.getAll();
 			if (items.size() < 2) {
 				continue;

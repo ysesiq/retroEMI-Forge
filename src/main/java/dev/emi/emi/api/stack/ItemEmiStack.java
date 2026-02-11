@@ -10,8 +10,6 @@ import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
 
 import com.google.common.collect.Lists;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
@@ -130,7 +128,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
         ItemStack stack = getItemStack();
         if ((flags & RENDER_ICON) != 0) {
             glEnable(GL_RESCALE_NORMAL);
-            RenderSystem.enableDepthTest();
+            context.enableDepthTest();
             RenderHelper.enableGUIStandardItemLighting();
             if (stack.getItem() instanceof ItemBlock && stack.getItemDamage() == 32767) stack.setItemDamage(0);
             draw.drawItem(stack, x, y);

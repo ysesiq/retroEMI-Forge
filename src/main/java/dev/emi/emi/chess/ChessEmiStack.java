@@ -1,7 +1,6 @@
 package dev.emi.emi.chess;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -12,7 +11,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
 
@@ -29,7 +27,7 @@ class ChessEmiStack extends EmiStack {
     public void render(DrawContext raw, int x, int y, float delta, int flags) {
         EmiDrawContext context = EmiDrawContext.wrap(raw);
         ChessPiece piece = EmiChess.getBoard().get(position);
-        RenderSystem.enableDepthTest();
+        context.enableDepthTest();
         EmiChess chess = EmiChess.get();
         if (chess.pendingPromotion != -1) {
             PieceType type = null;

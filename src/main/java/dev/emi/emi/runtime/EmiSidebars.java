@@ -21,8 +21,6 @@ import dev.emi.emi.screen.EmiScreenManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.JsonHelper;
 
-import java.util.List;
-
 public class EmiSidebars {
 	public static List<EmiIngredient> craftables = com.rewindmc.retroemi.shim.java.List.of();
 	public static List<EmiIngredient> lookupHistory = Lists.newArrayList();

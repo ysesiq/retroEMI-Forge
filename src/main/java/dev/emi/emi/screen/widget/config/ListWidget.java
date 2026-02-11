@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
@@ -183,7 +182,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		{	// Render horizontal shadows
 			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/gui/options_background.png"));
 			context.setColor(64 / 255f, 64 / 255f, 64 / 255f, 1);
-			RenderSystem.enableDepthTest();
+            context.enableDepthTest();
 			GL11.glDepthFunc(GL11.GL_ALWAYS);
 			tessellator.startDrawingQuads();
 			tessellator.addVertexWithUV((double) this.left, (double) this.top, -100.0, 0.0F, (float) this.top / 32.0F);
@@ -196,9 +195,9 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 			tessellator.addVertexWithUV((double) this.left, (double) this.bottom, -100.0, 0.0F, (float) this.bottom / 32.0F);
 			tessellator.draw();
             GL11.glDepthFunc(GL11.GL_LEQUAL);
-			RenderSystem.disableDepthTest();
+            context.disableDepthTest();
             GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ZERO, GL11.GL_ONE);
-			RenderSystem.enableBlend();
+            context.enableBlend();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glShadeModel(GL11.GL_SMOOTH);
 			n = 4;
@@ -251,7 +250,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 			tessellator.draw();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
-		RenderSystem.disableBlend();
+        context.disableBlend();
 	}
 
 	public void centerScrollOn(Entry entry) {

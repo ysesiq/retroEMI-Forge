@@ -1,9 +1,7 @@
 package dev.emi.emi;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -11,23 +9,18 @@ import java.util.stream.Stream;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import com.google.common.base.Joiner;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.api.stack.Comparison;
-import dev.emi.emi.data.EmiResourceManager;
 import dev.emi.emi.data.EmiTagExclusionsLoader;
 import dev.emi.emi.data.RecipeDefaultLoader;
-import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -90,8 +83,7 @@ public final class EmiPort {
     public static Collection<ResourceLocation> findResources(IResourceManager manager, String directoryPath, Predicate<String> fileNamePredicate) {
         List<ResourceLocation> resources = new ArrayList<>();
 
-        for (Object o : manager.getResourceDomains()) {
-            String namespace = (String) o;
+        for (String namespace : (Set<String>) manager.getResourceDomains()) {
             try {
                 ResourceLocation location = new ResourceLocation(namespace, directoryPath);
                 String fileName = directoryPath.substring(directoryPath.lastIndexOf('/') + 1);

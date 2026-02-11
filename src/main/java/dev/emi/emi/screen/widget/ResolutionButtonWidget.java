@@ -16,7 +16,6 @@ import dev.emi.emi.widget.RecipeDefaultButtonWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 
 public class ResolutionButtonWidget extends ButtonWidget {
 	public Supplier<Widget> hoveredWidget;

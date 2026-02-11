@@ -2,7 +2,6 @@ package dev.emi.emi.recipe;
 
 import java.util.List;
 
-import net.minecraft.init.Items;
 import org.jetbrains.annotations.Nullable;
 
 import dev.emi.emi.EmiPort;

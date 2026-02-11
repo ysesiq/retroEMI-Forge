@@ -16,7 +16,6 @@ import dev.emi.emi.mixin.accessor.InventoryCraftingAccessor;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.util.SyntheticIdentifier;
 
 public class EmiShapedRecipe extends EmiCraftingRecipe {
 

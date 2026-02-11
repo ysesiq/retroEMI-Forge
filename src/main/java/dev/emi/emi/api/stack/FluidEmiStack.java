@@ -16,7 +16,6 @@ import dev.emi.emi.screen.tooltip.EmiTextTooltipWrapper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;

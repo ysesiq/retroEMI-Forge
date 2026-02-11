@@ -6,8 +6,6 @@ import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -70,11 +68,11 @@ public class SizedButtonWidget extends ButtonWidget {
         if (!this.isMouseOver(mouseX, mouseY)) {
             context.resetColor();
         }
-		RenderSystem.enableDepthTest();
+        context.enableDepthTest();
 		context.drawTexture(texture, this.x, this.y, getU(mouseX, mouseY), getV(mouseX, mouseY), this.width, this.height);
 		if (this.isMouseOver(mouseX, mouseY) && text != null && this.active) {
 			context.push();
-			RenderSystem.disableDepthTest();
+            context.disableDepthTest();
 			Minecraft client = Minecraft.getMinecraft();
 			EmiRenderHelper.drawTooltip(client.currentScreen, context, text.get().stream().map(EmiPort::ordered).map(TooltipComponent::of).collect(Collectors.toList()), mouseX, mouseY);
 			context.pop();

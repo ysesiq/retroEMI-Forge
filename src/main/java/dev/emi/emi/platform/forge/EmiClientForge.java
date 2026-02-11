@@ -1,19 +1,15 @@
 package dev.emi.emi.platform.forge;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.rewindmc.retroemi.REMIMixinHooks;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import dev.emi.emi.EmiPort;
-import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.EmiScreenBase;
 import dev.emi.emi.screen.EmiScreenManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import org.lwjgl.opengl.GL11;
 
 public class EmiClientForge {
 
