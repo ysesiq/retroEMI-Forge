@@ -14,10 +14,10 @@ public class PacketReader {
     public static final Map<String, Function<PacketByteBuf, EmiPacket>> serverReaders = new HashMap<>();
 
     public static void registerServerPacketReader(ResourceLocation id, Function<PacketByteBuf, EmiPacket> reader) {
-        serverReaders.put(RetroEMI.compactify(id), reader);
+        serverReaders.put(id.toString(), reader);
     }
 
     public static void registerClientPacketReader(ResourceLocation id, Function<PacketByteBuf, EmiPacket> reader) {
-        clientReaders.put(RetroEMI.compactify(id), reader);
+        clientReaders.put(id.toString(), reader);
     }
 }

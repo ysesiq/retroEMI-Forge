@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import dev.emi.emi.EmiPort;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.*;
 import net.minecraft.util.ResourceLocation;
@@ -35,7 +36,7 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
 
     public synchronized void loadLocaleDataFiles(IResourceManager resourceManager, List<String> languages) {
         for (String code : languages) {
-            ResourceLocation id = new ResourceLocation("emi", "lang/" + code.toLowerCase(Locale.ROOT) + ".json");
+            ResourceLocation id = EmiPort.id("emi", "lang/" + code.toLowerCase(Locale.ROOT) + ".json");
             try {
                 this.loadLocaleData(resourceManager.getAllResources(id));
             } catch (IOException ignore) {
@@ -72,112 +73,77 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
 
     public Map<ResourceLocation, IResource> findResources(IResourceManager manager, String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
         Map<ResourceLocation, IResource> result = new HashMap<>();
+        if (!(manager instanceof SimpleReloadableResourceManager srm)) return result;
 
-        if (!(manager instanceof SimpleReloadableResourceManager srm)) {
-            return result;
-        }
+        boolean direct = startingPath.contains(".");
+        int cut = startingPath.lastIndexOf('/');
+        String folder = direct ? (cut >= 0 ? startingPath.substring(0, cut) : "") : startingPath;
+        String fileName = direct ? (cut >= 0 ? startingPath.substring(cut + 1) : startingPath) : null;
 
-        String folderOnly = startingPath;
-        String directFileName = null;
-        boolean isDirectFile = startingPath.contains(".");
+        for (var entry : srm.domainResourceManagers.entrySet()) {
+            String domain = ((Map.Entry<String, FallbackResourceManager>) entry).getKey();
+            FallbackResourceManager frm = ((Map.Entry<String, FallbackResourceManager>) entry).getValue();
+            String assetPrefix = "assets/" + domain + "/";
+            String folderPrefix = folder.isEmpty() ? assetPrefix : assetPrefix + folder + "/";
 
-        if (isDirectFile) {
-            int idx = startingPath.lastIndexOf('/');
-            if (idx >= 0) {
-                folderOnly = startingPath.substring(0, idx);
-                directFileName = startingPath.substring(idx + 1);
-            } else {
-                folderOnly = "";
-                directFileName = startingPath;
-            }
-        }
+            for (IResourcePack pack : (List<IResourcePack>) frm.resourcePacks) {
 
-        Map<String, FallbackResourceManager> domainManagers = srm.domainResourceManagers;
+                if (pack instanceof FolderResourcePack frp) {
+                    File root = new File(frp.resourcePackFile, folderPrefix);
+                    if (!root.exists()) continue;
 
-        for (Map.Entry<String, FallbackResourceManager> entry : domainManagers.entrySet()) {
-            String domain = entry.getKey();
-            FallbackResourceManager frm = entry.getValue();
-            List<IResourcePack> packs = frm.resourcePacks;
+                    LinkedList<File> stack = new LinkedList<>();
+                    stack.add(root);
 
-            for (IResourcePack pack : packs) {
+                    String basePath = frp.resourcePackFile.getAbsolutePath().replace("\\", "/") + "/" + assetPrefix;
 
-                if (pack instanceof FolderResourcePack) {
-                    File base = ((FolderResourcePack) pack).resourcePackFile;
-                    File dir = new File(base, "assets/" + domain + (folderOnly.isEmpty() ? "" : "/" + folderOnly));
+                    while (!stack.isEmpty()) {
+                        File f = stack.removeFirst();
+                        File[] list = f.listFiles();
+                        if (list == null) continue;
 
-                    if (dir.exists()) {
-                        LinkedList<File> stack = new LinkedList<>();
-                        stack.add(dir);
-
-                        while (!stack.isEmpty()) {
-                            File f = stack.removeFirst();
-                            File[] children = f.listFiles();
-                            if (children != null) {
-                                for (File child : children) {
-                                    if (child.isDirectory()) {
-                                        stack.add(child);
-                                    } else {
-                                        String name = child.getName();
-                                        boolean match = !isDirectFile || name.equals(directFileName);
-
-                                        if (match) {
-                                            String basePath = base.getAbsolutePath().replace("\\", "/");
-                                            String fullPath = child.getAbsolutePath().replace("\\", "/")
-                                                .replace(basePath + "/assets/" + domain + "/", "");
-
-                                            ResourceLocation id = new ResourceLocation(domain, fullPath);
-                                            if (allowedPathPredicate.test(id)) {
-                                                try {
-                                                    result.put(id, manager.getResource(id));
-                                                } catch (IOException ignored) {
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                        for (File child : list) {
+                            if (child.isDirectory()) {
+                                stack.add(child);
+                                continue;
                             }
+
+                            if (direct && !child.getName().equals(fileName)) continue;
+
+                            String rel = child.getAbsolutePath().replace("\\", "/").replace(basePath, "");
+                            ResourceLocation id = EmiPort.id(domain, rel);
+                            if (!allowedPathPredicate.test(id)) continue;
+
+                            try { result.put(id, manager.getResource(id)); } catch (IOException ignored) {}
                         }
                     }
                 }
-                else if (pack instanceof FileResourcePack) {
-                    File zipFile = ((FileResourcePack) pack).resourcePackFile;
 
-                    try (ZipFile zip = new ZipFile(zipFile)) {
-                        Enumeration<? extends ZipEntry> entries = zip.entries();
+                else if (pack instanceof FileResourcePack frp) {
+                    try (ZipFile zip = new ZipFile(frp.resourcePackFile)) {
+                        Enumeration<? extends ZipEntry> en = zip.entries();
 
-                        while (entries.hasMoreElements()) {
-                            ZipEntry ze = entries.nextElement();
+                        while (en.hasMoreElements()) {
+                            ZipEntry ze = en.nextElement();
                             if (ze.isDirectory()) continue;
 
                             String name = ze.getName();
-                            if (!name.startsWith("assets/" + domain)) continue;
+                            if (!name.startsWith(assetPrefix)) continue;
 
-                            String relative = name.substring(("assets/" + domain + "/").length());
+                            String rel = name.substring(assetPrefix.length());
+                            if (direct ? !rel.equals(startingPath) : !rel.startsWith(folder + "/")) continue;
 
-                            boolean match;
-                            if (isDirectFile) {
-                                match = relative.equals(startingPath);
-                            } else {
-                                match = relative.startsWith(folderOnly + "/");
-                            }
+                            ResourceLocation id = EmiPort.id(domain, rel);
+                            if (!allowedPathPredicate.test(id)) continue;
 
-                            if (match) {
-                                ResourceLocation id = new ResourceLocation(domain, relative);
-                                if (allowedPathPredicate.test(id)) {
-                                    try {
-                                        result.put(id, manager.getResource(id));
-                                    } catch (IOException ignored) {
-                                    }
-                                }
-                            }
+                            try {
+                                result.put(id, manager.getResource(id));
+                            } catch (IOException ignored) {}
                         }
-                    } catch (IOException ignored) {
-                    }
+                    } catch (IOException ignored) {}
                 }
             }
         }
-
-        System.out.println("found resource:" + result);
         return result;
     }
 }

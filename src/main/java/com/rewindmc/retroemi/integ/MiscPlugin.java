@@ -1,5 +1,6 @@
 package com.rewindmc.retroemi.integ;
 
+import dev.emi.emi.EmiPort;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +22,7 @@ public class MiscPlugin implements NamedEmiPlugin {
         EmiStack lavaCatalyst = lava.copy().setRemainder(lava);
 
         registry.addRecipe(EmiWorldInteractionRecipe.builder()
-                .id(new ResourceLocation("emi", "/world/fluid_interaction/minecraft/obsidian_glitch"))
+                .id(EmiPort.id("emi", "/world/fluid_interaction/minecraft/obsidian_glitch"))
                 .leftInput(waterCatalyst)
                 .rightInput(EmiStack.of(Items.redstone), false, (sw) -> {
                     sw.appendTooltip(Text.literal(String.valueOf('\u00a7') + "6Build a cobblestone generator, and put redstone dust where the cobblestone would generate."));

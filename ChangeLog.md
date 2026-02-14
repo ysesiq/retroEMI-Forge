@@ -3,3 +3,4 @@
 * Add: Support JSON language files
 * Add: NEIU Initial Compatibility (NYI)
 * Add: Waila Compatibility (NYI)
+* Add: /emi command

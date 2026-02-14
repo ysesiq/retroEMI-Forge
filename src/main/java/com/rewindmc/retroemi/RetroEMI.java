@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import dev.emi.emi.data.EmiTagExclusionsLoader;
+import dev.emi.emi.data.RecipeDefaultLoader;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import cpw.mods.fml.common.registry.GameData;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -51,7 +54,7 @@ public class RetroEMI {
 
 	private RetroEMI() {
 		if (!FMLCommonHandler.instance().getSide().isServer()) {
-			itemRenderer = new RenderItem();
+			itemRenderer = RenderItem.getInstance();
 		} else {
 			itemRenderer = null;
 		}
@@ -143,7 +146,7 @@ public class RetroEMI {
 	}
 
 	public static void renderModernTooltip(GuiScreen screen, List<TooltipComponent> components, int x, int y, int maxWidth, TooltipPositioner positioner) {
-		FontRenderer textRenderer = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer textRenderer = screen.mc.fontRenderer;
 		TooltipComponent tooltipComponent2;
 		int r;
 		if (components.isEmpty()) {
@@ -287,14 +290,6 @@ public class RetroEMI {
 //		return EmiStack.of(stack);
 //	}
 
-	public static String compactify(ResourceLocation id) {
-		// 1.4 limits channel length to 20 chars, but all strings in the protocol are UTF-16
-		// so this doesn't cost anything extra - same trick used by UpsilonFixes
-
-		// Is this necessary? -Bagel
-		return id.toString().replace("emi:", "ē").replace("_", "");
-	}
-
 	public static String translate(String s) {
 		return StringTranslate.getInstance().translateKey(s);
 	}
@@ -330,5 +325,12 @@ public class RetroEMI {
 
     public static int getScaledWidth(Minecraft client) {
         return client.displayWidth / EmiPort.getGuiScale(client);
+    }
+
+    public static void registerReloadListeners(IReloadableResourceManager manager) {
+        manager.registerReloadListener(new RecipeDefaultLoader());
+//		manager.registerReloadListener(new EmiRemoveFromIndex());
+        manager.registerReloadListener(new EmiTagExclusionsLoader());
+        manager.registerReloadListener(EmiResourceManager.instance);
     }
 }

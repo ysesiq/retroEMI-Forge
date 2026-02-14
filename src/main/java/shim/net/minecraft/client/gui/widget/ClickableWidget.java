@@ -5,6 +5,7 @@ package shim.net.minecraft.client.gui.widget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
@@ -41,8 +42,8 @@ public abstract class ClickableWidget extends Gui implements Drawable, Element {
         FOCUSED
 	}
 
-	public static final ResourceLocation WIDGETS_TEXTURE = new ResourceLocation("textures/gui/widgets.png");
-	public static final ResourceLocation ACCESSIBILITY_TEXTURE = new ResourceLocation("textures/gui/accessibility.png");
+	public static final ResourceLocation WIDGETS_TEXTURE = EmiPort.id("textures/gui/widgets.png");
+	public static final ResourceLocation ACCESSIBILITY_TEXTURE = EmiPort.id("textures/gui/accessibility.png");
 	protected int width;
 	protected int height;
 	public int x;
@@ -184,7 +185,7 @@ public abstract class ClickableWidget extends Gui implements Drawable, Element {
 	}
 
 	public void playDownSound() {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0F));
 	}
 
 	public int getWidth() {

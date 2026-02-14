@@ -1343,7 +1343,7 @@ public class EmiScreenManager {
 				}
 				if (EmiRecipeFiller.performFill(context, EmiApi.getHandledScreen(), EmiCraftContext.Type.CRAFTABLE, destination, amount)) {
 					Minecraft.getMinecraft().getSoundHandler()
-							.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+							.playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0F));
 					return true;
 				}
 			}
@@ -1360,7 +1360,7 @@ public class EmiScreenManager {
 			repopulatePanels(SidebarType.FAVORITES);
 			return true;
 		} else if (function.apply(EmiConfig.copyId)) {
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0F));
 			StringSelection ss = new StringSelection("" + recipe.getId());
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, (ClipboardOwner) null);
 			return true;

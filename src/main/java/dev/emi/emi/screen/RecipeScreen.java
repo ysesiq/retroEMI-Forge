@@ -407,7 +407,7 @@ public class RecipeScreen extends REMIScreen {
 		pressedSlot = null;
 		if (mouseX >= x + 19 + buttonOff && mouseY >= y + 5 && mouseX < x + minimumWidth + buttonOff - 19 && mouseY <= y + 5 + 12) {
 			EmiApi.displayAllRecipes();
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0F));
 			return true;
 		}
 		for (WidgetGroup group : currentPage) {
@@ -442,7 +442,7 @@ public class RecipeScreen extends REMIScreen {
 		}
 		RecipeTab rTab = getTabAt(mx, my);
 		if (rTab != null) {
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0F));
 			focusCategory(rTab.category);
 			return true;
 		}

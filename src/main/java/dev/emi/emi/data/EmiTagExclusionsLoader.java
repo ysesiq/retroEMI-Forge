@@ -30,7 +30,7 @@ public class EmiTagExclusionsLoader implements EmiResourceReloadListener, IResou
 				continue;
 			}
 			try {
-				for (Object o : manager.getAllResources(new ResourceLocation("emi", "tag/exclusions/emi.json"))) {
+				for (Object o : manager.getAllResources(EmiPort.id("emi", "tag/exclusions/emi.json"))) {
                     IResource resource = (IResource) o;
 					InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream(resource));
 					JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
@@ -39,11 +39,11 @@ public class EmiTagExclusionsLoader implements EmiResourceReloadListener, IResou
 							exclusions.clear();
 						}
 						for (String key : json.entrySet().stream().map(Map.Entry::getKey).collect(Collectors.toList())) {
-							ResourceLocation type = new ResourceLocation(key);
+							ResourceLocation type = EmiPort.id(key);
 							if (JsonHelper.hasArray(json, key)) {
 								JsonArray arr = JsonHelper.getArray(json, key);
 								for (JsonElement el : arr) {
-									ResourceLocation eid = new ResourceLocation(el.getAsString());
+									ResourceLocation eid = EmiPort.id(el.getAsString());
 									if (key.equals("exclusions")) {
 										exclusions.add(eid);
 										if (eid.getResourceDomain().equals("c")) {

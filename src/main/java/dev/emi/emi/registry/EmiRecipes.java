@@ -1,11 +1,14 @@
 package dev.emi.emi.registry;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Iterables;
@@ -32,12 +35,15 @@ import dev.emi.emi.runtime.EmiReloadLog;
 import dev.emi.emi.runtime.dev.EmiDev;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringTranslate;
+import shim.net.minecraft.util.SyntheticIdentifier;
 
 public class EmiRecipes {
 	public static volatile Worker activeWorker = null;
@@ -64,16 +70,16 @@ public class EmiRecipes {
 		byWorkstation.clear();
 		decorators.clear();
 		manager = Manager.EMPTY;
-        Minecraft client = Minecraft.getMinecraft();
-        if (client.theWorld != null) {
-            CraftingManager manager = CraftingManager.getInstance();
-            recipeIds = Maps.newIdentityHashMap();
-            if (manager != null) {
-                for (IRecipe entry : (List<IRecipe>) manager.getRecipeList()) {
-                    recipeIds.put(entry, new ResourceLocation(entry.toString()));
-                }
-            }
-        }
+//		Minecraft client = Minecraft.getMinecraft();
+//		if (client.theWorld != null) {
+//			CraftingManager manager = CraftingManager.getInstance();
+//			recipeIds = new Reference2ObjectOpenHashMap<>();
+//			if (manager != null) {
+//				for (IRecipe entry : (List<IRecipe>) manager.getRecipeList()) {
+//					recipeIds.put(entry, SyntheticIdentifier.generateId(entry));
+//				}
+//			}
+//		}
 	}
 
 	public static void bake() {

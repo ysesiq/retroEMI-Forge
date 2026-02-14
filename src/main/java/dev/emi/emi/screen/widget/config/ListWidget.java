@@ -160,7 +160,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		this.hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
 
 		{	// Render background
-			Minecraft.getMinecraft().renderEngine.getTexture(new ResourceLocation("textures/gui/options_background.png"));
+			Minecraft.getMinecraft().getTextureManager().getTexture(EmiPort.id("textures/gui/options_background.png"));
             context.setColor(32 / 255f, 32 / 255f, 32 / 255f, 1);
 			tessellator.startDrawingQuads();
 			tessellator.addVertexWithUV((double) this.left, (double) this.bottom, 0.0, (float) this.left / 32.0F,
@@ -180,7 +180,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		this.renderList(draw, k, l, mouseX, mouseY, delta);
 
 		{	// Render horizontal shadows
-			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/gui/options_background.png"));
+			Minecraft.getMinecraft().renderEngine.bindTexture(EmiPort.id("textures/gui/options_background.png"));
 			context.setColor(64 / 255f, 64 / 255f, 64 / 255f, 1);
             context.enableDepthTest();
 			GL11.glDepthFunc(GL11.GL_ALWAYS);

@@ -93,13 +93,13 @@ public class BoM {
 		disabledRecipes.clear();
 		JsonArray disabled = JsonHelper.getArray(object, "disabled", new JsonArray());
 		for (JsonElement el : disabled) {
-			ResourceLocation id = new ResourceLocation(el.getAsString());
+			ResourceLocation id = EmiPort.id(el.getAsString());
 			EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
 			disabledRecipes.add(recipe);
 		}
 		JsonArray added = JsonHelper.getArray(object, "added", new JsonArray());
 		for (JsonElement el : added) {
-			ResourceLocation id = new ResourceLocation(el.getAsString());
+			ResourceLocation id = EmiPort.id(el.getAsString());
 			EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
 			if (recipe != null && !disabledRecipes.contains(recipe)) {
 				for (EmiStack output : recipe.getOutputs()) {

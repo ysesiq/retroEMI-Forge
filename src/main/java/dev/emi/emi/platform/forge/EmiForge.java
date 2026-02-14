@@ -1,11 +1,15 @@
 package dev.emi.emi.platform.forge;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+
 import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -17,6 +21,7 @@ import dev.emi.emi.nemi.NemiPlugin;
 import dev.emi.emi.network.*;
 import dev.emi.emi.platform.EmiClient;
 import dev.emi.emi.platform.EmiMain;
+import dev.emi.emi.registry.EmiCommands;
 import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadManager;
@@ -27,9 +32,6 @@ import shim.net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 
 @Mod(
     modid = "emi",
@@ -73,10 +75,10 @@ public class EmiForge {
         PacketReader.registerServerPacketReader(EmiNetwork.CHESS, EmiChessPacket.C2S::new);
     }
 
-//    @SubscribeEvent
-//    public void registerCommands(FMLServerStartingEvent event) {
-//        event.registerServerCommand(new EmiCommands());
-//    }
+    @Mod.EventHandler
+    public void registerCommands(FMLServerStartingEvent event) {
+        event.registerServerCommand(new EmiCommands());
+    }
 
     @SubscribeEvent
     public void playerConnect(PlayerEvent.PlayerLoggedInEvent event) {
@@ -119,7 +121,7 @@ public class EmiForge {
         DataOutputStream dos = new DataOutputStream(baos);
         PacketByteBuf buf = PacketByteBuf.out(dos);
         packet.write(buf);
-        return new S3FPacketCustomPayload(RetroEMI.compactify(packet.getId()), baos.toByteArray());
+        return new S3FPacketCustomPayload(packet.getId().toString(), baos.toByteArray());
     }
 
     public static final class Client {

@@ -3,6 +3,7 @@ package com.rewindmc.retroemi;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.VanillaPlugin;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -43,8 +44,8 @@ public class REMIPlugin implements EmiMultiPlugin, Runnable {
     }
 
     public static EmiRecipeCategory category(String id, ItemStack icon) {
-        return new EmiRecipeCategory(new ResourceLocation(id), EmiStack.of(icon),
-                new EmiTexture(new ResourceLocation("emi", "textures/simple_icons/" + id + ".png"), 0, 0, 16, 16, 16, 16, 16, 16));
+        return new EmiRecipeCategory(EmiPort.id(id), EmiStack.of(icon),
+                new EmiTexture(EmiPort.id("emi", "textures/simple_icons/" + id + ".png"), 0, 0, 16, 16, 16, 16, 16, 16));
     }
 
     public static <T extends IRecipe> Iterable<T> recipesOfType(Class<T> clazz) {

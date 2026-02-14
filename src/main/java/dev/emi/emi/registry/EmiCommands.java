@@ -2,6 +2,7 @@ package dev.emi.emi.registry;
 
 import java.util.List;
 
+import dev.emi.emi.EmiPort;
 import org.jetbrains.annotations.Nullable;
 
 import dev.emi.emi.api.EmiApi;
@@ -26,46 +27,44 @@ public class EmiCommands extends CommandBase {
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender var1) {
+	public String getCommandUsage(ICommandSender sender) {
 		return "commands.emi.usage";
 	}
 
-	//TODO Implement when recipe changes are made
 	@Override
 	public void processCommand(ICommandSender sender, String[] userInputStrings) {
-		if (userInputStrings.length > 2) {
-			EntityPlayerMP player = getPlayer(sender, userInputStrings[0]);
-			if (userInputStrings[0].equals("view")) {
-				if (userInputStrings[1].equals("recipe")) {
-					if (userInputStrings[2].isEmpty()) {
-						throw new WrongUsageException("commands.emi.id", new Object[0]);
-					} else {
-						ResourceLocation id = new ResourceLocation(userInputStrings[2]);
-						send(player, VIEW_RECIPE, id);
-					}
-				} else if (userInputStrings[1].equals("tree")) {
-					send(player, VIEW_TREE, null);
-				}
-			} else if (userInputStrings[0].equals("tree")) {
-				if (userInputStrings[1].equals("goal")) {
-					if (userInputStrings[2].isEmpty()) {
-						throw new WrongUsageException("commands.emi.id", new Object[0]);
-					} else {
-						ResourceLocation id = new ResourceLocation(userInputStrings[2]);
-						send(player, TREE_GOAL, id);
-					}
-				} else if (userInputStrings[1].equals("resolution")) {
-					if (userInputStrings[2].isEmpty()) {
-						throw new WrongUsageException("commands.emi.id", new Object[0]);
-					} else {
-						ResourceLocation id = new ResourceLocation(userInputStrings[2]);
-						send(player, TREE_RESOLUTION, id);
-					}
-				}
-			}
-		} else {
-			throw new WrongUsageException("commands.emi.usage", new Object[0]);
-		}
+        if (sender instanceof EntityPlayerMP player) {
+            if (userInputStrings.length >= 2) {
+                if (userInputStrings[0].equals("view")) {
+                    if (userInputStrings[1].equals("recipe")) {
+                        if (userInputStrings[2].isEmpty()) {
+                            throw new WrongUsageException("commands.emi.id");
+                        } else {
+                            ResourceLocation id = EmiPort.id(userInputStrings[2]);
+                            send(player, VIEW_RECIPE, id);
+                        }
+                    } else if (userInputStrings[1].equals("tree")) {
+                        send(player, VIEW_TREE, null);
+                    }
+                } else if (userInputStrings[0].equals("tree")) {
+                    if (userInputStrings[1].equals("goal")) {
+                        if (userInputStrings[2].isEmpty()) {
+                            throw new WrongUsageException("commands.emi.id");
+                        } else {
+                            ResourceLocation id = EmiPort.id(userInputStrings[2]);
+                            send(player, TREE_GOAL, id);
+                        }
+                    } else if (userInputStrings[1].equals("resolution")) {
+                        if (userInputStrings[2].isEmpty()) {
+                            throw new WrongUsageException("commands.emi.id");
+                        } else {
+                            ResourceLocation id = EmiPort.id(userInputStrings[2]);
+                            send(player, TREE_RESOLUTION, id);
+                        }
+                    }
+                }
+            }
+        }
 	}
 
 	@Override

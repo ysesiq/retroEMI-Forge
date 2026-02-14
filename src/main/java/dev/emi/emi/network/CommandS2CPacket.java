@@ -1,5 +1,6 @@
 package dev.emi.emi.network;
 
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
@@ -23,7 +24,7 @@ public class CommandS2CPacket implements EmiPacket {
 		if (type == EmiCommands.VIEW_RECIPE || type == EmiCommands.TREE_GOAL || type == EmiCommands.TREE_RESOLUTION) {
 			String path = buf.readString();
 			String domain = buf.readString();
-			id = new ResourceLocation(path, domain);
+			id = EmiPort.id(domain, path);
 		} else {
 			id = null;
 		}

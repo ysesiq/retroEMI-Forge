@@ -272,11 +272,11 @@ public class VanillaPlugin implements EmiPlugin {
 				}
 			} else if (recipe instanceof RecipeFireworks fwork) {
 				// All firework recipes are one recipe in 1.7
-				addRecipeSafe(registry, () -> new EmiFireworkStarRecipe(new ResourceLocation("minecraft", "firework_star")), recipe);
-				addRecipeSafe(registry, () -> new EmiFireworkStarFadeRecipe(new ResourceLocation("minecraft", "firework_star_fade")), recipe);
-				addRecipeSafe(registry, () -> new EmiFireworkRocketRecipe(new ResourceLocation("minecraft", "firework_rocket")), recipe);
+				addRecipeSafe(registry, () -> new EmiFireworkStarRecipe(EmiPort.id("minecraft", "firework_star")), recipe);
+				addRecipeSafe(registry, () -> new EmiFireworkStarFadeRecipe(EmiPort.id("minecraft", "firework_star_fade")), recipe);
+				addRecipeSafe(registry, () -> new EmiFireworkRocketRecipe(EmiPort.id("minecraft", "firework_rocket")), recipe);
 			} else if (recipe instanceof RecipesMapCloning map) {
-				addRecipeSafe(registry, () -> new EmiMapCloningRecipe(new ResourceLocation("minecraft", "map_cloning")), recipe);
+				addRecipeSafe(registry, () -> new EmiMapCloningRecipe(EmiPort.id("minecraft", "map_cloning")), recipe);
 			} else {
 				// No way to introspect arbitrary recipes in 1.7. :(
 			}
@@ -287,7 +287,7 @@ public class VanillaPlugin implements EmiPlugin {
 			ItemStack out = recipe.getValue();
 			String id = in.getUnlocalizedName() + "." + in.getItemDamage() + "/" + out.getUnlocalizedName() + "." + in.getItemDamage();
 			float xp = FurnaceRecipes.smelting().func_151398_b(out);
-			addRecipeSafe(registry, () -> new EmiCookingRecipe(new ResourceLocation("smelting", "furnace/" + id), in, out, xp, SMELTING, 1, false));
+			addRecipeSafe(registry, () -> new EmiCookingRecipe(EmiPort.id("smelting", "furnace/" + id), in, out, xp, SMELTING, 1, false));
 		}
 
 		safely("repair", () -> addRepair(registry, hiddenItems));
@@ -522,7 +522,7 @@ public class VanillaPlugin implements EmiPlugin {
 	}
 
 	private static ResourceLocation synthetic(String type, String name) {
-		return EmiPort.id(type, "/" + name);
+		return EmiPort.id("emi", "/" + type + "/" + name);
 	}
 
 	private static void safely(String name, Runnable runnable) {

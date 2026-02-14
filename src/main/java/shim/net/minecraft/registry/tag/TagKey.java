@@ -7,6 +7,7 @@ import com.google.common.collect.Interners;
 import com.rewindmc.retroemi.RetroEMI;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.mixin.accessor.ItemBlockAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -116,7 +117,7 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
     }
 
     private static ResourceLocation convertOredict(String oredict) {
-        return new ResourceLocation("forge", formatOredict(oredict));
+        return EmiPort.id("forge", formatOredict(oredict));
     }
 
     private static String formatTag(String tag) {
@@ -176,7 +177,7 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
         }
 
         public ResourceLocation getRegistryName() {
-            return new ResourceLocation(name().toLowerCase());
+            return EmiPort.id(name().toLowerCase());
         }
     }
 
