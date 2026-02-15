@@ -427,5 +427,11 @@
   "tag.forge.stair.wood": "Wood Stairs",
   "tag.forge.stick.wood": "Stick",
   "tag.forge.tree.leaves": "Leaves",
-  "tag.forge.tree.sapling": "Sapling"
+  "tag.forge.tree.sapling": "Sapling",
+  "tag.forge.cobblestone": "Cobblestone",
+  "tag.forge.sand": "Sand",
+  "tag.forge.sandstone": "Sandstone",
+  "tag.forge.stone": "Stone",
+  "tag.forge.lava": "Lava",
+  "tag.forge.water": "Water"
 }

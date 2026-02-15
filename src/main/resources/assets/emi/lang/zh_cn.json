@@ -523,5 +523,11 @@
   "tag.forge.stair.wood": "木楼梯",
   "tag.forge.stick.wood": "木棍",
   "tag.forge.tree.leaves": "树叶",
-  "tag.forge.tree.sapling": "树苗"
+  "tag.forge.tree.sapling": "树苗",
+  "tag.forge.cobblestone": "圆石",
+  "tag.forge.sand": "沙子",
+  "tag.forge.sandstone": "沙石",
+  "tag.forge.stone": "石头",
+  "tag.forge.lava": "岩浆",
+  "tag.forge.water": "水"
 }
