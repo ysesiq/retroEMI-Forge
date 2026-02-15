@@ -43,12 +43,12 @@ public class EmiAnvilEnchantRecipe implements EmiRecipe {
 
 	@Override
 	public List<EmiIngredient> getInputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(EmiStack.of(tool), getBook());
+		return shim.java.List.of(EmiStack.of(tool), getBook());
 	}
 
 	@Override
 	public List<EmiStack> getOutputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(EmiStack.of(tool));
+		return shim.java.List.of(EmiStack.of(tool));
 	}
 
 	@Override

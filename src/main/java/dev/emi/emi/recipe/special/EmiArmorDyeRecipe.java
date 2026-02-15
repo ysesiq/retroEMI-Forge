@@ -24,7 +24,7 @@ public class EmiArmorDyeRecipe extends EmiPatternCraftingRecipe {
 	private final Item armor;
 
 	public EmiArmorDyeRecipe(Item armor, ResourceLocation id) {
-		super(com.rewindmc.retroemi.shim.java.List.of(
+		super(shim.java.List.of(
 			EmiIngredient.of(DYES.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
 			EmiStack.of(armor)), EmiStack.of(armor), id);
 		this.armor = armor;

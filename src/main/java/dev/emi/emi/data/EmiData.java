@@ -15,11 +15,11 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import shim.net.minecraft.util.JsonHelper;
 
 public class EmiData {
-    public static Map<String, EmiRecipeCategoryProperties> categoryPriorities = com.rewindmc.retroemi.shim.java.Map.of();
-    public static List<Predicate<EmiRecipe>> recipeFilters = com.rewindmc.retroemi.shim.java.List.of();
-    public static List<Supplier<IndexStackData>> stackData = com.rewindmc.retroemi.shim.java.List.of();
-    public static List<Supplier<EmiAlias>> aliases = com.rewindmc.retroemi.shim.java.List.of();
-    public static List<Supplier<EmiRecipe>> recipes = com.rewindmc.retroemi.shim.java.List.of();
+    public static Map<String, EmiRecipeCategoryProperties> categoryPriorities = shim.java.Map.of();
+    public static List<Predicate<EmiRecipe>> recipeFilters = shim.java.List.of();
+    public static List<Supplier<IndexStackData>> stackData = shim.java.List.of();
+    public static List<Supplier<EmiAlias>> aliases = shim.java.List.of();
+    public static List<Supplier<EmiRecipe>> recipes = shim.java.List.of();
 
     public static void init(Consumer<EmiResourceReloadListener> register) {
         register.accept(new RecipeDefaultLoader());

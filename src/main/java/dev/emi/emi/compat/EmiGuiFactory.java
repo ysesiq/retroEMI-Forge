@@ -19,7 +19,7 @@ public class EmiGuiFactory implements IModGuiFactory {
 
     @Override
     public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
-        return com.rewindmc.retroemi.shim.java.Set.of();
+        return shim.java.Set.of();
     }
 
     @Override

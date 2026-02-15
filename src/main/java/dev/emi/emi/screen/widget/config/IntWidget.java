@@ -13,7 +13,7 @@ public class IntWidget extends ConfigEntryWidget {
 	public IntWidget(Text name, List<TooltipComponent> tooltip, Supplier<String> search, Mutator<Integer> mutator) {
 		super(name, tooltip, search, 20);
 		this.edit = new IntEdit(150, () -> mutator.get(), i -> mutator.set(i));
-		this.setChildren(com.rewindmc.retroemi.shim.java.List.of(edit.text, edit.up, edit.down));
+		this.setChildren(shim.java.List.of(edit.text, edit.up, edit.down));
 	}
 
 	@Override

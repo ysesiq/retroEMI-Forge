@@ -30,7 +30,7 @@ public class ScreenAlignWidget extends ConfigEntryWidget {
 				mutator.set(mutator.get());
 			});
 		});
-		this.setChildren(com.rewindmc.retroemi.shim.java.List.of(horizontal, vertical));
+		this.setChildren(shim.java.List.of(horizontal, vertical));
 	}
 
 	public Text getHorizontalText() {

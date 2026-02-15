@@ -45,11 +45,11 @@ public class EmiTags {
 		if (TAG_VALUES.containsKey(key)) {
 			EmiRegistryAdapter adapter = ADAPTERS_BY_REGISTRY.get(key.registry());
 			if (adapter != null) {
-				List<T> values = (List<T>) TAG_VALUES.getOrDefault(key, com.rewindmc.retroemi.shim.java.List.of());
+				List<T> values = (List<T>) TAG_VALUES.getOrDefault(key, shim.java.List.of());
 				return values.stream().map(t -> adapter.of(t, EmiPort.emptyExtraData(), 1)).collect(Collectors.toList());
 			}
 		}
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -61,7 +61,7 @@ public class EmiTags {
 		if (adapter != null) {
 			return key.stream().map(t -> adapter.of(t, EmiPort.emptyExtraData(), 1)).collect(Collectors.toList());
 		}
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -121,7 +121,7 @@ public class EmiTags {
 				return new ListEmiIngredient(keys.stream().map(k -> tagIngredient(k, 1)).collect(Collectors.toList()), amount);
 			}
 		} else {
-			return new ListEmiIngredient(com.rewindmc.retroemi.shim.java.List.of(map.values().stream().map(i -> i.copy().setAmount(1)).collect(Collectors.toList()),
+			return new ListEmiIngredient(shim.java.List.of(map.values().stream().map(i -> i.copy().setAmount(1)).collect(Collectors.toList()),
 					keys.stream().map(k -> tagIngredient(k, 1)).collect(Collectors.toList()))
 				.stream().flatMap(a -> a.stream()).collect(Collectors.toList()), amount);
 		}
@@ -140,7 +140,7 @@ public class EmiTags {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> List<EmiTagKey<T>> getTags(TagKey.Type registry) {
-		return (List<EmiTagKey<T>>) (List) SORTED_TAGS.getOrDefault(registry.getRegistryName(), com.rewindmc.retroemi.shim.java.List.of());
+		return (List<EmiTagKey<T>>) (List) SORTED_TAGS.getOrDefault(registry.getRegistryName(), shim.java.List.of());
 	}
 
 	public static void registerTagModels(IResourceManager manager, Consumer<ResourceLocation> consumer) {
@@ -184,7 +184,7 @@ public class EmiTags {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private static <T> void reloadTags(TagKey.Type registry) {
-		Set<T> hidden = com.rewindmc.retroemi.shim.java.Set.copyOf(((EmiTagKey<T>) EmiTagKey.of(registry, HIDDEN_FROM_RECIPE_VIEWERS)).getAll());
+		Set<T> hidden = shim.java.Set.copyOf(((EmiTagKey<T>) EmiTagKey.of(registry, HIDDEN_FROM_RECIPE_VIEWERS)).getAll());
 		ResourceLocation rid = registry.getRegistryName();
 		List<EmiTagKey<T>> tags = registry.getAll().stream().map(key -> (TagKey<T>) key).map(EmiTagKey::of)
 			.filter(key -> !exclusions.contains(rid, key.id()) && !hidden.containsAll(key.getAll()))

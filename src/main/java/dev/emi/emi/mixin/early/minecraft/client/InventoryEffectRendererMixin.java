@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import com.rewindmc.retroemi.RetroEMI;
-import com.rewindmc.retroemi.shim.java.List;
+import shim.java.List;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.config.EffectLocation;
 import dev.emi.emi.config.EmiConfig;

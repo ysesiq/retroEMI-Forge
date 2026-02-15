@@ -59,7 +59,7 @@ public class SidebarSubpanelsWidget extends ConfigEntryWidget {
 	public List<TooltipComponent> getTooltip(int mouseX, int mouseY) {
 		for (IntEdit edit : rows) {
 			if (edit.contains(mouseX, mouseY)) {
-				return com.rewindmc.retroemi.shim.java.List.of(TooltipComponent.of(EmiPort.ordered(
+				return shim.java.List.of(TooltipComponent.of(EmiPort.ordered(
 					EmiPort.translatable("emi.sidebar.size.rows"))));
 			}
 		}

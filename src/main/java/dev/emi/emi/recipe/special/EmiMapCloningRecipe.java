@@ -8,7 +8,7 @@ import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import com.rewindmc.retroemi.shim.java.List;
+import shim.java.List;
 
 import java.util.Random;
 

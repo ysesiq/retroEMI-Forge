@@ -30,7 +30,7 @@ public class CookingRecipeHandler<T extends ContainerFurnace> implements Standar
 
 	@Override
 	public List<Slot> getCraftingSlots(T handler) {
-		return com.rewindmc.retroemi.shim.java.List.of((Slot) handler.inventorySlots.get(0));
+		return shim.java.List.of((Slot) handler.inventorySlots.get(0));
 	}
 
 	@Override

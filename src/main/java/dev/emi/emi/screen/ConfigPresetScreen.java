@@ -134,7 +134,7 @@ public class ConfigPresetScreen extends REMIScreen {
 
 		@Override
 		public List<? extends Element> children() {
-			return com.rewindmc.retroemi.shim.java.List.of(button);
+			return shim.java.List.of(button);
 		}
 
 		@Override
@@ -160,7 +160,7 @@ public class ConfigPresetScreen extends REMIScreen {
 
 		@Override
 		public List<? extends Element> children() {
-			return com.rewindmc.retroemi.shim.java.List.of();
+			return shim.java.List.of();
 		}
 
 		@Override

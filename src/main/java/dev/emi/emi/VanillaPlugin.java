@@ -243,7 +243,7 @@ public class VanillaPlugin implements EmiPlugin {
 		for (IRecipe recipe : (List<IRecipe>) registry.getRecipeManager().getRecipeList()) {
 			if (recipe instanceof RecipesMapExtending map) {
 				EmiStack paper = EmiStack.of(Items.paper);
-				addRecipeSafe(registry, () -> new EmiCraftingRecipe(com.rewindmc.retroemi.shim.java.List.of(
+				addRecipeSafe(registry, () -> new EmiCraftingRecipe(shim.java.List.of(
 						paper, paper, paper, paper,
 						EmiStack.of(Items.map),
 						paper, paper, paper, paper
@@ -382,7 +382,7 @@ public class VanillaPlugin implements EmiPlugin {
         for (Item item : RetroEMI.getAllItems()) {
             if (item instanceof ItemHoe hoe) {
                 EmiIngredient hoes = damagedTool(EmiStack.of(hoe), 1);
-                EmiIngredient dirt = EmiIngredient.of(com.rewindmc.retroemi.shim.java.List.of(EmiStack.of(Blocks.dirt), EmiStack.of(Blocks.grass)));
+                EmiIngredient dirt = EmiIngredient.of(shim.java.List.of(EmiStack.of(Blocks.dirt), EmiStack.of(Blocks.grass)));
                 ResourceLocation id = synthetic("world/tilling", EmiUtil.subId(EmiPort.id(hoe.getUnlocalizedName() + "." + Blocks.dirt)));
                 addRecipeSafe(registry, () -> basicWorld(dirt, hoes, EmiStack.of(Blocks.farmland), id));
             }

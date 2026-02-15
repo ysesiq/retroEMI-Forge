@@ -101,7 +101,7 @@ class ChessEmiStack extends EmiStack {
 
     @Override
     public List<Text> getTooltipText() {
-        return com.rewindmc.retroemi.shim.java.List.of();
+        return shim.java.List.of();
     }
 
     @Override
@@ -132,7 +132,7 @@ class ChessEmiStack extends EmiStack {
             }
             return list;
         }
-        return com.rewindmc.retroemi.shim.java.List.of();
+        return shim.java.List.of();
     }
 
     @Override

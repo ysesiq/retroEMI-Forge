@@ -19,7 +19,7 @@ public class RegexTagQuery extends Query {
 		} catch (Exception e) {
 		}
 		if (p == null) {
-			valid = com.rewindmc.retroemi.shim.java.Set.of();
+			valid = shim.java.Set.of();
 		} else {
 			final Pattern pat = p;
 			valid = Stream.<EmiTagKey<?>>concat(

@@ -196,7 +196,7 @@ public class EmiFavorites {
 			Map<EmiIngredient, ChanceMaterialCost> chancedCosts = Maps.newHashMap(BoM.tree.cost.chanceCosts);
 			Object2LongMap<EmiRecipe> originalBatches = new Object2LongLinkedOpenHashMap<>();
 			Object2LongMap<EmiRecipe> originalAmounts = new Object2LongLinkedOpenHashMap<>();
-			EmiPlayerInventory emptyInventory = new EmiPlayerInventory(com.rewindmc.retroemi.shim.java.List.of());
+			EmiPlayerInventory emptyInventory = new EmiPlayerInventory(shim.java.List.of());
 			emptyInventory.inventory.clear();
 			BoM.tree.calculateProgress(emptyInventory);
 			countRecipes(originalBatches, originalAmounts, BoM.tree.goal);

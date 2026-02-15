@@ -109,7 +109,7 @@ public class ConfigScreen extends REMIScreen {
 			text = null;
 		}
 		if (text == null) {
-			return com.rewindmc.retroemi.shim.java.List.of();
+			return shim.java.List.of();
 		}
 		return text;
 	}
@@ -283,12 +283,12 @@ public class ConfigScreen extends REMIScreen {
 			"binds", "binds.crafts", "binds.cheats",
 			"dev"
 		);
-		List<List<String>> removes = com.rewindmc.retroemi.shim.java.List.of(
-			com.rewindmc.retroemi.shim.java.List.of("binds.cheats"),
-			com.rewindmc.retroemi.shim.java.List.of("general.search"),
-			com.rewindmc.retroemi.shim.java.List.of("ui.top-sidebar", "ui.bottom-sidebar"),
-			com.rewindmc.retroemi.shim.java.List.of("binds.crafts"),
-			com.rewindmc.retroemi.shim.java.List.of("ui.left-sidebar", "ui.right-sidebar")
+		List<List<String>> removes = shim.java.List.of(
+			shim.java.List.of("binds.cheats"),
+			shim.java.List.of("general.search"),
+			shim.java.List.of("ui.top-sidebar", "ui.bottom-sidebar"),
+			shim.java.List.of("binds.crafts"),
+			shim.java.List.of("ui.left-sidebar", "ui.right-sidebar")
 		);
 		int space = list.getLogicalHeight() - 10;
 		for (List<String> r : removes) {
@@ -308,7 +308,7 @@ public class ConfigScreen extends REMIScreen {
 			}
 			this.addDrawableChild(new ConfigJumpButton(
 				2 + (newGroup ? 0 : 8), y, u, v, w -> jump(s),
-				com.rewindmc.retroemi.shim.java.List.of(EmiPort.translatable("config.emi.group." + s.replace('-', '_')))));
+				shim.java.List.of(EmiPort.translatable("config.emi.group." + s.replace('-', '_')))));
 			y += 16;
 		}
 	}

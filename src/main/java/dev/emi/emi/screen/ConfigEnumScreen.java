@@ -100,7 +100,7 @@ public class ConfigEnumScreen<T> extends REMIScreen {
 
 		@Override
 		public List<? extends Element> children() {
-			return com.rewindmc.retroemi.shim.java.List.of(button);
+			return shim.java.List.of(button);
 		}
 
 		@Override

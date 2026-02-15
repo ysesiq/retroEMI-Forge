@@ -38,7 +38,7 @@ public abstract class EmiStack implements EmiIngredient {
 
     @Override
 	public List<EmiStack> getEmiStacks() {
-		return com.rewindmc.retroemi.shim.java.List.of(this);
+		return shim.java.List.of(this);
 	}
 
 	public EmiStack getRemainder() {

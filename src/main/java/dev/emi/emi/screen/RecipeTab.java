@@ -86,6 +86,6 @@ public class RecipeTab {
 		if (page >= 0 && page < getPageCount()) {
 			return pages.get(page);
 		}
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 }

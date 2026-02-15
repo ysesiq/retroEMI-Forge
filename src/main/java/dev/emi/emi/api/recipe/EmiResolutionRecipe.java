@@ -32,12 +32,12 @@ public class EmiResolutionRecipe implements EmiRecipe {
 
 	@Override
 	public List<EmiIngredient> getInputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(stack);
+		return shim.java.List.of(stack);
 	}
 
 	@Override
 	public List<EmiStack> getOutputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(stack);
+		return shim.java.List.of(stack);
 	}
 
 	@Override

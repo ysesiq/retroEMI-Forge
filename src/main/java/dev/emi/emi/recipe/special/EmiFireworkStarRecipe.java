@@ -24,13 +24,13 @@ public class EmiFireworkStarRecipe extends EmiPatternCraftingRecipe {
 	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
 
 	private static final List<ItemStack> SHAPES =
-        com.rewindmc.retroemi.shim.java.List.of(new ItemStack(Items.firework_charge), new ItemStack(Items.feather), new ItemStack(Items.gold_nugget), new ItemStack(Items.skull, 1, 0),
+        shim.java.List.of(new ItemStack(Items.firework_charge), new ItemStack(Items.feather), new ItemStack(Items.gold_nugget), new ItemStack(Items.skull, 1, 0),
 					new ItemStack(Items.skull, 1, 1), new ItemStack(Items.skull, 1, 2), new ItemStack(Items.skull, 1, 3), new ItemStack(Items.skull, 1, 4));
 
-	private static final List<Item> EFFECTS = com.rewindmc.retroemi.shim.java.List.of(Items.diamond, Items.glowstone_dust);
+	private static final List<Item> EFFECTS = shim.java.List.of(Items.diamond, Items.glowstone_dust);
 
 	public EmiFireworkStarRecipe(ResourceLocation id) {
-		super(com.rewindmc.retroemi.shim.java.List.of(
+		super(shim.java.List.of(
 				EmiIngredient.of(DYES.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
 						EmiIngredient.of(SHAPES.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
 						EmiIngredient.of(EFFECTS.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),

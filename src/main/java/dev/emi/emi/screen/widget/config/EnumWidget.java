@@ -28,7 +28,7 @@ public class EnumWidget extends ConfigEntryWidget {
 		button = EmiPort.newButton(0, 0, 150, 20, getText(), button -> {
 			page(mutator.get(), filter, mutator::set);
 		});
-		this.setChildren(com.rewindmc.retroemi.shim.java.List.of(button));
+		this.setChildren(shim.java.List.of(button));
 	}
 
 	public static void page(ConfigEnum original, Predicate<ConfigEnum> filter, Consumer<ConfigEnum> consumer) {
@@ -38,7 +38,7 @@ public class EnumWidget extends ConfigEntryWidget {
 		if (client.currentScreen instanceof ConfigScreen cs) {
 			client.displayGuiScreen(new ConfigEnumScreen<ConfigEnum>(cs, Stream.of(values).filter(f -> filter.test((ConfigEnum) f)).map(v -> {
 				ConfigEnum en = (ConfigEnum) v;
-				return new ConfigEnumScreen.Entry<ConfigEnum>(en, en.getText(), com.rewindmc.retroemi.shim.java.List.of());
+				return new ConfigEnumScreen.Entry<ConfigEnum>(en, en.getText(), shim.java.List.of());
 			}).collect(Collectors.toList()), consumer));
 		}
 	}

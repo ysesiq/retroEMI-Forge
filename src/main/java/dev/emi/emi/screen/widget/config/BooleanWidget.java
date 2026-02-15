@@ -22,7 +22,7 @@ public class BooleanWidget extends ConfigEntryWidget {
 			mutator.set(!mutator.get());
 			button.setMessage(getText());
 		});
-		this.setChildren(com.rewindmc.retroemi.shim.java.List.of(button));
+		this.setChildren(shim.java.List.of(button));
 	}
 
 	public Text getText() {

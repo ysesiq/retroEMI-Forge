@@ -561,7 +561,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		}
 
 		public List<TooltipComponent> getTooltip(int mouseX, int mouseY) {
-			return com.rewindmc.retroemi.shim.java.List.of();
+			return shim.java.List.of();
 		}
 
 		public abstract int getHeight();

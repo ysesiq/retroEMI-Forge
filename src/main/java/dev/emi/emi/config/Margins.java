@@ -1,6 +1,6 @@
 package dev.emi.emi.config;
 
-import com.rewindmc.retroemi.shim.java.List;
+import shim.java.List;
 
 public class Margins extends IntGroup {
 

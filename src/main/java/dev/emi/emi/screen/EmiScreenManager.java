@@ -81,7 +81,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.Element;
 import shim.net.minecraft.client.gui.ParentElement;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -94,11 +93,11 @@ public class EmiScreenManager {
 	private static final int ENTRY_SIZE = 16 + PADDING_SIZE * 2;
 	private static final int SUBPANEL_SEPARATOR_SIZE = 3;
 	private static Minecraft client = Minecraft.getMinecraft();
-	private static List<? extends EmiIngredient> searchedStacks = com.rewindmc.retroemi.shim.java.List.of();
+	private static List<? extends EmiIngredient> searchedStacks = shim.java.List.of();
 	private static int lastWidth, lastHeight;
 	private static List<Bounds> lastExclusion;
 	//	private static StackBatcher.ClaimedCollection batchers = new StackBatcher.ClaimedCollection();
-	private static List<SidebarPanel> panels =  com.rewindmc.retroemi.shim.java.List.of(
+	private static List<SidebarPanel> panels =  shim.java.List.of(
 			new SidebarPanel(SidebarSide.LEFT, EmiConfig.leftSidebarPages),
 			new SidebarPanel(SidebarSide.RIGHT, EmiConfig.rightSidebarPages),
 			new SidebarPanel(SidebarSide.TOP, EmiConfig.topSidebarPages),
@@ -124,13 +123,13 @@ public class EmiScreenManager {
 	public static EmiSearchWidget search = new EmiSearchWidget(client.fontRenderer, 0, 0, 160, 18);
 	public static SizedButtonWidget emi = new SizedButtonWidget(0, 0, 20, 20, 204, 0,
 			() -> true, (w) -> client.displayGuiScreen(new ConfigScreen(client.currentScreen)),
-			com.rewindmc.retroemi.shim.java.List.of(EmiPort.translatable("tooltip.emi.config", EmiRenderHelper.getEmiText())));
+			shim.java.List.of(EmiPort.translatable("tooltip.emi.config", EmiRenderHelper.getEmiText())));
 	public static SizedButtonWidget tree = new SizedButtonWidget(0, 0, 20, 20, 184, 0,
 			() -> true, (w) -> EmiApi.viewRecipeTree(),
-			com.rewindmc.retroemi.shim.java.List.of(EmiPort.translatable("tooltip.emi.recipe_tree")));
+			shim.java.List.of(EmiPort.translatable("tooltip.emi.recipe_tree")));
     public static SizedButtonWidget nemi = new SizedButtonWidget(0, 0, 20, 20, 184, 0,
 			() -> true, (w) -> NemiPlugin.cycleNemi(),
-			com.rewindmc.retroemi.shim.java.List.of(EmiPort.translatable("tooltip.emi.nemi")));
+			shim.java.List.of(EmiPort.translatable("tooltip.emi.nemi")));
 
 	public static boolean isDisabled() {
 		return !EmiReloadManager.isLoaded() || !EmiConfig.enabled;
@@ -518,7 +517,7 @@ public class EmiScreenManager {
 	public static List<? extends EmiIngredient> getSearchSource() {
 		SidebarPanel search = getSearchPanel();
 		if (search == null) {
-			return com.rewindmc.retroemi.shim.java.List.of();
+			return shim.java.List.of();
 		}
 		return EmiSidebars.getStacks(search.getType());
 	}
@@ -759,7 +758,7 @@ public class EmiScreenManager {
 			}
 			ScreenSpace space = getHoveredSpace(mouseX, mouseY);
 			if (EmiApi.isCheatMode() && !ItemStacks.isEmpty(cursor) && space != null && space.getType() == SidebarType.INDEX && EmiConfig.deleteCursorStack.isBound()) {
-				List<TooltipComponent> list = com.rewindmc.retroemi.shim.java.List.of(
+				List<TooltipComponent> list = shim.java.List.of(
 					TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.delete_stack"))),
 					TooltipComponent.of(EmiPort.ordered(EmiConfig.deleteCursorStack.getBindText()))
 				);
@@ -802,7 +801,7 @@ public class EmiScreenManager {
 		} catch (Exception e) {
 			try {
 				EmiLog.error("Error rendering tooltip", e);
-				List<TooltipComponent> list = com.rewindmc.retroemi.shim.java.List.of(
+				List<TooltipComponent> list = shim.java.List.of(
 					EmiTooltipComponents.of(EmiPort.literal("Error rendering tooltip", Formatting.RED)),
 					EmiTooltipComponents.of(EmiPort.literal("See log", Formatting.GRAY))
 				);
@@ -1449,7 +1448,7 @@ public class EmiScreenManager {
 
 		public List<ScreenSpace> getSpaces() {
 			if (spaces == null) {
-				return com.rewindmc.retroemi.shim.java.List.of();
+				return shim.java.List.of();
 			}
 			return spaces;
 		}
@@ -1782,7 +1781,7 @@ public class EmiScreenManager {
 			if (end > start) {
 				return stacks.subList(start, end);
 			}
-			return com.rewindmc.retroemi.shim.java.List.of();
+			return shim.java.List.of();
 		}
 
 		public SidebarType getType() {

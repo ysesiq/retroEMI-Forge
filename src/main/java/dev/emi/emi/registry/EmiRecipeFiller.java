@@ -87,12 +87,12 @@ public class EmiRecipeFiller {
 				if (slot instanceof SlotCrafting crs) {
 					var inv = ((SlotCraftingAccessor) crs).getCraftMatrix();
 					if (inv != null && inv.getSizeInventory() > 0) {
-						return com.rewindmc.retroemi.shim.java.List.of(new CoercedRecipeHandler<T>(crs));
+						return shim.java.List.of(new CoercedRecipeHandler<T>(crs));
 					}
 				}
 			}
 		}
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 
 	@SuppressWarnings("unchecked")

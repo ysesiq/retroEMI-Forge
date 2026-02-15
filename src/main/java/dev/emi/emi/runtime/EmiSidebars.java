@@ -22,7 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.util.JsonHelper;
 
 public class EmiSidebars {
-	public static List<EmiIngredient> craftables = com.rewindmc.retroemi.shim.java.List.of();
+	public static List<EmiIngredient> craftables = shim.java.List.of();
 	public static List<EmiIngredient> lookupHistory = Lists.newArrayList();
 	public static List<EmiIngredient> craftHistory = Lists.newArrayList();
 
@@ -33,9 +33,9 @@ public class EmiSidebars {
 			case FAVORITES -> EmiFavorites.favoriteSidebar;
 			case LOOKUP_HISTORY -> lookupHistory;
 			case CRAFT_HISTORY -> craftHistory;
-			case EMPTY -> com.rewindmc.retroemi.shim.java.List.of();
+			case EMPTY -> shim.java.List.of();
 			case CHESS -> EmiChess.SIDEBAR;
-			default -> com.rewindmc.retroemi.shim.java.List.of();
+			default -> shim.java.List.of();
 		};
 	}
 

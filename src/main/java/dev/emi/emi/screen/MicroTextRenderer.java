@@ -15,7 +15,7 @@ import java.util.List;
 public class MicroTextRenderer {
 	private static final ResourceLocation TEXTURE = EmiPort.id("emi", "textures/gui/microfont.png");
 	private static final Char2ObjectMap<MicroChar> MICRO_CHARS = new Char2ObjectOpenHashMap<>();
-	private static final List<UnitScale> QUANTITY_SCALES = com.rewindmc.retroemi.shim.java.List.of(
+	private static final List<UnitScale> QUANTITY_SCALES = shim.java.List.of(
 		new UnitScale("", 0),
 		new UnitScale("k", 3),
 		new UnitScale("M", 6),
@@ -23,7 +23,7 @@ public class MicroTextRenderer {
 		new UnitScale("T", 12),
 		new UnitScale("Q", 15)
 	);
-	private static final List<UnitScale> BUCKET_VOLUME_SCALES = com.rewindmc.retroemi.shim.java.List.of(
+	private static final List<UnitScale> BUCKET_VOLUME_SCALES = shim.java.List.of(
 		new UnitScale("mB", 0),
 		new UnitScale("B", 3),
 		new UnitScale("kB", 6),
@@ -32,7 +32,7 @@ public class MicroTextRenderer {
 		new UnitScale("TB", 15),
 		new UnitScale("PB", 18)
 	);
-	private static final List<UnitScale> LITER_VOLUME_SCALES = com.rewindmc.retroemi.shim.java.List.of(
+	private static final List<UnitScale> LITER_VOLUME_SCALES = shim.java.List.of(
 		new UnitScale("mL", 0),
 		new UnitScale("L", 3),
 		new UnitScale("kL", 6),
@@ -41,7 +41,7 @@ public class MicroTextRenderer {
 		new UnitScale("TL", 15),
 		new UnitScale("PL", 18)
 	);
-	private static final List<UnitScale> DROPLET_VOLUME_SCALES = com.rewindmc.retroemi.shim.java.List.of(
+	private static final List<UnitScale> DROPLET_VOLUME_SCALES = shim.java.List.of(
 		new UnitScale("d", 0),
 		new UnitScale("kd", 3),
 		new UnitScale("Md", 6),

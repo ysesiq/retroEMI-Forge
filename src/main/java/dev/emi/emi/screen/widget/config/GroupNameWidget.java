@@ -12,7 +12,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.Element;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
 
 public class GroupNameWidget extends Entry {
 	protected static final Minecraft CLIENT = Minecraft.getMinecraft();
@@ -63,6 +62,6 @@ public class GroupNameWidget extends Entry {
 
 	@Override
 	public List<? extends Element> children() {
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 }

@@ -39,7 +39,6 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.text.WordUtils;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
@@ -138,7 +137,7 @@ public class EmiAgnosForge extends EmiAgnos {
 //            }
 //        }
 //        return mods;
-        return com.rewindmc.retroemi.shim.java.List.of();
+        return shim.java.List.of();
     }
 
     @Override

@@ -25,12 +25,12 @@ public abstract class EmiIngredientRecipe implements EmiRecipe {
 
 	@Override
 	public List<EmiIngredient> getInputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(new ListEmiIngredient(getStacks(), 1));
+		return shim.java.List.of(new ListEmiIngredient(getStacks(), 1));
 	}
 
 	@Override
 	public List<EmiStack> getOutputs() {
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 
 	@Override

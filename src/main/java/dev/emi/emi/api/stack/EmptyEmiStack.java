@@ -25,7 +25,7 @@ public class EmptyEmiStack extends EmiStack {
 
 	@Override
 	public List<EmiStack> getEmiStacks() {
-		return com.rewindmc.retroemi.shim.java.List.of(EMPTY);
+		return shim.java.List.of(EMPTY);
 	}
 
 	@Override
@@ -82,12 +82,12 @@ public class EmptyEmiStack extends EmiStack {
 
 	@Override
 	public List<Text> getTooltipText() {
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 
 	@Override
 	public List<TooltipComponent> getTooltip() {
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 
 	@Override

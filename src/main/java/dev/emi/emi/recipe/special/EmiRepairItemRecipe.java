@@ -21,7 +21,7 @@ public class EmiRepairItemRecipe extends EmiPatternCraftingRecipe {
     private final Item tool;
 
 	public EmiRepairItemRecipe(Item tool, ResourceLocation id) {
-		super(com.rewindmc.retroemi.shim.java.List.of(
+		super(shim.java.List.of(
 				EmiStack.of(tool),
 				EmiStack.of(tool)),
 				EmiStack.of(tool), id);

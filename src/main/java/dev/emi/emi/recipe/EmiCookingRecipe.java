@@ -44,12 +44,12 @@ public class EmiCookingRecipe implements EmiRecipe {
 
 	@Override
 	public List<EmiIngredient> getInputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(input);
+		return shim.java.List.of(input);
 	}
 
 	@Override
 	public List<EmiStack> getOutputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(output);
+		return shim.java.List.of(output);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class EmiCookingRecipe implements EmiRecipe {
 	@Override
 	public void addWidgets(WidgetHolder widgets) {
 		widgets.addFillingArrow(24, 5, 50 * 200).tooltip((mx, my) -> {
-			return com.rewindmc.retroemi.shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.cooking.time", 200 / 20f))));
+			return shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.cooking.time", 200 / 20f))));
 		});
 		if (infiniBurn) {
 			widgets.addTexture(EmiTexture.FULL_FLAME, 1, 24);

@@ -23,7 +23,7 @@ public class EmiFireworkStarFadeRecipe extends EmiPatternCraftingRecipe {
 	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
 
 	public EmiFireworkStarFadeRecipe(ResourceLocation id) {
-		super(com.rewindmc.retroemi.shim.java.List.of(
+		super(shim.java.List.of(
 			EmiIngredient.of(DYES.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
 			EmiStack.of(Items.firework_charge)), EmiStack.of(Items.firework_charge), id);
 	}

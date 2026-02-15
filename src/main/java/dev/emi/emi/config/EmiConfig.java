@@ -198,14 +198,14 @@ public class EmiConfig {
 
 	@Comment("The subpanels in the left sidebar")
 	@ConfigValue("ui.left-sidebar-subpanels")
-	public static SidebarSubpanels leftSidebarSubpanels = new SidebarSubpanels(com.rewindmc.retroemi.shim.java.List.of(
+	public static SidebarSubpanels leftSidebarSubpanels = new SidebarSubpanels(shim.java.List.of(
 	), SidebarSettings.LEFT);
 
 	@Comment("How many columns and rows of ingredients to limit the left sidebar to")
 	@ConfigValue("ui.left-sidebar-size")
 	public static IntGroup leftSidebarSize = new IntGroup(
 		"emi.sidebar.size.",
-		com.rewindmc.retroemi.shim.java.List.of("columns", "rows"),
+		shim.java.List.of("columns", "rows"),
         new ArrayList<>(Arrays.asList(12, 100))
 	);
 
@@ -232,21 +232,21 @@ public class EmiConfig {
 	@ConfigGroup("ui.right-sidebar")
 	@Comment("The pages in the right sidebar")
 	@ConfigValue("ui.right-sidebar-pages")
-	public static SidebarPages rightSidebarPages = new SidebarPages(com.rewindmc.retroemi.shim.java.List.of(
+	public static SidebarPages rightSidebarPages = new SidebarPages(shim.java.List.of(
 		new SidebarPages.SidebarPage(SidebarType.INDEX),
 		new SidebarPages.SidebarPage(SidebarType.CRAFTABLES)
 	), SidebarSettings.RIGHT);
 
 	@Comment("The subpanels in the right sidebar")
 	@ConfigValue("ui.right-sidebar-subpanels")
-	public static SidebarSubpanels rightSidebarSubpanels = new SidebarSubpanels(com.rewindmc.retroemi.shim.java.List.of(
+	public static SidebarSubpanels rightSidebarSubpanels = new SidebarSubpanels(shim.java.List.of(
 	), SidebarSettings.RIGHT);
 
 	@Comment("How many columns and rows of ingredients to limit the right sidebar to")
 	@ConfigValue("ui.right-sidebar-size")
 	public static IntGroup rightSidebarSize = new IntGroup(
 	    "emi.sidebar.size.",
-	    com.rewindmc.retroemi.shim.java.List.of("columns", "rows"),
+	    shim.java.List.of("columns", "rows"),
 	    new ArrayList<>(Arrays.asList(12, 100))
 	);
 
@@ -272,19 +272,19 @@ public class EmiConfig {
 	@ConfigGroup("ui.top-sidebar")
 	@Comment("The pages in the top sidebar")
 	@ConfigValue("ui.top-sidebar-pages")
-	public static SidebarPages topSidebarPages = new SidebarPages(com.rewindmc.retroemi.shim.java.List.of(
+	public static SidebarPages topSidebarPages = new SidebarPages(shim.java.List.of(
 	), SidebarSettings.TOP);
 
 	@Comment("The subpanels in the top sidebar")
 	@ConfigValue("ui.top-sidebar-subpanels")
-	public static SidebarSubpanels topSidebarSubpanels = new SidebarSubpanels(com.rewindmc.retroemi.shim.java.List.of(
+	public static SidebarSubpanels topSidebarSubpanels = new SidebarSubpanels(shim.java.List.of(
 	), SidebarSettings.TOP);
 
 	@Comment("How many columns and rows of ingredients to limit the top sidebar to")
 	@ConfigValue("ui.top-sidebar-size")
 	public static IntGroup topSidebarSize = new IntGroup(
 		"emi.sidebar.size.",
-		com.rewindmc.retroemi.shim.java.List.of("columns", "rows"),
+		shim.java.List.of("columns", "rows"),
 		new ArrayList<>(Arrays.asList(9, 9))
 	);
 
@@ -310,19 +310,19 @@ public class EmiConfig {
 	@ConfigGroup("ui.bottom-sidebar")
 	@Comment("The pages in the bottom sidebar")
 	@ConfigValue("ui.bottom-sidebar-pages")
-	public static SidebarPages bottomSidebarPages = new SidebarPages(com.rewindmc.retroemi.shim.java.List.of(
+	public static SidebarPages bottomSidebarPages = new SidebarPages(shim.java.List.of(
 	), SidebarSettings.BOTTOM);
 
 	@Comment("The subpanels in the bottom sidebar")
 	@ConfigValue("ui.bottom-sidebar-subpanels")
-	public static SidebarSubpanels bottomSidebarSubpanels = new SidebarSubpanels(com.rewindmc.retroemi.shim.java.List.of(
+	public static SidebarSubpanels bottomSidebarSubpanels = new SidebarSubpanels(shim.java.List.of(
 	), SidebarSettings.BOTTOM);
 
 	@Comment("How many columns and rows of ingredients to limit the bottom sidebar to")
 	@ConfigValue("ui.bottom-sidebar-size")
 	public static IntGroup bottomSidebarSize = new IntGroup(
 		"emi.sidebar.size.",
-		com.rewindmc.retroemi.shim.java.List.of("columns", "rows"),
+		shim.java.List.of("columns", "rows"),
 		new ArrayList<>(Arrays.asList(9, 9))
 	);
 

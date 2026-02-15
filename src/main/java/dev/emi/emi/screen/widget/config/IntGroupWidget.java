@@ -57,7 +57,7 @@ public class IntGroupWidget extends ConfigEntryWidget {
 		for (int i = 0; i < edits.size(); i++) {
 			IntEdit e = edits.get(i);
 			if (e.contains(mouseX, mouseY)) {
-				return com.rewindmc.retroemi.shim.java.List.of(TooltipComponent.of(EmiPort.ordered(group.getValueTranslation(i))));
+				return shim.java.List.of(TooltipComponent.of(EmiPort.ordered(group.getValueTranslation(i))));
 			}
 		}
 		return super.getTooltip(mouseX, mouseY);

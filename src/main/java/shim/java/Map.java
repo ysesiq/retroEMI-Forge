@@ -1,4 +1,4 @@
-package com.rewindmc.retroemi.shim.java;
+package shim.java;
 
 import java.util.Collections;
 import java.util.HashMap;

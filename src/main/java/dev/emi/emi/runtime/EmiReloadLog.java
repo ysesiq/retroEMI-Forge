@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 
 public class EmiReloadLog {
 	private static List<String> pendingWarnings = Lists.newArrayList();
-	public static List<String> warnings = com.rewindmc.retroemi.shim.java.List.of();
+	public static List<String> warnings = shim.java.List.of();
 	private static int pendingWarningCount;
 	public static int warningCount;
 

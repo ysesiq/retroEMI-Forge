@@ -28,7 +28,7 @@ public class RecipeFillButtonWidget extends RecipeButtonWidget {
 		super(x, y, 24, 0, recipe);
 		GuiContainer hs = EmiApi.getHandledScreen();
 		EmiRecipeHandler handler = EmiRecipeFiller.getFirstValidHandler(recipe, hs);
-		tooltip = com.rewindmc.retroemi.shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.inapplicable"))));
+		tooltip = shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.inapplicable"))));
 		if (handler == null) {
 			canFill = false;
 		} else {
@@ -42,7 +42,7 @@ public class RecipeFillButtonWidget extends RecipeButtonWidget {
 				}
 			} catch (Exception e) {
 				canFill = false;
-				tooltip = com.rewindmc.retroemi.shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.error.recipe.initialize"))));
+				tooltip = shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.error.recipe.initialize"))));
 			}
 		}
 	}

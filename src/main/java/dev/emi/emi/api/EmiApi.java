@@ -144,7 +144,7 @@ public class EmiApi {
 		if (stack instanceof TagEmiIngredient tag) {
 			for (EmiRecipe recipe : getRecipeManager().getRecipes(VanillaPlugin.TAG)) {
 				if (recipe instanceof EmiTagRecipe tr && tr.key.equals(tag.key)) {
-					setPages(Collections.singletonMap(VanillaPlugin.TAG, com.rewindmc.retroemi.shim.java.List.of(recipe)), stack);
+					setPages(Collections.singletonMap(VanillaPlugin.TAG, shim.java.List.of(recipe)), stack);
 					break;
 				}
 			}

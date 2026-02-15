@@ -253,7 +253,7 @@ class ChessBoard {
 			}
 			return list;
 		}
-		return com.rewindmc.retroemi.shim.java.List.of();
+		return shim.java.List.of();
 	}
 
 	private void addRookMoves(List<ChessMove> list, ChessPiece self, int position, int x, int y) {

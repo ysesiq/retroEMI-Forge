@@ -43,7 +43,7 @@ public class EmiCraftingRecipe implements EmiRecipe {
 
 	@Override
 	public List<EmiStack> getOutputs() {
-        return com.rewindmc.retroemi.shim.java.List.of(output);
+        return shim.java.List.of(output);
 	}
 
 	@Override

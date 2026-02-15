@@ -23,7 +23,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
 
 	public EmiFireworkRocketRecipe(ResourceLocation id) {
-		super(com.rewindmc.retroemi.shim.java.List.of(
+		super(shim.java.List.of(
 				EmiStack.of(Items.paper),
 						EmiStack.of(Items.firework_charge),
 						EmiStack.of(Items.gunpowder)),

@@ -113,7 +113,7 @@ public class InventoryRecipeHandler implements StandardRecipeHandler<ContainerPl
 		if (!canCraft(recipe, context)) {
 			Container sh = context.getScreenHandler();
 			if (!canFit(sh, recipe)) {
-				return com.rewindmc.retroemi.shim.java.List.of(TooltipComponent.of(EmiPort.ordered(TOO_SMALL)));
+				return shim.java.List.of(TooltipComponent.of(EmiPort.ordered(TOO_SMALL)));
 			}
 		}
 

@@ -2,7 +2,7 @@ package dev.emi.emi.screen.widget;
 
 import java.util.function.Supplier;
 
-import com.rewindmc.retroemi.shim.java.List;
+import shim.java.List;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.render.EmiTexture;

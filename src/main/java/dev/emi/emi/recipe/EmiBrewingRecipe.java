@@ -42,12 +42,12 @@ public class EmiBrewingRecipe implements EmiRecipe {
 
 	@Override
 	public List<EmiIngredient> getInputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(input3, ingredient);
+		return shim.java.List.of(input3, ingredient);
 	}
 
 	@Override
 	public List<EmiStack> getOutputs() {
-		return com.rewindmc.retroemi.shim.java.List.of(output3);
+		return shim.java.List.of(output3);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class EmiBrewingRecipe implements EmiRecipe {
 	public void addWidgets(WidgetHolder widgets) {
 		widgets.addTexture(BACKGROUND, 0, 0, 64, 55, 55, 15);
 		widgets.addAnimatedTexture(BACKGROUND, 42, 0, 9, 28, 176, 0, 1000 * 20, false, false, false).tooltip((mx, my) -> {
-			return com.rewindmc.retroemi.shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.cooking.time", 20))));
+			return shim.java.List.of(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.cooking.time", 20))));
 		});
 		widgets.addAnimatedTexture(BACKGROUND, 10, -1, 12, 29, 185, 0, 700, false, true, false);
 //        widgets.addTexture(BACKGROUND, 44, 30, 18, 4, 176, 29);

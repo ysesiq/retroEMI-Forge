@@ -23,19 +23,19 @@ public class ConfigPresets {
 		+ " Ideal for getting the most out of EMI's features")
 	@ConfigValue("presets.productive")
 	public static Runnable productive = () -> {
-		setPages(EmiConfig.rightSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
+		setPages(EmiConfig.rightSidebarPages, shim.java.List.of(
 			new SidebarPages.SidebarPage(SidebarType.INDEX)
 		));
 
-		setPages(EmiConfig.leftSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
+		setPages(EmiConfig.leftSidebarPages, shim.java.List.of(
 			new SidebarPages.SidebarPage(SidebarType.CRAFTABLES)
 		));
 
-		setPages(EmiConfig.topSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
+		setPages(EmiConfig.topSidebarPages, shim.java.List.of(
 			new SidebarPages.SidebarPage(SidebarType.FAVORITES)
 		));
 
-		setPages(EmiConfig.bottomSidebarPages, com.rewindmc.retroemi.shim.java.List.of());
+		setPages(EmiConfig.bottomSidebarPages, shim.java.List.of());
 
 		EmiConfig.leftSidebarTheme = SidebarTheme.MODERN;
 		EmiConfig.leftSidebarHeader = HeaderType.VISIBLE;
@@ -123,7 +123,7 @@ public class ConfigPresets {
 		EmiConfig.searchSidebarFocus = SidebarType.INDEX;
 		EmiConfig.emptySearchSidebarFocus = SidebarType.EMPTY;
 
-		setPages(EmiConfig.rightSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
+		setPages(EmiConfig.rightSidebarPages, shim.java.List.of(
 			new SidebarPages.SidebarPage(SidebarType.INDEX),
 			new SidebarPages.SidebarPage(SidebarType.EMPTY)
 		));
@@ -135,18 +135,18 @@ public class ConfigPresets {
 		EmiConfig.searchSidebarFocus = SidebarType.INDEX;
 		EmiConfig.emptySearchSidebarFocus = SidebarType.CRAFTABLES;
 
-		setPages(EmiConfig.rightSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
+		setPages(EmiConfig.rightSidebarPages, shim.java.List.of(
 			new SidebarPages.SidebarPage(SidebarType.INDEX),
 			new SidebarPages.SidebarPage(SidebarType.CRAFTABLES)
 		));
 
-		setPages(EmiConfig.leftSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
+		setPages(EmiConfig.leftSidebarPages, shim.java.List.of(
 			new SidebarPages.SidebarPage(SidebarType.FAVORITES)
 		));
 
-		setPages(EmiConfig.topSidebarPages, com.rewindmc.retroemi.shim.java.List.of());
+		setPages(EmiConfig.topSidebarPages, shim.java.List.of());
 
-		setPages(EmiConfig.bottomSidebarPages, com.rewindmc.retroemi.shim.java.List.of());
+		setPages(EmiConfig.bottomSidebarPages, shim.java.List.of());
 	};
 
 	// Binds
