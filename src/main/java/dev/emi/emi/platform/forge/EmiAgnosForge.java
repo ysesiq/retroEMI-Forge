@@ -1,5 +1,6 @@
 package dev.emi.emi.platform.forge;
 
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import com.rewindmc.retroemi.InputPair;
@@ -212,7 +213,7 @@ public class EmiAgnosForge extends EmiAgnos {
 		for (Map.Entry<InputPair, Prototype> en : recipes.entrySet()) {
 			InputPair i = en.getKey();
 			registry.addRecipe(new EmiBrewingRecipe(EmiStack.of(i.potion()), EmiStack.of(i.ingredient()), EmiStack.of(en.getValue()),
-					EmiPort.id("brewing", "/" + i.potion().toStack().getItemDamage() + "/" + i.ingredient().toStack().getUnlocalizedName() + "/" +
+					EmiPort.id("brewing", "/" + i.potion().toStack().getItemDamage() + "/" + RetroEMI.getId(i.ingredient().toStack()) + "/" +
                         en.getValue().toStack().getItemDamage())));
 		}
 		// Vanilla potion entries have different meta from brewable potions (!)

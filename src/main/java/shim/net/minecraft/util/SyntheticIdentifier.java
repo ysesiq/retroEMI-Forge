@@ -1,5 +1,6 @@
 package shim.net.minecraft.util;
 
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -17,6 +18,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,15 +28,13 @@ public class SyntheticIdentifier {
         if (o == null) {
             return EmiPort.id( "null:null");
         } else if (o instanceof ShapedRecipes sr) {
-            return  EmiPort.id("shaped:" + ((ShapedRecipesAccessor) sr).getRecipeWidth() + "x" + ((ShapedRecipesAccessor) sr).getRecipeHeight() + "/" + describeFlat(((ShapedRecipesAccessor) sr).getRecipeItems()) + "/" +
-                describe(sr.getRecipeOutput()));
+            return  EmiPort.id("shaped:" + ((ShapedRecipesAccessor) sr).getRecipeWidth() + "x" + ((ShapedRecipesAccessor) sr).getRecipeHeight() + "/" + describeFlat(((ShapedRecipesAccessor) sr).getRecipeItems()) + "/" + describe(sr.getRecipeOutput()));
         } else if (o instanceof ShapelessRecipes sr) {
             return  EmiPort.id("shapeless:" + describeFlat(((ShapelessRecipesAccessor)sr).getRecipeItems()) + "/" + describe(sr.getRecipeOutput()));
         } else if (o instanceof ShapedOreRecipe sr) {
-            return  EmiPort.id("shaped_ore:" + ((ShapedOreRecipeAccessor) sr).getRecipeWidth() + "x" + ((ShapedOreRecipeAccessor) sr).getRecipeHeight() + "/" +
-                describe(sr.getRecipeOutput().getUnlocalizedName() + "." + sr.getRecipeOutput().getItemDamage()));
+            return  EmiPort.id("shaped_ore:" + ((ShapedOreRecipeAccessor) sr).getRecipeWidth() + "x" + ((ShapedOreRecipeAccessor) sr).getRecipeHeight() + "/" + describe(sr.getRecipeOutput()));
         } else if (o instanceof ShapelessOreRecipe sr) {
-            return  EmiPort.id("shapeless_ore:" + describe(sr.getRecipeOutput().getUnlocalizedName() + "." + sr.getRecipeOutput().getItemDamage()));
+            return  EmiPort.id("shapeless_ore:" + describe(sr.getRecipeOutput()));
         } else if (o instanceof EmiCraftingRecipe cr) {
             return  EmiPort.id("crafting:" + describeFlat(cr.getInputs()) + "/" + describe(cr.getOutputs()));
         }
@@ -50,12 +50,12 @@ public class SyntheticIdentifier {
     }
 
     public static String describeFlat(Stream<?> stream) {
-        return stream.map(SyntheticIdentifier::describe).collect(Collectors.joining("/"));
+        return stream.filter(Objects::nonNull).map(SyntheticIdentifier::describe).collect(Collectors.joining("/"));
     }
 
     public static String describe(Object o) {
         if (o == null) {
-            return "null";
+            return "";
         } else if (o instanceof EmiStack es) {
             return describe(es.getItemStack());
         } else if (o instanceof EmiIngredient ei) {
@@ -64,7 +64,11 @@ public class SyntheticIdentifier {
             if (is.getItem() == null) {
                 return "null";
             } else {
-                return is.getUnlocalizedName() + "." + is.getItemDamage() + (is.hasTagCompound() ? is.getTagCompound().toString() : "");
+                return RetroEMI.getId(is) +
+                    (is.getHasSubtypes() || is.hasTagCompound() ? "#" : "") +
+                    (is.getHasSubtypes() ? is.getItemDamage() : "") +
+                    (is.getHasSubtypes() && is.hasTagCompound() ? "#" : "") +
+                    (is.hasTagCompound() ? is.getTagCompound().toString() : "");
             }
         } else if (o instanceof Block b) {
             return describe(new ItemStack(b));

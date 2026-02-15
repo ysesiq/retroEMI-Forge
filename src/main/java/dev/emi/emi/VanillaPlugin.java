@@ -285,7 +285,7 @@ public class VanillaPlugin implements EmiPlugin {
 		for (Map.Entry<ItemStack, ItemStack> recipe : ((Map<ItemStack, ItemStack>)FurnaceRecipes.smelting().getSmeltingList()).entrySet()) {
 			ItemStack in = recipe.getKey();
 			ItemStack out = recipe.getValue();
-			String id = in.getUnlocalizedName() + "." + in.getItemDamage() + "/" + out.getUnlocalizedName() + "." + in.getItemDamage();
+			String id = RetroEMI.getId(in) + (in.getHasSubtypes() ? "#" + in.getItemDamage() : "") + "/" + RetroEMI.getId(out) + (out.getHasSubtypes() ? "#" + out.getItemDamage() : "");
 			float xp = FurnaceRecipes.smelting().func_151398_b(out);
 			addRecipeSafe(registry, () -> new EmiCookingRecipe(EmiPort.id("smelting", "furnace/" + id), in, out, xp, SMELTING, 1, false));
 		}
@@ -370,7 +370,7 @@ public class VanillaPlugin implements EmiPlugin {
         for (ItemStack stack : stacks) {
             if (stack.getItemDamage() != 2 && stack.getItemDamage() != 3) {
                 addRecipeSafe(registry, () -> basicWorld(EmiStack.of(stack).setRemainder(EmiStack.of(stack)), EmiStack.of(Items.dye, 1, 15), EmiStack.of(stack),
-                    synthetic("world/flower_duping", EmiUtil.subId(EmiPort.id(stack.getItem() + "." +  stack.getItemDamage()))), false));
+                    synthetic("world/flower_duping", EmiUtil.subId(EmiPort.id(RetroEMI.getId(stack) + "#" +  stack.getItemDamage()))), false));
             }
         }
     }
@@ -484,7 +484,7 @@ public class VanillaPlugin implements EmiPlugin {
 		}, item -> {
 			if (!hiddenItems.contains(item.item())) {
 				int time = fuelMap.get(item);
-				registry.addRecipe(new EmiFuelRecipe(EmiStack.of(item.toStack()), time, synthetic("fuel/item", EmiUtil.subId(EmiPort.id(item.toStack().getUnlocalizedName() + "@" + Item.getIdFromItem(item.item()) + "." +  item.toStack().getItemDamage())))));
+				registry.addRecipe(new EmiFuelRecipe(EmiStack.of(item.toStack()), time, synthetic("fuel/item", EmiUtil.subId(EmiPort.id(item.toStack().getUnlocalizedName() + "@" + Item.getIdFromItem(item.item()) + (item.toStack().getHasSubtypes() ? "#" +  item.toStack().getItemDamage() : ""))))));
 			}
 		});
 	}

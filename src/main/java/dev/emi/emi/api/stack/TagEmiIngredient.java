@@ -105,79 +105,39 @@ public class TagEmiIngredient implements EmiIngredient {
 		EmiDrawContext context = EmiDrawContext.wrap(draw);
 		Minecraft client = Minecraft.getMinecraft();
 
-//		if ((flags & RENDER_ICON) != 0) {
-//			if (!tagKey.hasCustomModel()) {
-//				if (stacks.size() > 0) {
-//					stacks.get(0).render(context.raw(), x, y, delta, -1 ^ RENDER_AMOUNT);
-//				}
-//			} else {
+		if ((flags & RENDER_ICON) != 0) {
+			if (!tagKey.hasCustomModel()) {
+				if (stacks.size() > 0) {
+					stacks.get(0).render(context.raw(), x, y, delta, -1 ^ RENDER_AMOUNT);
+				}
+			} else {
 				// TODO tag textures
 
 //                BakedModel model = EmiAgnos.getBakedTagModel(EmiTags.getCustomModel(key));
 //
 //                context.matrices().push();
 //                context.matrices().translate(x + 8, y + 8, 150);
-//                context.matrices().multiplyPositionMatrix(new Matrix4f().scaling(1.0f, -1.0f, 1.0f));
+//                context.matrices().scale(1.0F, -1.0F, 1.0F);
 //                context.matrices().scale(16.0f, 16.0f, 16.0f);
 //
-//                model.getTransformation().getTransformation(ModelTransformationMode.GUI).apply(false, context.matrices());
 //                context.matrices().translate(-0.5f, -0.5f, -0.5f);
 //
 //                if (!model.isSideLit()) {
-//                    DiffuseLighting.disableGuiDepthLighting();
+//                    RenderHelper.disableStandardItemLighting();
 //                }
-//                VertexConsumerProvider.Immediate immediate = context.raw().getVertexConsumers();
 //
-//                ((ItemRendererAccessor) client.getItemRenderer())
-//                    .invokeRenderBakedItemModel(model,
-//                        ItemStack.EMPTY, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, context.matrices(),
-//                        ItemRenderer.getDirectItemGlintConsumer(immediate,
-//                            TexturedRenderLayers.getEntityTranslucentCull(), true, false));
-//                immediate.draw();
+//                RenderHelper.enableGUIStandardItemLighting();
+//
+//                FakeModelRenderer.renderGuiModel(model, x, y);
 //
 //                if (!model.isSideLit()) {
-//                    DiffuseLighting.enableGuiDepthLighting();
+//                    RenderHelper.enableStandardItemLighting();
 //                }
 //
-//                context.matrices().pop();
-
-//                ResourceLocation texture = tagKey.getCustomModel();
-//            System.out.println("resource texture:" + texture.toString());
-//
-//                GL11.glPushMatrix();
-//                GL11.glTranslatef(x + 8, y + 8, 150);
-//                GL11.glScalef(1.0f, -1.0f, 1.0f);
-//                GL11.glScalef(16.0f, 16.0f, 16.0f);
-//
-//                GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
-//
-//                RenderHelper.disableStandardItemLighting();
-//
-//                GL11.glEnable(GL11.GL_LIGHTING);
-//                GL11.glEnable(GL11.GL_LIGHT0);
-//                GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-//                GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT_AND_DIFFUSE);
-//
-////                GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION,
-////                    (FloatBuffer) FloatBuffer.wrap(new float[] {0.0f, 0.0f, 1.0f, 0.0f}));
-////                GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_AMBIENT,
-////                    (FloatBuffer) FloatBuffer.wrap(new float[] {0.4f, 0.4f, 0.4f, 1.0f}));
-////                GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_DIFFUSE,
-////                    (FloatBuffer) FloatBuffer.wrap(new float[] {0.6f, 0.6f, 0.6f, 1.0f}));
-//
-//                GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-//
-//                GL11.glEnable(GL11.GL_BLEND);
-//                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-//                GL11.glEnable(GL11.GL_ALPHA_TEST);
-//                GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
-//
-////                client.getTextureManager().bindTexture(texture);
-//                RenderItem renderItem = new RenderItem();
-//                renderItem.renderItemAndEffectIntoGUI(client.fontRenderer, client.getTextureManager(), new ItemStack((Item) GameData.getItemRegistry().getObject(texture)), x, y);
-////			}
-//		}
-		if ((flags & RENDER_AMOUNT) != 0) {
+//                context.pop();
+			}
+		}
+        if ((flags & RENDER_AMOUNT) != 0) {
 			String count = "";
 			if (amount != 1) {
 				count += amount;

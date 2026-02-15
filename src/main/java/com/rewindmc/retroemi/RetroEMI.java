@@ -10,6 +10,7 @@ import java.util.List;
 import dev.emi.emi.data.EmiTagExclusionsLoader;
 import dev.emi.emi.data.RecipeDefaultLoader;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import org.jetbrains.annotations.Nullable;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import cpw.mods.fml.common.registry.GameData;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -332,5 +333,26 @@ public class RetroEMI {
 //		manager.registerReloadListener(new EmiRemoveFromIndex());
         manager.registerReloadListener(new EmiTagExclusionsLoader());
         manager.registerReloadListener(EmiResourceManager.instance);
+    }
+
+    private static @Nullable String getIdInner(ItemStack stack) {
+        if (ItemStacks.isEmpty(stack)) {
+            return null;
+        }
+        Item item = stack.getItem();
+        if (item instanceof ItemBlock ib) {
+            return EmiPort.getBlockRegistry().getNameForObject(ib.field_150939_a);
+        } else {
+            return EmiPort.getItemRegistry().getNameForObject(item);
+        }
+    }
+
+    public static @Nullable String getId(ItemStack stack) {
+        String s = getIdInner(stack);
+        if (s != null && s.contains(":")) {
+            String[] parts = s.split(":");
+            return parts[1];
+        }
+        return null;
     }
 }

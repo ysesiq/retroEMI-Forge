@@ -47,7 +47,7 @@ public class REMIMixinHooks {
 			try {
 				InventoryCrafting inv = (InventoryCrafting) craftMatrix;
 				List<IRecipe> list = ((CraftingManagerAccessor) CraftingManager.getInstance()).getRecipes();
-				for (var r : list) {
+				for (IRecipe r : list) {
 					if (r.matches(inv, client.theWorld)) {
 						ResourceLocation id = EmiPort.getId(r);
 						EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);

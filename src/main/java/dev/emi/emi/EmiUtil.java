@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -39,11 +38,11 @@ public class EmiUtil {
 	}
 
 	public static String subId(Block block) {
-		return subId(EmiPort.id(GameRegistry.findUniqueIdentifierFor(block).toString()));
+		return subId(EmiPort.id(EmiPort.getBlockRegistry().getNameForObject(block)));
 	}
 
 	public static String subId(Item item) {
-		return subId(EmiPort.id(GameRegistry.findUniqueIdentifierFor(item).toString()));
+		return subId(EmiPort.id(EmiPort.getItemRegistry().getNameForObject(item)));
 	}
 
 	public static String subId(Fluid fluid) {
@@ -87,21 +86,6 @@ public class EmiUtil {
 		}, 3, 3);
 	}
 
-	public static InventoryCrafting getSoulforgeInventory() {
-		return new InventoryCrafting(new Container() {
-
-			@Override
-			public boolean canInteractWith(EntityPlayer player) {
-				return false;
-			}
-
-
-			@Override
-			public void detectAndSendChanges() {
-			}
-		}, 4, 4);
-	}
-
 	public static int getOutputCount(EmiRecipe recipe, EmiIngredient stack) {
 		int count = 0;
 		for (EmiStack o : recipe.getOutputs()) {
@@ -127,6 +111,9 @@ public class EmiUtil {
 		GuiContainer hs = EmiApi.getHandledScreen();
 		EmiCraftContext context = new EmiCraftContext<>(hs, inventory, EmiCraftContext.Type.CRAFTABLE);
 		for (EmiRecipe recipe : recipes) {
+			if (!recipe.supportsRecipeTree()) {
+				continue;
+			}
 			int weight = 0;
 			EmiRecipeHandler handler = EmiRecipeFiller.getFirstValidHandler(recipe, hs);
 			if (handler != null && handler.canCraft(recipe, context)) {
@@ -159,8 +146,8 @@ public class EmiUtil {
 		if (ingredient.getEmiStacks().size() == 1 && !ingredient.isEmpty()) {
 			EmiStack stack = ingredient.getEmiStacks().get(0);
 			return getPreferredRecipe(EmiApi.getRecipeManager().getRecipesByOutput(stack).stream().filter(r -> {
-				return r.supportsRecipeTree() && r.getOutputs().stream().anyMatch(i -> i.isEqual(stack));
-			}).collect(Collectors.toList()), inventory, false);
+					return r.getOutputs().stream().anyMatch(i -> i.isEqual(stack));
+				}).collect(Collectors.toList()), inventory, false);
 		}
 		return null;
 	}

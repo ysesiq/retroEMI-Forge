@@ -1,5 +1,7 @@
 package shim.net.minecraft.client.util.math;
 
+import org.lwjgl.opengl.GL11;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class MatrixStack {
@@ -28,4 +30,11 @@ public class MatrixStack {
 		r.run();
 	}
 
+    public void push() {
+        GL11.glPushMatrix();
+    }
+
+    public void pop() {
+        GL11.glPopMatrix();
+    }
 }
