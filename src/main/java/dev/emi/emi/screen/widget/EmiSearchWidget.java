@@ -39,7 +39,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 	public boolean highlight = false;
 	// Reimplement focus because other mods keep breaking it
 	public boolean isFocused;
-	Tessellator tessellator = Tessellator.instance;
+//	Tessellator tessellator = Tessellator.instance;
 
 	public EmiSearchWidget(FontRenderer fontRenderer, int x, int y, int width, int height) {
 		super(fontRenderer, x, y, width, height, EmiPort.literal(""));

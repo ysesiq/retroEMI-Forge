@@ -29,7 +29,7 @@ dependencies {
     api("com.github.GTNewHorizons:GTNHLib:0.9.0:dev") { transitive = false }
 
     // Compatible mods
-//    implementation("com.github.GTNewHorizons:waila:1.19.22:dev") { transitive = false }
+    implementation("com.github.GTNewHorizons:waila:1.19.22:dev") { transitive = false }
     implementation("com.github.GTNewHorizons:NotEnoughItems:2.7.50-GTNH:dev")
 
     // Compatibility test

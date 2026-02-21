@@ -135,6 +135,17 @@ public class FillRecipeC2SPacket implements EmiPacket {
 					} else {
 						Slot s = crafting.get(i);
 						if (s != null && s.isItemValid(stack) && stack.stackSize <= s.getSlotStackLimit()) {
+                            if (!ItemStacks.isEmpty(s.getStack())) { // Make sure we don't accidentally delete any items that could have been placed in this slot
+                                if (s.canTakeStack(player)) {
+                                    ItemStack taken = s.getStack();
+                                    rubble.add(taken.copy());
+                                    s.putStack(ItemStacks.EMPTY);
+                                    s.onPickupFromSlot(player, taken);
+                                } else {
+                                    player.inventory.addItemStackToInventory(stack);
+                                    continue;
+                                }
+                            }
 							s.putStack(stack);
 						} else {
 							RetroEMI.offerOrDrop(player, stack);

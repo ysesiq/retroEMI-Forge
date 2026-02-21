@@ -44,16 +44,26 @@ public class EmiClientForge {
 //    }
 
     @SubscribeEvent
+    public void renderScreenBackground(GuiScreenEvent.DrawScreenEvent.Pre event) {
+        EmiDrawContext context = EmiDrawContext.instance();
+        if (event.gui instanceof GuiContainer screen) {
+            EmiScreenBase base = EmiScreenBase.of(screen);
+            if (base != null) {
+                EmiScreenManager.drawBackground(context, event.mouseX, event.mouseY, event.renderPartialTicks);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void renderScreenForeground(GuiScreenEvent.DrawScreenEvent.Post event) {
         EmiDrawContext context = EmiDrawContext.instance();
         if (event.gui instanceof GuiContainer screen) {
             EmiScreenBase base = EmiScreenBase.of(screen);
             if (base != null) {
-                Minecraft client = Minecraft.getMinecraft();
                 context.push();
                 EmiPort.setPositionTexShader();
-                EmiScreenManager.render(context, event.mouseX, event.mouseY, client.timer.renderPartialTicks);
-                EmiScreenManager.drawForeground(context, event.mouseX, event.mouseY, client.timer.renderPartialTicks);
+                EmiScreenManager.render(context, event.mouseX, event.mouseY, event.renderPartialTicks);
+                EmiScreenManager.drawForeground(context, event.mouseX, event.mouseY, event.renderPartialTicks);
                 context.pop();
             }
         }

@@ -1,56 +1,82 @@
 package dev.emi.emi.nemi;
 
-import codechicken.nei.*;
-import codechicken.nei.api.API;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import codechicken.nei.LayoutManager;
+import codechicken.nei.LayoutStyleMinecraft;
+import cpw.mods.fml.common.Loader;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.api.widget.Bounds;
-import dev.emi.emi.config.EmiConfig;
+import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.RecipeScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Method;
+import java.util.List;
 
 @EmiEntrypoint
 public class NemiPlugin implements EmiPlugin {
     private static final Minecraft client = Minecraft.getMinecraft();
-    private static final Map<ItemStack, EmiStack> stackCache = new HashMap<>();
 
     public static void onLoad() {
-        API.registerNEIGuiHandler(new NemiScreenHandler());
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void cycleNemi() {
-        EmiConfig.enabled = !EmiConfig.enabled;
-        if (client.currentScreen instanceof RecipeScreen rs) {
-            rs.close();
+        if (Loader.isModLoaded("NotEnoughItems")) {
+            try {
+                Class<?> apiClass = Class.forName("codechicken.nei.api.API");
+                Method registerMethod = apiClass.getMethod("registerNEIGuiHandler",
+                    Class.forName("codechicken.nei.api.INEIGuiHandler"));
+                Object handler = new NemiScreenHandler();
+                registerMethod.invoke(null, handler);
+            } catch (Exception e) {
+                EmiLog.error("Failed to register NEI GUI handler via reflection", e);
+            }
         }
     }
 
     @Override
     public void register(EmiRegistry registry) {
-        registry.addGenericExclusionArea((screen, consumer) -> {
-            final LayoutStyleMinecraft layout = (LayoutStyleMinecraft) LayoutManager.getLayoutStyle();
-            final int rows = (int) Math.ceil((double) layout.buttonCount / layout.numButtons);
-            final int diff = rows * 19 + 2;
-            consumer.accept(new Bounds(0, 0, layout.numButtons * 19, diff));
-        });
+        if (Loader.isModLoaded("NotEnoughItems")) {
+            registry.addGenericExclusionArea((screen, consumer) -> {
+                final LayoutStyleMinecraft layout = (LayoutStyleMinecraft) LayoutManager.getLayoutStyle();
+                if (layout != null && !(client.currentScreen instanceof RecipeScreen)) {
+                    final int rows = (int) Math.ceil((double) layout.buttonCount / layout.numButtons);
+                    final int diff = rows * 19 + 2;
+                    consumer.accept(new Bounds(0, 0, layout.numButtons * 19, diff));
+                }
+            });
+
+            registry.addGenericStackProvider((screen, x, y) -> {
+                if (client.currentScreen instanceof GuiContainer guiContainer) {
+                    ItemStack stack = null;
+                    List<Slot> inventorySlots = guiContainer.inventorySlots.inventorySlots;
+                    if (inventorySlots != null) {
+                        for (Slot slot : inventorySlots) {
+                            if (isMouseOverSlot(guiContainer, slot, x, y)) {
+                                stack = slot.getStack();
+                                break;
+                            }
+                        }
+                    }
+                    if (stack != null && stack.stackSize > 0) {
+                        EmiStack emiStack = EmiStack.of(stack.getItem(), stack.getItemDamage());
+                        return new EmiStackInteraction(emiStack);
+                    }
+                }
+                return EmiStackInteraction.EMPTY;
+            });
+        }
     }
 
-    public static EmiStack stackEmi2Nei(ItemStack neiStack) {
-        return stackCache.computeIfAbsent(neiStack, stack ->
-            EmiStack.of(stack.getItem(), stack.getItemDamage())
-        );
-    }
+    private static boolean isMouseOverSlot(GuiContainer gui, Slot slot, int mouseX, int mouseY) {
+        if (gui == null || slot == null) {
+            return false;
+        }
 
-    public static ItemStack stackNei2Emi(EmiStack emiStack) {
-        return emiStack.getItemStack().copy();
+        return mouseX >= slot.xDisplayPosition + gui.guiLeft && mouseX < slot.xDisplayPosition + gui.guiLeft + 16 &&
+               mouseY >= slot.yDisplayPosition + gui.guiTop && mouseY < slot.yDisplayPosition + gui.guiTop + 16;
     }
 }

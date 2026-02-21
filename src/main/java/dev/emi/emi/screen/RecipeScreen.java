@@ -45,9 +45,9 @@ import net.minecraft.util.ResourceLocation;
 public class RecipeScreen extends REMIScreen {
 	private static final ResourceLocation TEXTURE = EmiPort.id("emi", "textures/gui/background.png");
 	public static @Nullable EmiIngredient resolve = null;
-	private Map<EmiRecipeCategory, List<EmiRecipe>> recipes;
+	public Map<EmiRecipeCategory, List<EmiRecipe>> recipes;
 	public GuiContainer old;
-	private List<RecipeTab> tabs = Lists.newArrayList();
+	public List<RecipeTab> tabs = Lists.newArrayList();
 	private int tabPageSize = 6;
 	private int tabPage = 0, tab = 0, page = 0;
 	private List<SizedButtonWidget> arrows;
@@ -58,7 +58,7 @@ public class RecipeScreen extends REMIScreen {
 	private double scrollAcc = 0;
 	private int minimumWidth = 176;
 	int backgroundWidth = minimumWidth;
-	int backgroundHeight = 200;
+	public int backgroundHeight = 200;
 	int x = (this.width - backgroundWidth) / 2;
 	int y = (this.height - backgroundHeight) / 2;
 

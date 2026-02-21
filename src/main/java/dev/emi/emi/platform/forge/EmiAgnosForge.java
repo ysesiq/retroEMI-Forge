@@ -328,7 +328,9 @@ public class EmiAgnosForge extends EmiAgnos {
     protected void renderFluidAgnos(FluidEmiStack stack, MatrixStack matrices, int x, int y, float delta, int xOff, int yOff, int width, int height) {
         FluidStack fs = new FluidStack(stack.getKeyOfType(Fluid.class), 1000, stack.getNbt());
         RenderSystem.setShaderTexture(0, TextureMap.locationBlocksTexture);
-        Minecraft.getMinecraft().currentScreen.drawTexturedModelRectFromIcon(x, y, fs.getFluid().getIcon(), 16, 16);
+        if (fs.getFluid().getIcon() != null) {
+            Minecraft.getMinecraft().currentScreen.drawTexturedModelRectFromIcon(x, y, fs.getFluid().getIcon(), 16, 16);
+        }
     }
 
     @Override

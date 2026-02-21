@@ -1,6 +1,5 @@
 package dev.emi.emi.mixin.early.minecraft.client;
 
-import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.mixinsupport.inject_interface.EmiSearchInput;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,18 +20,6 @@ public class GuiContainerMixin extends GuiScreen {
     @Inject(method = "initGui", at = @At("TAIL"))
     private void addEMIWidgets(CallbackInfo ci) {
         EmiScreenManager.addWidgets(this);
-    }
-
-    @Inject(
-            method = "drawScreen",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/inventory/GuiContainer;drawDefaultBackground()V",
-                    shift = At.Shift.AFTER
-            ))
-    private void renderEMIBackground(int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        EmiDrawContext context = EmiDrawContext.instance();
-        EmiScreenManager.drawBackground(context, mouseX, mouseY, delta);
     }
 
     @Inject(method = "func_146977_a", at = @At(value = "RETURN"))
