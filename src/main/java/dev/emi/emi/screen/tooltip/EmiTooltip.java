@@ -1,14 +1,14 @@
 package dev.emi.emi.screen.tooltip;
 
+import com.rewindmc.retroemi.RetroEMI;
+import dev.emi.emi.EmiPort;
+import net.minecraft.util.EnumChatFormatting;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import dev.emi.emi.EmiPort;
-import com.rewindmc.retroemi.RetroEMI;
-import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
-import shim.net.minecraft.util.Formatting;
 
 public class EmiTooltip {
 	public static final DecimalFormat TEXT_FORMAT = new DecimalFormat("0.##");
@@ -17,7 +17,7 @@ public class EmiTooltip {
 		return TooltipComponent.of(EmiPort.ordered(
 			EmiPort.translatable("tooltip.emi.chance." + type,
 				TEXT_FORMAT.format(chance * 100))
-					.formatted(Formatting.GOLD)));
+					.formatted(EnumChatFormatting.GOLD)));
 	}
 
 	public static List<TooltipComponent> splitTranslate(String key) {

@@ -1,11 +1,6 @@
 package dev.emi.emi.runtime;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import com.google.common.collect.Lists;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.EmiApi;
@@ -20,10 +15,13 @@ import dev.emi.emi.registry.EmiRecipeFiller;
 import dev.emi.emi.screen.MicroTextRenderer;
 import dev.emi.emi.screen.StackBatcher.Batchable;
 import dev.emi.emi.screen.tooltip.RecipeTooltipComponent;
+import net.minecraft.util.EnumChatFormatting;
+import org.jetbrains.annotations.Nullable;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
+
+import java.util.List;
 
 public class EmiFavorite implements EmiIngredient, Batchable {
 	protected final EmiIngredient stack;
@@ -193,10 +191,10 @@ public class EmiFavorite implements EmiIngredient, Batchable {
 			list.addAll(super.getTooltip());
 
 			long diff = total - amount;
-			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.remaining", EmiRenderHelper.getAmountText(stack, amount)).formatted(Formatting.GRAY)));
-			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.obtained", EmiRenderHelper.getAmountText(stack, diff), EmiRenderHelper.getAmountText(stack, total)).formatted(Formatting.GRAY)));
+			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.remaining", EmiRenderHelper.getAmountText(stack, amount)).formatted(EnumChatFormatting.GRAY)));
+			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.obtained", EmiRenderHelper.getAmountText(stack, diff), EmiRenderHelper.getAmountText(stack, total)).formatted(EnumChatFormatting.GRAY)));
 			if (batches != amount) {
-				list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.batches_remaining", batches).formatted(Formatting.GRAY)));
+				list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.batches_remaining", batches).formatted(EnumChatFormatting.GRAY)));
 			}
 
 			if (state == -1) {

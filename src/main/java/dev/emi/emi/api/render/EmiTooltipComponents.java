@@ -1,7 +1,5 @@
 package dev.emi.emi.api.render;
 
-import java.util.List;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.EmiUtil;
@@ -12,9 +10,11 @@ import dev.emi.emi.screen.tooltip.IngredientTooltipComponent;
 import dev.emi.emi.screen.tooltip.RecipeCostTooltipComponent;
 import dev.emi.emi.screen.tooltip.RecipeTooltipComponent;
 import dev.emi.emi.screen.tooltip.RemainderTooltipComponent;
+import net.minecraft.util.EnumChatFormatting;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
+
+import java.util.List;
 
 public class EmiTooltipComponents {
 
@@ -50,7 +50,7 @@ public class EmiTooltipComponents {
 	 * @return A tooltip component that displays the amount of a provided stack.
 	 */
 	public static TooltipComponent getAmount(EmiIngredient ingredient) {
-		return of(EmiRenderHelper.getAmountText(ingredient, ingredient.getAmount()).copy().formatted(Formatting.GRAY));
+		return of(EmiRenderHelper.getAmountText(ingredient, ingredient.getAmount()).copy().formatted(EnumChatFormatting.GRAY));
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class EmiTooltipComponents {
 	public static void appendModName(List<TooltipComponent> components, String namespace) {
 		if (EmiConfig.appendModId) {
 			String mod = EmiUtil.getModName(namespace);
-			components.add(of(EmiPort.literal(mod, Formatting.BLUE, Formatting.ITALIC)));
+			components.add(of(EmiPort.literal(mod, EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC)));
 		}
 	}
 }

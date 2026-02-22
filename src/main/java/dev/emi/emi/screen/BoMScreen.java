@@ -1,18 +1,7 @@
 package dev.emi.emi.screen;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.util.ResourceLocation;
-import shim.org.lwjgl.glfw.GLFW;
-
 import com.google.common.collect.Lists;
-
+import com.rewindmc.retroemi.REMIScreen;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.EmiUtil;
@@ -43,16 +32,24 @@ import dev.emi.emi.runtime.EmiHistory;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import dev.emi.emi.screen.tooltip.RecipeTooltipComponent;
 import net.minecraft.client.Minecraft;
-import shim.net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
-import com.rewindmc.retroemi.REMIScreen;
+import shim.org.lwjgl.glfw.GLFW;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BoMScreen extends REMIScreen {
 	private static final int NODE_WIDTH = 30;
@@ -596,7 +593,7 @@ public class BoMScreen extends REMIScreen {
 			Text totalText;
 			if (cost instanceof ChanceMaterialCost cmc) {
 				totalText = EmiPort.append(EmiPort.literal("≈"), EmiRenderHelper.getAmountText(cost.ingredient, adjusted))
-					.formatted(Formatting.GOLD);
+					.formatted(EnumChatFormatting.GOLD);
 			} else {
 				totalText = EmiRenderHelper.getAmountText(cost.ingredient, adjusted);
 			}
@@ -604,7 +601,7 @@ public class BoMScreen extends REMIScreen {
 				long amount = alreadyDone;
 				if (amount < adjusted) {
 					Text amountText = amount == 0 ? EmiPort.literal("0") : (EmiRenderHelper.getAmountText(cost.ingredient, amount));
-					MutableText text = EmiPort.append(EmiPort.literal("", Formatting.RED), amountText);
+					MutableText text = EmiPort.append(EmiPort.literal("", EnumChatFormatting.RED), amountText);
 					text = EmiPort.append(text, EmiPort.literal("/"));
 					text = EmiPort.append(text, totalText);
 					return text;
@@ -782,7 +779,7 @@ public class BoMScreen extends REMIScreen {
 				a = Math.max(a, node.amount);
 				return EmiPort.append(EmiPort.literal("≈"),
 						EmiRenderHelper.getAmountText(node.ingredient, a))
-					.formatted(Formatting.GOLD);
+					.formatted(EnumChatFormatting.GOLD);
 			} else {
 				return EmiRenderHelper.getAmountText(node.ingredient, amount);
 			}

@@ -1,8 +1,8 @@
 package dev.emi.emi.config;
 
 import dev.emi.emi.EmiPort;
+import net.minecraft.util.EnumChatFormatting;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
 
 public enum SidebarType implements ConfigEnum {
 	NONE("none", 0, 0),
@@ -35,7 +35,7 @@ public enum SidebarType implements ConfigEnum {
 	}
 
 	public Text getDescription() {
-		return EmiPort.translatable("emi.sidebar.type." + name.replace("-", "_") + ".description").formatted(Formatting.GRAY);
+		return EmiPort.translatable("emi.sidebar.type." + name.replace("-", "_") + ".description").formatted(EnumChatFormatting.GRAY);
 	}
 
 	public static SidebarType fromName(String name) {

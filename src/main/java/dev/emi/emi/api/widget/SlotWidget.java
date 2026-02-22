@@ -1,10 +1,6 @@
 package dev.emi.emi.api.widget;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import com.google.common.collect.Lists;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -23,11 +19,15 @@ import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.screen.RecipeScreen;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import dev.emi.emi.screen.tooltip.RecipeCostTooltipComponent;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
-import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class SlotWidget extends Widget {
 	protected final EmiIngredient stack;
@@ -234,7 +234,7 @@ public class SlotWidget extends Widget {
 		EmiRecipe recipe = getRecipe();
 		if (recipe != null) {
 			if (recipe.getId() != null && EmiConfig.showRecipeIds) {
-				list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(recipe.getId().toString(), Formatting.GRAY))));
+				list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(recipe.getId().toString(), EnumChatFormatting.GRAY))));
 			}
 			if (canResolve() && EmiConfig.helpLevel.has(HelpLevel.NORMAL)) {
 				if (EmiConfig.viewRecipes.isBound()) {

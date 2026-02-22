@@ -1,38 +1,36 @@
 package dev.emi.emi.api.stack;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.jetbrains.annotations.ApiStatus;
-
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
-
 import com.google.common.collect.Lists;
-
+import com.rewindmc.retroemi.ItemStacks;
+import com.rewindmc.retroemi.RetroEMI;
 import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
+import dev.emi.emi.api.render.EmiRender;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.StackBatcher;
-import dev.emi.emi.api.render.EmiRender;
 import net.minecraft.client.Minecraft;
-import shim.net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import shim.net.minecraft.registry.tag.ItemKey;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import com.rewindmc.retroemi.ItemStacks;
-import com.rewindmc.retroemi.RetroEMI;
+import org.jetbrains.annotations.ApiStatus;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.item.TooltipContext;
+import shim.net.minecraft.registry.tag.ItemKey;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
 
 @ApiStatus.Internal
 public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
@@ -199,7 +197,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
                 String stackNamespace = GameData.getItemRegistry().getNameForObject(stack.getItem());
                 String modNamespaceBase = stackNamespace.replaceAll(":.*", "");
                 String modNamespace = modNamespaceBase.substring(0, 1).toUpperCase() + modNamespaceBase.substring(1);
-                list.add(TooltipComponent.of(Text.literal(modNamespace).formatted(Formatting.BLUE, Formatting.ITALIC)));
+                list.add(TooltipComponent.of(Text.literal(modNamespace).formatted(EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC)));
             }
             list.addAll(super.getTooltip());
         }

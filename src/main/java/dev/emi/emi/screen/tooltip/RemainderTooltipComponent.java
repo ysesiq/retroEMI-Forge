@@ -1,11 +1,7 @@
 package dev.emi.emi.screen.tooltip;
 
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -13,8 +9,12 @@ import dev.emi.emi.api.stack.ItemEmiStack;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import shim.net.minecraft.text.Text;
 import shim.net.minecraft.util.Formatting;
+
+import java.util.List;
+import java.util.Map;
 
 public class RemainderTooltipComponent implements EmiTooltipComponent {
 	public List<Remainder> remainders = Lists.newArrayList();
@@ -67,7 +67,7 @@ public class RemainderTooltipComponent implements EmiTooltipComponent {
 				is.setItemDamage(is.getItemDamage() - remainder.damage);
 				context.raw().drawItemInSlot(render.text, is, 18 * 2, 18 * i);
 				context.drawStack(input, 18 * 2, 18 * i, -1 ^ (EmiIngredient.RENDER_ICON | EmiIngredient.RENDER_AMOUNT | EmiIngredient.RENDER_REMAINDER));
-				Text t = remainder.damage > 0 ? EmiPort.literal("+" + remainder.damage, Formatting.GREEN) : EmiPort.literal("" + remainder.damage, Formatting.RED);
+				Text t = remainder.damage > 0 ? EmiPort.literal("+" + remainder.damage, EnumChatFormatting.GREEN) : EmiPort.literal("" + remainder.damage, EnumChatFormatting.RED);
 				int width = render.text.getStringWidth(t.asString());
 				context.push();
 				context.matrices().translate(0, 0, 200);
@@ -86,7 +86,7 @@ public class RemainderTooltipComponent implements EmiTooltipComponent {
 			if (chanced) {
 				Text t = EmiPort.literal(EmiTooltip.TEXT_FORMAT.format(remainder.remainder.getChance() * 100) + "%");
 				int tx = text.renderer.getStringWidth(t.asString());
-				text.draw(t, 27 - tx / 2, 9 + i * 18, Formatting.GOLD.getColorValue(), false);
+				text.draw(t, 27 - tx / 2, 9 + i * 18, Formatting.getColorValue(EnumChatFormatting.GOLD), false);
 			}
 		}
 	}

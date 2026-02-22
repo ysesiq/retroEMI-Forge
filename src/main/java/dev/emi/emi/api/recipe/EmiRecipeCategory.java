@@ -3,6 +3,7 @@ package dev.emi.emi.api.recipe;
 import java.util.Comparator;
 import java.util.List;
 
+import net.minecraft.util.EnumChatFormatting;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,11 +76,11 @@ public class EmiRecipeCategory implements EmiRenderable {
 		List<TooltipComponent> list = Lists.newArrayList();
 		list.add(TooltipComponent.of(EmiPort.ordered(getName())));
 		if (EmiUtil.showAdvancedTooltips()) {
-			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(id.toString(), Formatting.DARK_GRAY))));
+			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(id.toString(), EnumChatFormatting.DARK_GRAY))));
 		}
 		if (EmiConfig.appendModId) {
 			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(EmiUtil.getModName(getId().getResourceDomain()),
-				Formatting.BLUE, Formatting.ITALIC))));
+                EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC))));
 		}
 		return list;
 	}

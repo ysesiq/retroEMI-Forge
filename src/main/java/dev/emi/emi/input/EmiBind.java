@@ -1,19 +1,18 @@
 package dev.emi.emi.input;
 
+import com.github.bsideup.jabel.Desugar;
+import com.google.common.collect.Lists;
+import dev.emi.emi.EmiPort;
+import net.minecraft.util.EnumChatFormatting;
+import shim.net.minecraft.client.util.InputUtil;
+import shim.net.minecraft.text.MutableText;
+import shim.net.minecraft.text.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.github.bsideup.jabel.Desugar;
-import com.google.common.collect.Lists;
-
-import dev.emi.emi.EmiPort;
-import shim.net.minecraft.client.util.InputUtil;
-import shim.net.minecraft.text.MutableText;
-import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
 
 public class EmiBind {
 	public static final EmiBind LEFT_CLICK = new EmiBind("", new EmiBind.ModifiedKey(InputUtil.Type.MOUSE.createFromCode(0), 0));
@@ -58,7 +57,7 @@ public class EmiBind {
 
 	public Text getBindText() {
 		if (!isBound()) {
-			return EmiPort.literal("[]", Formatting.GOLD);
+			return EmiPort.literal("[]", EnumChatFormatting.GOLD);
 		} else {
 			ModifiedKey bind = boundKeys.get(0);
 			for (ModifiedKey key : boundKeys) {
@@ -67,9 +66,9 @@ public class EmiBind {
 					break;
 				}
 			}
-			return EmiPort.literal("[", Formatting.GOLD)
-				.append(bind.getKeyText(Formatting.GOLD))
-				.append(EmiPort.literal("]", Formatting.GOLD));
+			return EmiPort.literal("[", EnumChatFormatting.GOLD)
+				.append(bind.getKeyText(EnumChatFormatting.GOLD))
+				.append(EmiPort.literal("]", EnumChatFormatting.GOLD));
 		}
 	}
 
@@ -189,7 +188,7 @@ public class EmiBind {
 			return key == InputUtil.UNKNOWN_KEY;
 		}
 
-		public MutableText getKeyText(Formatting formatting) {
+		public MutableText getKeyText(EnumChatFormatting formatting) {
 			MutableText text = EmiPort.literal("", formatting);
 			appendModifiers(text, modifiers());
 			EmiPort.append(text, key().getLocalizedText());

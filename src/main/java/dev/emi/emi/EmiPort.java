@@ -1,17 +1,6 @@
 package dev.emi.emi;
 
-import javax.annotation.Nullable;
-import java.io.InputStream;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glEnable;
-
 import com.rewindmc.retroemi.EmiResourceManager;
-import shim.com.mojang.blaze3d.systems.RenderSystem;
-
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.api.stack.Comparison;
@@ -19,24 +8,36 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.*;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.nbt.NBTTagCompound;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Style;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
-import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.util.SyntheticIdentifier;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+
+import javax.annotation.Nullable;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 /**
  * Multiversion quarantine, to avoid excessive git pain
@@ -47,11 +48,11 @@ public final class EmiPort {
 		return Text.literal(s);
 	}
 
-	public static MutableText literal(String s, Formatting formatting) {
+	public static MutableText literal(String s, EnumChatFormatting formatting) {
 		return Text.literal(s).formatted(formatting);
 	}
 
-	public static MutableText literal(String s, Formatting... formatting) {
+	public static MutableText literal(String s, EnumChatFormatting... formatting) {
 		return Text.literal(s).formatted(formatting);
 	}
 
@@ -63,7 +64,7 @@ public final class EmiPort {
 		return Text.translatable(s);
 	}
 
-	public static MutableText translatable(String s, Formatting formatting) {
+	public static MutableText translatable(String s, EnumChatFormatting formatting) {
 		return Text.translatable(s).formatted(formatting);
 	}
 

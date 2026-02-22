@@ -1,27 +1,9 @@
 package dev.emi.emi.screen;
 
-import java.awt.*;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.StringSelection;
-import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.rewindmc.retroemi.RetroEMI;
-import cpw.mods.fml.common.Loader;
-import dev.emi.emi.nemi.NemiPlugin;
-import org.jetbrains.annotations.Nullable;
-import shim.net.minecraft.client.gui.widget.ButtonWidget;
-import shim.org.lwjgl.glfw.GLFW;
-
 import com.google.common.collect.Lists;
-import shim.com.mojang.blaze3d.systems.RenderSystem;
-
-import cpw.mods.fml.common.FMLCommonHandler;
 import com.rewindmc.retroemi.ItemStacks;
+import com.rewindmc.retroemi.RetroEMI;
+import cpw.mods.fml.common.FMLCommonHandler;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.EmiUtil;
@@ -73,23 +55,35 @@ import dev.emi.emi.screen.widget.EmiSearchWidget;
 import dev.emi.emi.screen.widget.SidebarButtonWidget;
 import dev.emi.emi.screen.widget.SizedButtonWidget;
 import dev.emi.emi.search.EmiSearch;
-import net.minecraft.item.Item;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import shim.net.minecraft.util.Formatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import org.jetbrains.annotations.Nullable;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.Element;
 import shim.net.minecraft.client.gui.ParentElement;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.Text;
+import shim.org.lwjgl.glfw.GLFW;
+
+import java.awt.*;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EmiScreenManager {
 	private static final int PADDING_SIZE = 1;
@@ -797,8 +791,8 @@ public class EmiScreenManager {
 			try {
 				EmiLog.error("Error rendering tooltip", e);
 				List<TooltipComponent> list = shim.java.List.of(
-					EmiTooltipComponents.of(EmiPort.literal("Error rendering tooltip", Formatting.RED)),
-					EmiTooltipComponents.of(EmiPort.literal("See log", Formatting.GRAY))
+					EmiTooltipComponents.of(EmiPort.literal("Error rendering tooltip", EnumChatFormatting.RED)),
+					EmiTooltipComponents.of(EmiPort.literal("See log", EnumChatFormatting.GRAY))
 				);
 				EmiRenderHelper.drawTooltip(base.screen(), context, list, mouseX, mouseY);
 			} catch (Exception e2) {

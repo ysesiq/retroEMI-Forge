@@ -1,14 +1,14 @@
 package dev.emi.emi.screen.widget.config;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.screen.ConfigScreen.Mutator;
+import net.minecraft.util.EnumChatFormatting;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.Formatting;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class BooleanWidget extends ConfigEntryWidget {
 	private final Mutator<Boolean> mutator;
@@ -27,9 +27,9 @@ public class BooleanWidget extends ConfigEntryWidget {
 
 	public Text getText() {
 		if (mutator.get()) {
-			return EmiPort.literal("true", Formatting.GREEN);
+			return EmiPort.literal("true", EnumChatFormatting.GREEN);
 		} else {
-			return EmiPort.literal("false", Formatting.RED);
+			return EmiPort.literal("false", EnumChatFormatting.RED);
 		}
 	}
 

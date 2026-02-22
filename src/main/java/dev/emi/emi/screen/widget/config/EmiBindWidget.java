@@ -1,18 +1,17 @@
 package dev.emi.emi.screen.widget.config;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.google.common.collect.Lists;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiBind.ModifiedKey;
 import dev.emi.emi.screen.ConfigScreen;
+import net.minecraft.util.EnumChatFormatting;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
 import shim.net.minecraft.client.util.InputUtil;
-import shim.net.minecraft.util.Formatting;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class EmiBindWidget extends ConfigEntryWidget {
 	private final ConfigScreen screen;
@@ -31,7 +30,7 @@ public class EmiBindWidget extends ConfigEntryWidget {
 		buttons.clear();
 		for (int i = 0; i < bind.boundKeys.size(); i++) {
 			final int j = i;
-			ButtonWidget widget = EmiPort.newButton(0, 0, 200, 20, bind.boundKeys.get(i).getKeyText(Formatting.RESET), button -> {
+			ButtonWidget widget = EmiPort.newButton(0, 0, 200, 20, bind.boundKeys.get(i).getKeyText(EnumChatFormatting.RESET), button -> {
 				screen.setActiveBind(bind, j);
 			});
 			buttons.add(widget);
@@ -52,20 +51,20 @@ public class EmiBindWidget extends ConfigEntryWidget {
 				button.setWidth(200);
 				button.x = x + width - 224;
 				if (screen.lastModifier == 0) {
-					button.setMessage(EmiPort.literal("...", Formatting.YELLOW));
+					button.setMessage(EmiPort.literal("...", EnumChatFormatting.YELLOW));
 				} else {
 					button.setMessage(new ModifiedKey(InputUtil.Type.KEYSYM
 						.createFromCode(screen.lastModifier), screen.activeModifiers)
-						.getKeyText(Formatting.YELLOW));
+						.getKeyText(EnumChatFormatting.YELLOW));
 				}
 			} else if (i < bind.boundKeys.size()) {
 				if (bind.boundKeys.get(i).isUnbound() && i > 0) {
 					button.setWidth(20);
 					button.x = x + width - 20;
 					button.y = y;
-					button.setMessage(EmiPort.literal("+", Formatting.AQUA));
+					button.setMessage(EmiPort.literal("+", EnumChatFormatting.AQUA));
 				} else {
-					button.setMessage(bind.boundKeys.get(i).getKeyText(Formatting.RESET));
+					button.setMessage(bind.boundKeys.get(i).getKeyText(EnumChatFormatting.RESET));
 				}
 			}
 			h += 24;

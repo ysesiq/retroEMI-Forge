@@ -1,6 +1,6 @@
 package shim.net.minecraft.text;
 
-import shim.net.minecraft.util.Formatting;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +48,13 @@ public class TextImpl implements OrderedText, Text, MutableText {
 	}
 
 	@Override
-	public MutableText formatted(Formatting fmt) {
+	public MutableText formatted(EnumChatFormatting fmt) {
 		this.style += fmt;
 		return this;
 	}
 
 	@Override
-	public MutableText formatted(Formatting... fmt) {
+	public MutableText formatted(EnumChatFormatting... fmt) {
 		StringBuilder sb = new StringBuilder(style.length()+(fmt.length*2));
 		sb.append(style);
 		for (var f : fmt) sb.append(f);

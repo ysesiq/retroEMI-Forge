@@ -1,11 +1,6 @@
 package dev.emi.emi.screen.tooltip;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.google.common.collect.Lists;
-
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -16,8 +11,13 @@ import dev.emi.emi.bom.MaterialTree;
 import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.EnumChatFormatting;
 import shim.net.minecraft.text.Text;
 import shim.net.minecraft.util.Formatting;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RecipeCostTooltipComponent implements EmiTooltipComponent {
 	private static final Text COST = EmiPort.translatable("emi.cost_per");
@@ -101,7 +101,7 @@ public class RecipeCostTooltipComponent implements EmiTooltipComponent {
 
 	@Override
 	public void drawTooltipText(TextRenderData text) {
-		text.draw(COST, 0, 0, Formatting.GRAY.getColorValue(), true);
+		text.draw(COST, 0, 0, Formatting.getColorValue(EnumChatFormatting.GRAY), true);
 	}
 
 	private static class Node {
@@ -112,7 +112,7 @@ public class RecipeCostTooltipComponent implements EmiTooltipComponent {
 		public Node(EmiIngredient stack, double amount, boolean chanced) {
 			this.stack = stack;
 			if (chanced) {
-				text = EmiPort.append(EmiPort.literal("≈"), EmiRenderHelper.getAmountText(stack, amount)).formatted(Formatting.GOLD);
+				text = EmiPort.append(EmiPort.literal("≈"), EmiRenderHelper.getAmountText(stack, amount)).formatted(EnumChatFormatting.GOLD);
 			} else {
 				text = EmiRenderHelper.getAmountText(stack, amount);
 			}

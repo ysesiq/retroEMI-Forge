@@ -1,12 +1,12 @@
 package shim.net.minecraft.text;
 
-import shim.net.minecraft.util.Formatting;
+import net.minecraft.util.EnumChatFormatting;
 
 public interface MutableText extends Text {
 
 	MutableText setStyle(Style s);
-	MutableText formatted(Formatting fmt);
-	MutableText formatted(Formatting... fmt);
+	MutableText formatted(EnumChatFormatting fmt);
+	MutableText formatted(EnumChatFormatting... fmt);
 	MutableText append(Text text);
 
 }
