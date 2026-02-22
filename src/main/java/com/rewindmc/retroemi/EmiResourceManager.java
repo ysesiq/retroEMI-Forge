@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import dev.emi.emi.EmiPort;
+import dev.emi.emi.platform.forge.EmiClientForge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.FileResourcePack;

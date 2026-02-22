@@ -1,8 +1,10 @@
 # 1.1.22-beta2
 
-* Add: Support JSON language files
+* Add: Support JSON files (Including language & data files)
 * Add: /emi command
 * Change: Optimized recipe IDs
+* Change: Optimized performance and significantly improved loading speed
+* Change: Optimized code
 * Fix: UI confusion caused when loading with NEIU
   + Press Ctrl+O to switch ui between the two mods
 

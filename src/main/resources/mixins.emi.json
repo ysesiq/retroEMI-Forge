@@ -18,7 +18,7 @@
     "early.forge.FluidMixin",
     "early.minecraft.item.ItemMixin",
     "early.minecraft.item.ItemStackMixin",
-    "early.minecraft.packet.NetServerHandlerMixin",
+    "early.minecraft.network.NetHandlerPlayServerMixin",
     "late.nei.LayoutStyleMinecraftMixin"
   ],
   "client": [
@@ -29,10 +29,9 @@
     "early.minecraft.client.GuiContainerMixin",
     "early.minecraft.client.GuiScreenMixin",
     "early.minecraft.client.InventoryEffectRendererMixin",
-    "early.minecraft.client.RenderBlockMixin",
     "early.minecraft.client.ResourceLocationMixin",
     "early.minecraft.client.SlotCraftingMixin",
-    "early.minecraft.packet.NetClientHandlerMixin"
+    "early.minecraft.network.NetHandlerPlayClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

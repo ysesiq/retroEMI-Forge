@@ -1,4 +1,4 @@
-package dev.emi.emi.mixin.early.minecraft.packet;
+package dev.emi.emi.mixin.early.minecraft.network;
 
 import com.rewindmc.retroemi.PacketReader;
 import dev.emi.emi.network.EmiPacket;
@@ -17,7 +17,7 @@ import java.io.DataInputStream;
 import java.util.function.Function;
 
 @Mixin(NetHandlerPlayServer.class)
-public abstract class NetServerHandlerMixin {
+public abstract class NetHandlerPlayServerMixin {
     @Shadow public EntityPlayerMP playerEntity;
 
     @Inject(method = "processVanilla250Packet", at = @At("RETURN"))

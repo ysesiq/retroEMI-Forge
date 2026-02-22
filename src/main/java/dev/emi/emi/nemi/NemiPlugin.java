@@ -2,13 +2,13 @@ package dev.emi.emi.nemi;
 
 import codechicken.nei.LayoutManager;
 import codechicken.nei.LayoutStyleMinecraft;
-import cpw.mods.fml.common.Loader;
-import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.api.widget.Bounds;
+import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
+import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.RecipeScreen;
 import net.minecraft.client.Minecraft;
@@ -19,27 +19,24 @@ import net.minecraft.item.ItemStack;
 import java.lang.reflect.Method;
 import java.util.List;
 
-@EmiEntrypoint
 public class NemiPlugin implements EmiPlugin {
     private static final Minecraft client = Minecraft.getMinecraft();
 
     public static void onLoad() {
-        if (Loader.isModLoaded("NotEnoughItems")) {
-            try {
-                Class<?> apiClass = Class.forName("codechicken.nei.api.API");
-                Method registerMethod = apiClass.getMethod("registerNEIGuiHandler",
-                    Class.forName("codechicken.nei.api.INEIGuiHandler"));
-                Object handler = new NemiScreenHandler();
-                registerMethod.invoke(null, handler);
-            } catch (Exception e) {
-                EmiLog.error("Failed to register NEI GUI handler via reflection", e);
-            }
+        try {
+            Class<?> apiClass = Class.forName("codechicken.nei.api.API");
+            Method registerMethod = apiClass.getMethod("registerNEIGuiHandler",
+                Class.forName("codechicken.nei.api.INEIGuiHandler"));
+            Object handler = new NemiScreenHandler();
+            registerMethod.invoke(null, handler);
+        } catch (Exception e) {
+            EmiLog.error("Failed to register NEI GUI handler via reflection", e);
         }
     }
 
     @Override
     public void register(EmiRegistry registry) {
-        if (Loader.isModLoaded("NotEnoughItems")) {
+        if (EmiAgnos.isModLoaded("NotEnoughItems")) {
             registry.addGenericExclusionArea((screen, consumer) -> {
                 final LayoutStyleMinecraft layout = (LayoutStyleMinecraft) LayoutManager.getLayoutStyle();
                 if (layout != null && !(client.currentScreen instanceof RecipeScreen)) {
@@ -76,7 +73,7 @@ public class NemiPlugin implements EmiPlugin {
             return false;
         }
 
-        return mouseX >= slot.xDisplayPosition + gui.guiLeft && mouseX < slot.xDisplayPosition + gui.guiLeft + 16 &&
-               mouseY >= slot.yDisplayPosition + gui.guiTop && mouseY < slot.yDisplayPosition + gui.guiTop + 16;
+        return mouseX >= slot.xDisplayPosition + ((GuiContainerAccessor) gui).getGuiLeft() && mouseX < slot.xDisplayPosition + ((GuiContainerAccessor) gui).getGuiLeft() + 16 &&
+               mouseY >= slot.yDisplayPosition + ((GuiContainerAccessor) gui).getGuiTop() && mouseY < slot.yDisplayPosition + ((GuiContainerAccessor) gui).getGuiTop() + 16;
     }
 }

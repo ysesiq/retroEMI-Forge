@@ -3,6 +3,7 @@ package dev.emi.emi;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.Fluid;
 
 import com.google.common.collect.Lists;
@@ -77,20 +78,18 @@ public class EmiRenderHelper {
 		context.drawTexture(texture, x + coriw, y + corih, cor,        cor,         u + corcen, v + corcen, cor, cor, 256, 256);
 	}
 
-	public static void drawTintedSprite(MatrixStack matrices, String sheet, int icon, int color, int x, int y, int xOff, int yOff, int width, int height) {
+	public static void drawTintedSprite(MatrixStack matrices, IIcon sprite, int color, int x, int y, int xOff, int yOff, int width, int height) {
+		if (sprite == null) {
+			return;
+		}
 		EmiPort.setPositionColorTexShader();
 		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-		Minecraft.getMinecraft().renderEngine.getTexture(EmiPort.id		("minecraft", sheet));
+		Minecraft.getMinecraft().renderEngine.getTexture(EmiPort.id(sprite.getIconName()));
 		RenderSystem.enableBlend();
 
 		float r = ((color >> 16) & 255) / 256f;
 		float g = ((color >> 8) & 255) / 256f;
 		float b = (color & 255) / 256f;
-
-		float minU = (float) (icon % 16 * 16 + 0) / 256.0F;
-		float maxU = (float) (icon % 16 * 16 + 16) / 256.0F;
-		float minV = (float) (icon / 16 * 16 + 0) / 256.0F;
-		float maxV = (float) (icon / 16 * 16 + 16) / 256.0F;
 
 		RenderSystem.setShaderColor(r, g, b, 1);
 
@@ -100,12 +99,12 @@ public class EmiRenderHelper {
 		float yMin = (float) y;
 		float xMax = xMin + width;
 		float yMax = yMin + height;
-		float uSpan = maxU - minU;
-		float vSpan = maxV - minV;
-		float uMin = minU + uSpan / 16 * xOff;
-		float vMin = minV + vSpan / 16 * yOff;
-		float uMax = maxU - uSpan / 16 * (16 - (width + xOff));
-		float vMax = maxV - vSpan / 16 * (16 - (height + yOff));
+		float uSpan = sprite.getMaxU() - sprite.getMinU();
+		float vSpan = sprite.getMaxV() - sprite.getMinV();
+		float uMin = sprite.getMinU() + uSpan / 16 * xOff;
+		float vMin = sprite.getMinV() + vSpan / 16 * yOff;
+		float uMax = sprite.getMaxU() - uSpan / 16 * (16 - (width + xOff));
+		float vMax = sprite.getMaxV() - vSpan / 16 * (16 - (height + yOff));
 		tess.addVertexWithUV(xMin, yMax, 1, uMin, vMax);
 		tess.addVertexWithUV(xMax, yMax, 1, uMax, vMax);
 		tess.addVertexWithUV(xMax, yMin, 1, uMax, vMin);
@@ -194,16 +193,16 @@ public class EmiRenderHelper {
 				mutable.add(comp);
 			}
 		}
-        context.enableDepthTest();
+		context.enableDepthTest();
 		RenderSystem.disableLighting();
 		EmiPort.setPositionTexShader();
 		context.resetColor();
 		RetroEMI.renderModernTooltip(screen, mutable, x, y, maxWidth, positioner);
 	}
 
-	public static void drawSlotHightlight(EmiDrawContext context, int x, int y, int w, int h) {
+	public static void drawSlotHightlight(EmiDrawContext context, int x, int y, int w, int h, int z) {
 		context.push();
-		context.matrices().translate(0, 0, 200);
+		context.matrices().translate(0, 0, z);
 		RenderSystem.colorMask(true, true, true, false);
 		context.fill(x, y, w, h, -2130706433);
 		RenderSystem.colorMask(true, true, true, true);

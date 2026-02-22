@@ -1,4 +1,4 @@
-package dev.emi.emi.mixin.early.minecraft.packet;
+package dev.emi.emi.mixin.early.minecraft.network;
 
 import com.rewindmc.retroemi.PacketReader;
 import dev.emi.emi.network.EmiPacket;
@@ -16,7 +16,7 @@ import java.io.DataInputStream;
 import java.util.function.Function;
 
 @Mixin(NetHandlerPlayClient.class)
-public class NetClientHandlerMixin {
+public class NetHandlerPlayClientMixin {
 
     @Inject(method = "handleCustomPayload", at = @At("HEAD"))
     public void handleCustomPayload(S3FPacketCustomPayload packetIn, CallbackInfo ci) {

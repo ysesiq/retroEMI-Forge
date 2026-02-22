@@ -1,5 +1,6 @@
 package dev.emi.emi.mixin.early.minecraft.client;
 
+import dev.emi.emi.mixinsupport.inject_interface.EmiGuiContainer;
 import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.mixinsupport.inject_interface.EmiSearchInput;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,8 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.rewindmc.retroemi.REMIMixinHooks;
 
 @Mixin(GuiContainer.class)
-public class GuiContainerMixin extends GuiScreen {
+public class GuiContainerMixin extends GuiScreen implements EmiGuiContainer {
     @Shadow public Container inventorySlots;
+
+    @Shadow
+    protected int xSize;
+
+    @Shadow
+    protected int ySize;
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void addEMIWidgets(CallbackInfo ci) {
@@ -32,5 +39,15 @@ public class GuiContainerMixin extends GuiScreen {
         if (((EmiSearchInput) this).getEMISearchInput()) {
             ci.cancel();
         }
+    }
+
+    @Override
+    public int setXSize(int s) {
+        return this.xSize = s;
+    }
+
+    @Override
+    public int setYSize(int s) {
+        return this.ySize = s;
     }
 }

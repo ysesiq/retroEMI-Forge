@@ -9,7 +9,7 @@
     "forge.FluidMixin",
     "minecraft.item.ItemMixin",
     "minecraft.item.ItemStackMixin",
-    "minecraft.packet.NetServerHandlerMixin"
+    "minecraft.network.NetHandlerPlayServerMixin"
   ],
   "client": [
     "minecraft.client.FontRendererMixin",
@@ -17,10 +17,9 @@
     "minecraft.client.GuiContainerMixin",
     "minecraft.client.GuiScreenMixin",
     "minecraft.client.InventoryEffectRendererMixin",
-    "minecraft.client.RenderBlockMixin",
     "minecraft.client.ResourceLocationMixin",
     "minecraft.client.SlotCraftingMixin",
-    "minecraft.packet.NetClientHandlerMixin"
+    "minecraft.network.NetHandlerPlayClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

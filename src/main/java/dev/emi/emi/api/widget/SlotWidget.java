@@ -210,7 +210,7 @@ public class SlotWidget extends Widget {
 	}
 
 	public void drawSlotHighlight(DrawContext draw, Bounds bounds) {
-		EmiRenderHelper.drawSlotHightlight(EmiDrawContext.wrap(draw), bounds.x() + 1, bounds.y() + 1, bounds.width() - 2, bounds.height() - 2);
+		EmiRenderHelper.drawSlotHightlight(EmiDrawContext.wrap(draw), bounds.x() + 1, bounds.y() + 1, bounds.width() - 2, bounds.height() - 2, 200);
 	}
 
 	@Override

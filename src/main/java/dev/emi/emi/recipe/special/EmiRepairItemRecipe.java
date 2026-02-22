@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.api.recipe.EmiPatternCraftingRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
@@ -16,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class EmiRepairItemRecipe extends EmiPatternCraftingRecipe {
-    public static final List<Item> TOOLS =  ((Set<String>) Item.itemRegistry.getKeys()).stream().map(name -> (Item) Item.itemRegistry.getObject(name))
+    public static final List<Item> TOOLS =  RetroEMI.getAllItems().stream()
             .filter(item -> item != null && item.isRepairable()).collect(Collectors.toList());
     private final Item tool;
 
