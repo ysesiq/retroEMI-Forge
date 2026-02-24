@@ -1,15 +1,10 @@
 package dev.emi.emi.registry;
 
-import java.util.ListIterator;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import com.google.common.collect.Lists;
-
 import dev.emi.emi.api.EmiDragDropHandler;
 import dev.emi.emi.api.EmiExclusionArea;
 import dev.emi.emi.api.EmiRegistry;
+import dev.emi.emi.api.EmiScreenBoundsProvider;
 import dev.emi.emi.api.EmiStackProvider;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -21,15 +16,31 @@ import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import dev.emi.emi.data.EmiAlias;
 import dev.emi.emi.runtime.EmiHidden;
 import dev.emi.emi.runtime.EmiReloadLog;
+import dev.emi.emi.screen.EmiScreenBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.crafting.CraftingManager;
-import shim.net.minecraft.text.Text;
 import shim.java.List;
+import shim.net.minecraft.text.Text;
+
+import java.util.ListIterator;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class EmiRegistryImpl implements EmiRegistry {
 	private static final Minecraft client = Minecraft.getMinecraft();
+
+	@Override
+	public <T extends GuiScreen> void addScreenBoundsProvider(Class<T> clazz, EmiScreenBoundsProvider<T> provider) {
+		EmiScreenBase.addScreenBoundsProvider(clazz, provider);
+	}
+
+	@Override
+	public void addGenericScreenBoundsProvider(EmiScreenBoundsProvider<GuiScreen> provider) {
+		EmiScreenBase.addGenericScreenBoundsProvider(provider);
+	}
 
 	@Override
 	public boolean isStackDisabled(EmiIngredient stack) {

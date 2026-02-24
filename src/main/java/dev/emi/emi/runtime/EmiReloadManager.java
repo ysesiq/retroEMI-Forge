@@ -1,13 +1,7 @@
 package dev.emi.emi.runtime;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.google.common.collect.Lists;
-
 import dev.emi.emi.EmiPort;
-import dev.emi.emi.VanillaPlugin;
 import dev.emi.emi.api.EmiInitRegistry;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -26,11 +20,16 @@ import dev.emi.emi.registry.EmiRegistryImpl;
 import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.registry.EmiStackProviders;
 import dev.emi.emi.registry.EmiTags;
+import dev.emi.emi.screen.EmiScreenBase;
 import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.crafting.CraftingManager;
 import shim.net.minecraft.text.Text;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class EmiReloadManager {
 	private static int loadedResourcesMask = 0;
@@ -136,6 +135,7 @@ public class EmiReloadManager {
 					EmiHidden.clear();
 					EmiTags.ADAPTERS_BY_CLASS.map().clear();
 					EmiTags.ADAPTERS_BY_REGISTRY.clear();
+					EmiScreenBase.clearScreenBoundsProviders();
 					if (clear) {
 						clear = false;
 						continue;
@@ -148,8 +148,8 @@ public class EmiReloadManager {
 						EmiReloadLog.warn("Recipe Manager is null");
 						break;
 					}
-                    step(EmiPort.literal("Loading plugin"));
-                    List<EmiPluginContainer> plugins = Lists.newArrayList();
+					step(EmiPort.literal("Loading plugin"));
+					List<EmiPluginContainer> plugins = Lists.newArrayList();
 					plugins.addAll(EmiAgnos.getPlugins().stream()
 						.sorted((a, b) -> Integer.compare(entrypointPriority(a), entrypointPriority(b))).collect(java.util.stream.Collectors.toList()));
 

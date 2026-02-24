@@ -1,15 +1,9 @@
 package dev.emi.emi.api;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import dev.emi.emi.api.recipe.handler.EmiRecipeHandler;
-import org.jetbrains.annotations.ApiStatus;
-
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiRecipeDecorator;
+import dev.emi.emi.api.recipe.handler.EmiRecipeHandler;
 import dev.emi.emi.api.stack.Comparison;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
@@ -17,10 +11,34 @@ import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.crafting.CraftingManager;
-import shim.net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
+import shim.net.minecraft.text.Text;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface EmiRegistry {
+
+	/**
+	 * Adds a screen bounds provider for screens of a given class.
+	 * This allows EMI to properly recognize and handle custom screens.
+	 *
+	 * @param clazz The class of screen to provide bounds for
+	 * @param provider The screen bounds provider
+	 */
+	@ApiStatus.Experimental
+	<T extends GuiScreen> void addScreenBoundsProvider(Class<T> clazz, EmiScreenBoundsProvider<T> provider);
+
+	/**
+	 * Adds a screen bounds provider for every screen.
+	 * This allows EMI to properly recognize and handle custom screens.
+	 *
+	 * @param provider The screen bounds provider
+	 */
+	@ApiStatus.Experimental
+	void addGenericScreenBoundsProvider(EmiScreenBoundsProvider<GuiScreen> provider);
 
 	/**
 	 * @return Whether the provided stack is disabled.
