@@ -153,7 +153,7 @@ public class EmiReloadManager {
 					plugins.addAll(EmiAgnos.getPlugins().stream()
 						.sorted((a, b) -> Integer.compare(entrypointPriority(a), entrypointPriority(b))).collect(java.util.stream.Collectors.toList()));
 
-					if (EmiAgnos.isModLoaded("NotEnoughItem")) {
+					if (EmiAgnos.isModLoaded("NotEnoughItems")) {
 						plugins.add(new EmiPluginContainer(new NemiPlugin(), "nemi"));
 					}
 					EmiInitRegistry initRegistry = new EmiInitRegistryImpl();

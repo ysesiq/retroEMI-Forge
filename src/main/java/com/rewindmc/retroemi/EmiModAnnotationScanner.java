@@ -8,6 +8,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -44,37 +45,58 @@ public class EmiModAnnotationScanner {
 						JarEntry entry = entries.nextElement();
 						if (entry.getName().endsWith(".class") && !entry.isDirectory()) {
 							try (InputStream is = jarFile.getInputStream(entry)) {
-								if (hasAnnotation(is, annotationName)) {
+								byte[] classBytes = readAllBytes(is);
+								if (classBytes.length > 0 && hasAnnotation(classBytes, annotationName)) {
 									String className = entry.getName().replace('/', '.').replace(".class", "");
 									Class<?> clazz = classLoader.loadClass(className);
 									annotatedClasses.add(clazz);
 								}
+							} catch (Exception e) {
+								EmiLog.warn("Failed to process class " + entry.getName() + ": " + e.getMessage());
 							}
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
-			EmiLog.error("Error scanning for annotated classes:", e);
+			EmiLog.error("Error scanning for annotated classes", e);
 		}
 
 		return annotatedClasses;
 	}
 
-	private static boolean hasAnnotation(InputStream is, final String annotationName) throws IOException {
-		final boolean[] hasAnnotation = {false};
+	private static byte[] readAllBytes(InputStream inputStream) throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		int nRead;
+		byte[] data = new byte[1024];
+		while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+			buffer.write(data, 0, nRead);
+		}
+		return buffer.toByteArray();
+	}
 
-		ClassReader classReader = new ClassReader(is);
-		classReader.accept(new ClassVisitor(Opcodes.ASM4) {
-			@Override
-			public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-				if (annotationName.equals(desc)) {
-					hasAnnotation[0] = true;
+	private static boolean hasAnnotation(byte[] classBytes, final String annotationName) {
+		try {
+			final boolean[] hasAnnotation = {false};
+
+			ClassReader classReader = new ClassReader(classBytes);
+			classReader.accept(new ClassVisitor(Opcodes.ASM5) { // 升级到 ASM5
+				@Override
+				public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+					if (annotationName.equals(desc)) {
+						hasAnnotation[0] = true;
+					}
+					return super.visitAnnotation(desc, visible);
 				}
-				return super.visitAnnotation(desc, visible);
-			}
-		}, 0);
+			}, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
-		return hasAnnotation[0];
+			return hasAnnotation[0];
+		} catch (IllegalArgumentException e) {
+			EmiLog.warn("Skipping incompatible class file: " + e.getMessage());
+			return false;
+		} catch (Exception e) {
+			EmiLog.warn("Error processing class with ASM: " + e.getMessage());
+			return false;
+		}
 	}
 }
