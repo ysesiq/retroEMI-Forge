@@ -79,8 +79,13 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
         }
 
         for (Object entry : srm.domainResourceManagers.entrySet()) {
-            String namespace = ((Map.Entry<String, FallbackResourceManager>) entry).getKey();
-            FallbackResourceManager frm = ((Map.Entry<String, FallbackResourceManager>) entry).getValue();
+            String namespace = ((Map.Entry<String, ?>) entry).getKey();
+            Object frmObj = ((Map.Entry<String, ?>) entry).getValue();
+
+            if (!(frmObj instanceof FallbackResourceManager frm)) {
+                continue;
+            }
+
             String assetPrefix = "assets/" + namespace + "/";
 
             for (IResourcePack pack : (List<IResourcePack>) frm.resourcePacks) {
