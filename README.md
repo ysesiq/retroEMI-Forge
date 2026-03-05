@@ -3,9 +3,9 @@ EMI is a featureful and accessible item and recipe viewer for Minecraft.
 
 * Fork form [Rewind/retroEMI](https://git.sleeping.town/Rewind/retroEMI)
 
-Unascribed accidentally ported it to 1.4.7 because NEI is a trash heap! Oopsie daisy!
+exaptations accidentally ported it to 1.4.7 because NEI is a trash heap! Oopsie daisy!
 
-Even though NEI-Unofficial is very powerful, it still inherits NEI's unaesthetic shortcomings, so Xy_Lose ported it again to Forge 1.7.10
+Even though NEI-Unofficial is very powerful, it still inherits NEI's unaesthetic shortcomings, so Xy_Lose ported it again to Forge 1.7.10! Woo!
 
 ## Port notes
 
@@ -18,4 +18,6 @@ Mixin is provided by [UniMixins](https://github.com/LegacyModdingMC/UniMixins).
 
 Part of the code refers to [Bommels05's EMI 1.7.10 port](https://github.com/Bommels05/emi), such as tag, data, etc
 
-NEI-Unofficial compatibility Stay tuned, it's not something that will happen for a while, and I've been under a lot of pressure to study lately.
+### Note about NEI-Unofficial compatibility
+
+Stay tuned, it's not something that will happen for a while, and I've been under a lot of pressure to study lately.
