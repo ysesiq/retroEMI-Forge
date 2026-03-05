@@ -48,6 +48,8 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
             } catch (IOException ignore) {
             }
         }
+        EmiClientForge.registerAdditionalModels();
+        EmiClientForge.registerResourceReloaders();
     }
 
     private void loadLocaleData(List<IResource> resources, String code) throws IOException {

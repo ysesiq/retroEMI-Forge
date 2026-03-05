@@ -36,8 +36,6 @@ public class EmiClientForge {
 		PacketReader.registerClientPacketReader(EmiNetwork.COMMAND, CommandS2CPacket::new);
 		PacketReader.registerClientPacketReader(EmiNetwork.CHESS, EmiChessPacket.S2C::new);
 		RetroEMI.registerReloadListeners((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager());
-		EmiClientForge.registerAdditionalModels();
-		EmiClientForge.registerResourceReloaders();
 	}
 
 	public static void registerAdditionalModels() {
