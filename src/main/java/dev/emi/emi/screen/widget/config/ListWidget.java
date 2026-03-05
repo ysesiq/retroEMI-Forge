@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.AbstractParentElement;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.Drawable;
@@ -30,8 +31,7 @@ import org.lwjgl.opengl.GL14;
  * This is the lesser of two evils, at least this way I have vanilla compat.
  */
 public class ListWidget extends AbstractParentElement implements Drawable {
-	private static final ResourceLocation MENU_LIST_BACKGROUND_TEXTURE = EmiPort.id("minecraft", "textures/gui/menu_list_background.png");
-	private static final ResourceLocation INWORLD_MENU_LIST_BACKGROUND_TEXTURE = EmiPort.id("minecraft", "textures/gui/inworld_menu_list_background.png");
+	private static final ResourceLocation MENU_LIST_BACKGROUND_TEXTURE = EmiPort.id("minecraft", "textures/gui/options_background.png");
 
 	protected final Minecraft client;
 	private final List<Entry> children = Lists.newArrayList();
@@ -160,39 +160,41 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		this.hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
 
 		{	// Render background
-			Minecraft.getMinecraft().getTextureManager().getTexture(EmiPort.id("textures/gui/options_background.png"));
+			Minecraft.getMinecraft().getTextureManager().getTexture(MENU_LIST_BACKGROUND_TEXTURE);
             context.setColor(32 / 255f, 32 / 255f, 32 / 255f, 1);
 			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV((double) this.left, (double) this.bottom, 0.0, (float) this.left / 32.0F,
+			tessellator.addVertexWithUV(this.left, this.bottom, 0.0, (float) this.left / 32.0F,
 					(float) (this.bottom + (int) this.getScrollAmount()) / 32.0F);
-			tessellator.addVertexWithUV((double) this.right, (double) this.bottom, 0.0, (float) this.right / 32.0F,
+			tessellator.addVertexWithUV(this.right, this.bottom, 0.0, (float) this.right / 32.0F,
 					(float) (this.bottom + (int) this.getScrollAmount()) / 32.0F);
-			tessellator.addVertexWithUV((double) this.right, (double) this.top, 0.0, (float) this.right / 32.0F,
+			tessellator.addVertexWithUV(this.right, this.top, 0.0, (float) this.right / 32.0F,
 					(float) (this.top + (int) this.getScrollAmount()) / 32.0F);
-			tessellator.addVertexWithUV((double) this.left, (double) this.top, 0.0, (float) this.left / 32.0F,
+			tessellator.addVertexWithUV(this.left, this.top, 0.0, (float) this.left / 32.0F,
 					(float) (this.top + (int) this.getScrollAmount()) / 32.0F);
 			tessellator.draw();
 			context.resetColor();
 		}
 
+		draw.enableScissor(left, top, right, bottom);
 		int k = this.getRowLeft();
-		int l = this.top + 4 - (int) this.getScrollAmount();
+		int l = this.top + 4 - (int)this.getScrollAmount();
 		this.renderList(draw, k, l, mouseX, mouseY, delta);
+		draw.disableScissor();
 
 		{	// Render horizontal shadows
-			Minecraft.getMinecraft().renderEngine.bindTexture(EmiPort.id("textures/gui/options_background.png"));
+			Minecraft.getMinecraft().renderEngine.bindTexture(MENU_LIST_BACKGROUND_TEXTURE);
 			context.setColor(64 / 255f, 64 / 255f, 64 / 255f, 1);
             context.enableDepthTest();
 			GL11.glDepthFunc(GL11.GL_ALWAYS);
 			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV((double) this.left, (double) this.top, -100.0, 0.0F, (float) this.top / 32.0F);
-			tessellator.addVertexWithUV((double) (this.left + this.width), (double) this.top, -100.0, (float) this.width / 32.0F, (float) this.top / 32.0F);
-			tessellator.addVertexWithUV((double) (this.left + this.width), 0.0, -100.0, (float) this.width / 32.0F, 0.0F);
-			tessellator.addVertexWithUV((double) this.left, 0.0, -100.0, 0.0F, 0.0F);
-			tessellator.addVertexWithUV((double) this.left, (double) this.height, -100.0, 0.0F, (float) this.height / 32.0F);
-			tessellator.addVertexWithUV((double) (this.left + this.width), (double) this.height, -100.0, (float) this.width / 32.0F, (float) this.height / 32.0F);
-			tessellator.addVertexWithUV((double) (this.left + this.width), (double) this.bottom, -100.0, (float) this.width / 32.0F, (float) this.bottom / 32.0F);
-			tessellator.addVertexWithUV((double) this.left, (double) this.bottom, -100.0, 0.0F, (float) this.bottom / 32.0F);
+			tessellator.addVertexWithUV(this.left, this.top, -100.0, 0.0F, (float) this.top / 32.0F);
+			tessellator.addVertexWithUV(this.left + this.width, this.top, -100.0, (float) this.width / 32.0F, (float) this.top / 32.0F);
+			tessellator.addVertexWithUV(this.left + this.width, 0.0, -100.0, (float) this.width / 32.0F, 0.0F);
+			tessellator.addVertexWithUV(this.left, 0.0, -100.0, 0.0F, 0.0F);
+			tessellator.addVertexWithUV(this.left, this.height, -100.0, 0.0F, (float) this.height / 32.0F);
+			tessellator.addVertexWithUV(this.left + this.width, this.height, -100.0, (float) this.width / 32.0F, (float) this.height / 32.0F);
+			tessellator.addVertexWithUV(this.left + this.width, this.bottom, -100.0, (float) this.width / 32.0F, (float) this.bottom / 32.0F);
+			tessellator.addVertexWithUV(this.left, this.bottom, -100.0, 0.0F, (float) this.bottom / 32.0F);
 			tessellator.draw();
             GL11.glDepthFunc(GL11.GL_LEQUAL);
             context.disableDepthTest();
@@ -203,20 +205,20 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 			n = 4;
 			tessellator.startDrawingQuads();
 			tessellator.setColorRGBA_F(0, 0, 0, 0);
-			tessellator.addVertex((double) this.left, (double) (this.top + 4), 0.0);
-			tessellator.addVertex((double) this.right, (double) (this.top + 4), 0.0);
+			tessellator.addVertex(this.left, this.top + n, 0.0);
+			tessellator.addVertex(this.right, this.top + n, 0.0);
 			tessellator.setColorRGBA_F(0, 0, 0, 1);
-			tessellator.addVertex((double) this.right, (double) this.top, 0.0);
-			tessellator.addVertex((double) this.left, (double) this.top, 0.0);
+			tessellator.addVertex(this.right, this.top, 0.0);
+			tessellator.addVertex(this.left, this.top, 0.0);
 
-			tessellator.addVertex((double) this.left, (double) this.bottom, 0.0);
-			tessellator.addVertex((double) this.right, (double) this.bottom, 0.0);
+			tessellator.addVertex(this.left, this.bottom, 0.0);
+			tessellator.addVertex(this.right, this.bottom, 0.0);
 			tessellator.setColorRGBA_F(0, 0, 0, 0);
-			tessellator.addVertex((double) this.right, (double) (this.bottom - 4), 0.0);
-			tessellator.addVertex((double) this.left, (double) (this.bottom - 4), 0.0);
+			tessellator.addVertex(this.right, this.bottom - n, 0.0);
+			tessellator.addVertex(this.left, this.bottom - n, 0.0);
 			tessellator.draw();
             GL11.glShadeModel(GL11.GL_FLAT);
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            EmiPort.setPositionTexShader();
 			context.resetColor();
 		}
 
@@ -248,9 +250,9 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 			tessellator.addVertex(i, n, 0.0);
 
 			tessellator.draw();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+            EmiPort.setPositionTexShader();
 		}
-        context.disableBlend();
+        RenderSystem.disableBlend();
 	}
 
 	public void centerScrollOn(Entry entry) {
@@ -341,7 +343,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		Entry entry = this.getEntryAtPosition(mouseX, mouseY);
 		if (entry != null) {
 			if (entry.mouseClicked(mouseX, mouseY, button)) {
-				this.setFocused((Element) entry);
+				this.setFocused(entry);
 				this.setDragging(true);
 				return true;
 			}

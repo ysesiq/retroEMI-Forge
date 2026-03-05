@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import dev.emi.emi.runtime.EmiDrawContext;
 import org.jetbrains.annotations.Nullable;
 import shim.org.lwjgl.glfw.GLFW;
 import org.lwjgl.input.Keyboard;
@@ -136,8 +137,12 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 	}
 
 	protected void render(DrawContext raw, int mouseX, int mouseY, float delta) {
+		EmiDrawContext context = EmiDrawContext.wrap(raw);
 		for (Drawable drawable : this.drawables) {
-			drawable.render(raw, mouseX, mouseY, delta);
+            context.push();
+            context.resetColor();
+            drawable.render(raw, mouseX, mouseY, delta);
+            context.pop();
 		}
 	}
 

@@ -1,6 +1,17 @@
 package dev.emi.emi.screen;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import shim.org.lwjgl.glfw.GLFW;
+
 import com.google.common.collect.Lists;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
+
 import com.rewindmc.retroemi.REMIScreen;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
@@ -42,14 +53,6 @@ import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Text;
-import shim.org.lwjgl.glfw.GLFW;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class BoMScreen extends REMIScreen {
 	private static final int NODE_WIDTH = 30;
@@ -213,7 +216,7 @@ public class BoMScreen extends REMIScreen {
 		int mx = (int) ((mouseX - width / 2) / scale - offX);
 		int my = (int) ((mouseY - height / 2) / scale - offY);
 
-		MatrixStack view = MatrixStack.INSTANCE;
+		MatrixStack view = RenderSystem.getModelViewStack();
 		view.pushMatrix();
 		view.translate(width / 2, height / 2, 0);
 		view.scale(scale, scale, 1);
@@ -234,6 +237,7 @@ public class BoMScreen extends REMIScreen {
 			boolean first = true;
 			for (Node node : nodes) {
 				if (!skipTree || (first && !(first = false))) {
+					RenderSystem.disableLighting();
 					node.render(context, mx, my, delta);
 				}
 			}
@@ -385,7 +389,7 @@ public class BoMScreen extends REMIScreen {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+		if (keyCode == shim.org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE) {
 			this.close();
 			return true;
 		} else if (this.client.gameSettings.keyBindInventory.getKeyCode() == (keyCode)) {

@@ -1,6 +1,5 @@
 package com.rewindmc.retroemi;
 
-import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +10,7 @@ import dev.emi.emi.data.EmiTagExclusionsLoader;
 import dev.emi.emi.data.RecipeDefaultLoader;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import cpw.mods.fml.common.registry.GameData;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -40,11 +40,11 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringTranslate;
 import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
+import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.client.util.math.Vec2i;
 
 public class RetroEMI {
@@ -147,6 +147,7 @@ public class RetroEMI {
 	}
 
 	public static void renderModernTooltip(GuiScreen screen, List<TooltipComponent> components, int x, int y, int maxWidth, TooltipPositioner positioner) {
+		MatrixStack matrix = EmiDrawContext.instance().matrices();
 		FontRenderer textRenderer = screen.mc.fontRenderer;
 		TooltipComponent tooltipComponent2;
 		int r;
@@ -167,19 +168,17 @@ public class RetroEMI {
 		Vec2i vector2ic = positioner.getPosition(screen, x, y, l, m);
 		int n = vector2ic.x();
 		int o = vector2ic.y();
-		glPushMatrix();
+		matrix.push();
 		int p = 400;
 		Tessellator tess = Tessellator.instance;
-		glDisable(GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		EmiDrawContext.instance().context.zLevel += 300;
 		TooltipBackgroundRenderer.render(
-				(builder, startX, startY, endX, endY, z, colorStart, colorEnd) -> EmiDrawContext.instance().context.drawGradientRect(startX, startY, endX, endY,
+				(builder, startX, startY, endX, endY, z, colorStart, colorEnd) -> EmiDrawContext.instance().raw().fillGradient(startX, startY, endX, endY, 300,
 						colorStart, colorEnd), tess, n, o, l, m, 400);
-		EmiDrawContext.instance().context.zLevel -= 300;
-		glTranslatef(0.0f, 0.0f, 400.0f);
+		matrix.translate(0.0f, 0.0f, p);
 		int q = o;
 		for (r = 0; r < components.size(); ++r) {
 			tooltipComponent2 = components.get(r);
@@ -192,7 +191,7 @@ public class RetroEMI {
 			tooltipComponent2.drawItems(textRenderer, n, q);
 			q += tooltipComponent2.getHeight() + (r == 0 ? 2 : 0);
 		}
-		glPopMatrix();
+		matrix.pop();
 	}
 
 	public static final IntSet heldButtons = new IntOpenHashSet();
