@@ -1,7 +1,15 @@
+# 1.1.2-beta3
+
+* Feature: Resource pack recipes support (NYI)
+* Fix: Sometimes colors of the recipe screen elements were wrong
+* Fix: Crashes when loading with DragonAPI
+* Fix: Change scale of the recipe tree screen leads to coloring errors
+* Change: Optimized code
+
 # 1.1.22-beta2
 
-* Add: Support JSON files (Including language & data files)
-* Add: /emi command
+* Feature: Support JSON files (Including language & data files)
+* Feature: /emi command
 * Change: Optimized recipe IDs
 * Change: Optimized performance and significantly improved loading speed
 * Change: Optimized code
@@ -12,5 +20,7 @@
 
 # 1.1.22-beta1
 
+* Feature: EMI 1.0.24 to 1.1.22 updates
+* Feature: Recipe screenshot
 * Change: Removed NilLoader support
 * Change: Update MC version to 1.7.10
