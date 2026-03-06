@@ -86,12 +86,12 @@ public class RecipeDefaults {
 	}
 
 
-    @Desugar
+	@Desugar
 	public static record Resolution(ResourceLocation recipe, List<JsonElement> stacks) {
 	}
 
 
-    @Desugar
+	@Desugar
 	public static record Tag(JsonElement tag, JsonElement stack) {
 	}
 }

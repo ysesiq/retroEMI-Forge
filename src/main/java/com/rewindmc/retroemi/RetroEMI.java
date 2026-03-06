@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import dev.emi.emi.data.EmiTagExclusionsLoader;
-import dev.emi.emi.data.RecipeDefaultLoader;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -325,13 +323,6 @@ public class RetroEMI {
 
     public static int getScaledWidth(Minecraft client) {
         return client.displayWidth / EmiPort.getGuiScale(client);
-    }
-
-    public static void registerReloadListeners(IReloadableResourceManager manager) {
-        manager.registerReloadListener(new RecipeDefaultLoader());
-//		manager.registerReloadListener(new EmiRemoveFromIndex());
-        manager.registerReloadListener(new EmiTagExclusionsLoader());
-        manager.registerReloadListener(EmiResourceManager.instance);
     }
 
     private static @Nullable String getIdInner(ItemStack stack) {

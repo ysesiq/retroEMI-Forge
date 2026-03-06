@@ -18,46 +18,39 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.resource.SinglePreparationResourceReloader;
 import shim.net.minecraft.util.JsonHelper;
+import net.minecraft.profiler.Profiler;
 
-public class RecipeDefaultLoader implements EmiResourceReloadListener, IResourceManagerReloadListener {
+public class RecipeDefaultLoader extends SinglePreparationResourceReloader<RecipeDefaults>
+		implements EmiResourceReloadListener {
 	private static final Gson GSON = new Gson();
 	public static final ResourceLocation ID = EmiPort.id("emi:recipe_defaults");
 
 	@Override
-	public void onResourceManagerReload(IResourceManager manager) {
+	protected RecipeDefaults prepare(IResourceManager manager, Profiler profiler) {
 		RecipeDefaults defaults = new RecipeDefaults();
-		try {
-			for (IResource resource : (List<IResource>) manager.getAllResources(EmiPort.id("emi", "recipe/defaults/emi.json"))) {
-				InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream(resource));
-				JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
-				loadDefaults(defaults, json);
+		for (ResourceLocation id : EmiPort.findResources(manager, "recipe/defaults", i -> i.endsWith(".json"))) {
+			if (!id.getResourceDomain().equals("emi")) {
+				continue;
 			}
-		} catch (Exception e) {
-			EmiLog.error("Error loading recipe default file", e);
+			try {
+				for (IResource resource : (List<IResource>) manager.getAllResources(id)) {
+					InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream(resource));
+					JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
+					loadDefaults(defaults, json);
+				}
+			} catch (Exception e) {
+				EmiLog.error("Error loading recipe default file " + id, e);
+			}
 		}
-		BoM.setDefaults(defaults);
+		return defaults;
 	}
 
-//    @Override
-    protected RecipeDefaults prepare(IResourceManager manager) {
-        RecipeDefaults defaults = new RecipeDefaults();
-        for (ResourceLocation id : EmiPort.findResources(manager, "recipe/defaults", i -> i.endsWith(".json"))) {
-            if (!id.getResourceDomain().equals("emi")) {
-                continue;
-            }
-            try {
-                for (Object resource : manager.getAllResources(id)) {
-                    InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream((IResource) resource));
-                    JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
-                    loadDefaults(defaults, json);
-                }
-            } catch (Exception e) {
-                EmiLog.error("Error loading recipe default file " + id, e);
-            }
-        }
-        return defaults;
-    }
+	@Override
+	protected void apply(RecipeDefaults prepared, IResourceManager manager, Profiler profiler) {
+		BoM.setDefaults(prepared);
+	}
 
 	@Override
 	public ResourceLocation getEmiId() {

@@ -80,7 +80,7 @@ public class EmiModAnnotationScanner {
 			final boolean[] hasAnnotation = {false};
 
 			ClassReader classReader = new ClassReader(classBytes);
-			classReader.accept(new ClassVisitor(Opcodes.ASM5) { // 升级到 ASM5
+			classReader.accept(new ClassVisitor(Opcodes.ASM5) {
 				@Override
 				public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 					if (annotationName.equals(desc)) {

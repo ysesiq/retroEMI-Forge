@@ -1,12 +1,12 @@
 package dev.emi.emi.platform.forge;
 
+import com.rewindmc.retroemi.EmiResourceManager;
 import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
-import dev.emi.emi.data.EmiResourceReloadListener;
 import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
 import dev.emi.emi.network.CommandS2CPacket;
@@ -26,6 +26,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import shim.net.minecraft.resource.ResourceReloader;
 
 public class EmiClientForge {
 
@@ -35,7 +36,7 @@ public class EmiClientForge {
 		PacketReader.registerClientPacketReader(EmiNetwork.PING, PingS2CPacket::new);
 		PacketReader.registerClientPacketReader(EmiNetwork.COMMAND, CommandS2CPacket::new);
 		PacketReader.registerClientPacketReader(EmiNetwork.CHESS, EmiChessPacket.S2C::new);
-		RetroEMI.registerReloadListeners((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager());
+		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(EmiResourceManager.instance);
 	}
 
 	public static void registerAdditionalModels() {
@@ -44,7 +45,7 @@ public class EmiClientForge {
 	}
 
 	public static void registerResourceReloaders() {
-		EmiData.init(EmiResourceReloadListener::reload);
+		EmiData.init(ResourceReloader::reload);
 	}
 
 	public static void recipesReloaded() {

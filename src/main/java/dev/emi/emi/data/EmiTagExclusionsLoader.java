@@ -1,6 +1,7 @@
 package dev.emi.emi.data;
 
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -14,24 +15,25 @@ import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import shim.net.minecraft.util.JsonHelper;
+import shim.net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.util.JsonHelper;
+import net.minecraft.profiler.Profiler;
 
-public class EmiTagExclusionsLoader implements EmiResourceReloadListener, IResourceManagerReloadListener {
+public class EmiTagExclusionsLoader extends SinglePreparationResourceReloader<TagExclusions>
+		implements EmiResourceReloadListener {
 	private static final Gson GSON = new Gson();
 	private static final ResourceLocation ID = EmiPort.id("emi:tag_exclusions");
 
 	@Override
-	public void onResourceManagerReload(IResourceManager manager) {
+	public TagExclusions prepare(IResourceManager manager, Profiler profiler) {
 		TagExclusions exclusions = new TagExclusions();
 		for (ResourceLocation id : EmiPort.findResources(manager, "tag/exclusions", i -> i.endsWith(".json"))) {
 			if (!id.getResourceDomain().equals("emi")) {
 				continue;
 			}
 			try {
-				for (Object o : manager.getAllResources(EmiPort.id("emi", "tag/exclusions/emi.json"))) {
-                    IResource resource = (IResource) o;
+				for (IResource resource : (List<IResource>) manager.getAllResources(id)) {
 					InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream(resource));
 					JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
 					try {
@@ -66,6 +68,11 @@ public class EmiTagExclusionsLoader implements EmiResourceReloadListener, IResou
 				EmiLog.error("Error loading tag exclusions", e);
 			}
 		}
+		return exclusions;
+	}
+
+	@Override
+	public void apply(TagExclusions exclusions, IResourceManager manager, Profiler profiler) {
 		EmiTags.exclusions = exclusions;
 	}
 

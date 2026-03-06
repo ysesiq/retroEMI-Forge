@@ -9,7 +9,7 @@ import java.util.List;
 @Desugar
 public record EmiAlias(List<EmiIngredient> stacks, List<String> keys) {
 
-    @Desugar
-    public static record Baked(List<EmiIngredient> stacks, List<Text> text) {
-    }
+	@Desugar
+	public static record Baked(List<EmiIngredient> stacks, List<Text> text) {
+	}
 }
