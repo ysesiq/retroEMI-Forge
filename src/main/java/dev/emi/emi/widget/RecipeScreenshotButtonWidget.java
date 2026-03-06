@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.client.util.math.MatrixStack;
 
 public class RecipeScreenshotButtonWidget extends RecipeButtonWidget {
 	public RecipeScreenshotButtonWidget(int x, int y, EmiRecipe recipe) {
@@ -33,13 +34,13 @@ public class RecipeScreenshotButtonWidget extends RecipeButtonWidget {
 		} else {
 			// Note that saveScreenshot treats `/`s as indicating subdirectories.
 			// We don't want to keep `/` in paths because we want all recipe images in consistent directory locations.
-			path = id.getResourceDomain() + "/" + id.getResourceDomain().replace("/", "_");
+			path = id.getResourceDomain() + "/" + id.getResourcePath().replace("/", "_");
 		}
 
 		int width = recipe.getDisplayWidth() + 8;
 		int height = recipe.getDisplayHeight() + 8;
 		Minecraft client = Minecraft.getMinecraft();
-		DrawContext context = DrawContext.INSTANCE;
+		DrawContext context = new DrawContext(client, MatrixStack.INSTANCE);
 		EmiScreenshotRecorder.saveScreenshot("emi/recipes/" + path, width, height,
 			() -> EmiRenderHelper.renderRecipe(recipe, EmiDrawContext.wrap(context), 0, 0, false, -1));
 

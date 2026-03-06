@@ -29,7 +29,7 @@ public class DrawContext extends Gui {
 	private final MatrixStack matrices;
 	public static final DrawContext INSTANCE = new DrawContext(Minecraft.getMinecraft(), MatrixStack.INSTANCE);
 
-	private DrawContext(Minecraft client, MatrixStack matrices) {
+	public DrawContext(Minecraft client, MatrixStack matrices) {
 		this.client = client;
 		this.matrices = matrices;
 	}
