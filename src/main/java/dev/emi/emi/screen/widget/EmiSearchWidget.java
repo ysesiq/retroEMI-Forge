@@ -1,8 +1,16 @@
 package dev.emi.emi.screen.widget;
 
+import java.awt.Color;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.lwjgl.opengl.GL11;
+import shim.org.lwjgl.glfw.GLFW;
+
 import com.google.common.collect.Lists;
-import com.rewindmc.retroemi.Pair;
-import com.rewindmc.retroemi.RetroEMI;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
+
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -10,19 +18,14 @@ import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.search.EmiSearch;
 import dev.emi.emi.search.QueryType;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.EnumChatFormatting;
-import org.lwjgl.opengl.GL11;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.resources.I18n;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Style;
-import shim.org.lwjgl.glfw.GLFW;
-
-import java.awt.*;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.minecraft.util.EnumChatFormatting;
+import shim.net.minecraft.util.Pair;
 
 public class EmiSearchWidget extends TextFieldWidget {
 	private static final Pattern ESCAPE = Pattern.compile("\\\\.");
@@ -36,7 +39,6 @@ public class EmiSearchWidget extends TextFieldWidget {
 	public boolean highlight = false;
 	// Reimplement focus because other mods keep breaking it
 	public boolean isFocused;
-//	Tessellator tessellator = Tessellator.instance;
 
 	public EmiSearchWidget(FontRenderer fontRenderer, int x, int y, int width, int height) {
 		super(fontRenderer, x, y, width, height, EmiPort.literal(""));
@@ -53,7 +55,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 				int end = style.getLeft();
 				if (end > stringStart) {
 					if (end - stringStart >= string.length()) {
-						text = EmiPort.literal(string, style.getRight());
+						text = EmiPort.literal(string.substring(0, string.length()), style.getRight());
 						// Skip second loop
 						s = styles.size();
 						break;
@@ -68,7 +70,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 				Pair<Integer, Style> style = styles.get(s);
 				int end = style.getLeft();
 				if (end - stringStart >= string.length()) {
-					EmiPort.append(text, EmiPort.literal(string.substring(last), style.getRight()));
+					EmiPort.append(text, EmiPort.literal(string.substring(last, string.length()), style.getRight()));
 					break;
 				}
 				EmiPort.append(text, EmiPort.literal(string.substring(last, end - stringStart), style.getRight()));
@@ -78,7 +80,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 		});
 		this.setChangedListener(string -> {
 			if (string.isEmpty()) {
-				this.setSuggestion(RetroEMI.translate("emi.search"));
+				this.setSuggestion(I18n.format("emi.search"));
 				EmiScreenManager.focusSearchSidebarType(EmiConfig.emptySearchSidebarFocus);
 			} else {
 				this.setSuggestion("");
@@ -153,7 +155,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 			searchHistoryIndex = 0;
 			String currentSearch = getText();
 			if (!currentSearch.trim().isEmpty() && !currentSearch.isEmpty()) {
-                searchHistory.removeIf(s -> s == null || s.trim().isEmpty());
+				searchHistory.removeIf(s -> s == null || s.trim().isEmpty());
 				searchHistory.remove(currentSearch);
 				searchHistory.add(0, currentSearch);
 				if (searchHistory.size() > 36) {
@@ -239,7 +241,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 		}
 		lastRender = System.currentTimeMillis();
 		long deg = accumulatedSpin * -180 / 500;
-		MatrixStack view = MatrixStack.INSTANCE;
+		MatrixStack view = RenderSystem.getModelViewStack();
 		view.pushMatrix();
 		if (deg != 0) {
 			view.translate(this.x + (double) this.width / 2, this.y + (double) this.height / 2, 0);
@@ -250,7 +252,6 @@ public class EmiSearchWidget extends TextFieldWidget {
 
 		if (lower.contains("jeb_")) {
 			int amount = 0x3FF;
-			lastRender = System.currentTimeMillis();
 			float h = ((lastRender & amount) % (float) amount) / (float) amount;
 			int rgb = Color.HSBtoRGB(h, 1, 1);
 			context.setColor(((rgb >> 16) & 0xFF) / 255f, ((rgb >> 8) & 0xFF) / 255f, ((rgb >> 0) & 0xFF) / 255f);
@@ -261,7 +262,7 @@ public class EmiSearchWidget extends TextFieldWidget {
             this.setEditableColor(0xE0E0E0);
             this.setUneditableColor(0x707070);
             this.setFrameColor(0);
-        }
+		}
 
 		if (EmiConfig.enabled) {
 			super.renderWidget(context.raw(), mouseX, mouseY, delta);

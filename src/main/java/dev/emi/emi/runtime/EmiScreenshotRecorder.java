@@ -1,11 +1,15 @@
 package dev.emi.emi.runtime;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
+
+
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -13,9 +17,13 @@ import org.lwjgl.opengl.GL11;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.config.EmiConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.shader.Framebuffer;
+import shim.net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.event.ClickEvent;
-import net.minecraft.util.*;
-import shim.net.minecraft.util.Utils;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
 
 public class EmiScreenshotRecorder {
 	private static final String SCREENSHOTS_DIRNAME = "screenshots";
@@ -51,36 +59,41 @@ public class EmiScreenshotRecorder {
 			scale = EmiConfig.recipeScreenshotScale;
 		}
 
-		GL11.glColor4f(0f, 0f, 0f, 0f);
-		GL11.glPushAttrib(GL11.GL_VIEWPORT_BIT | GL11.GL_TRANSFORM_BIT);
+		Framebuffer framebuffer = new Framebuffer(width * scale, height * scale, true);
+		framebuffer.setFramebufferColor(0f, 0f, 0f, 0f);
+		if (Minecraft.isRunningOnMac) framebuffer.framebufferClear();
 
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
+		framebuffer.bindFramebuffer(true);
+
+		MatrixStack backupProj = RenderSystem.getProjectionMatrix();
+		RenderSystem.setProjectionMatrix(new MatrixStack());
+
 		GL11.glOrtho(0.0D, width, height, 0.0D, 1000.0D, 3000.0D);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glPushMatrix();
-		GL11.glLoadIdentity();
-		GL11.glTranslatef(0.0F, 0.0F, -2000.0F);
-		GL11.glViewport(0, 0, width * scale, height * scale);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		MatrixStack view = RenderSystem.getModelViewStack();
+		RenderSystem.getModelViewStack();
+		view.pushMatrix();
+		view.identity();
+		view.translate(0.0f, 0.0f, -2000.0f);
+		RenderSystem.viewport(0, 0, framebuffer.framebufferWidth, framebuffer.framebufferHeight);
+		EmiPort.applyModelViewMatrix();
+
 
 		renderer.run();
 
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glPopMatrix();
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glPopMatrix();
-		GL11.glPopAttrib();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		RenderSystem.setProjectionMatrix(backupProj);
+		view.popMatrix();
+		EmiPort.applyModelViewMatrix();
 
-		BufferedImage framebuffer = takeScreenshot(width * scale, height * scale);
+		framebuffer.unbindFramebuffer();
+		client.getFramebuffer().bindFramebuffer(true);
 
 		saveScreenshotInner(client.mcDataDir, path, framebuffer,
 			message -> client.ingameGUI.getChatGUI().printChatMessage(message));
 	}
 
-	private static void saveScreenshotInner(File gameDirectory, String suggestedPath, BufferedImage framebuffer, Consumer<IChatComponent> messageReceiver) {
+	private static void saveScreenshotInner(File gameDirectory, String suggestedPath, Framebuffer framebuffer, Consumer<IChatComponent> messageReceiver) {
+		BufferedImage nativeImage = takeScreenshot(framebuffer);
+
 		File screenshots = new File(gameDirectory, SCREENSHOTS_DIRNAME);
 		screenshots.mkdir();
 
@@ -92,36 +105,35 @@ public class EmiScreenshotRecorder {
 		File parent = file.getParentFile();
 		parent.mkdirs();
 
-		Utils.getIoWorkerExecutor().execute(() -> {
-			try {
-				ImageIO.write(framebuffer, "png", file);
+		try {
+			ImageIO.write(nativeImage, "png", file);
 
-				IChatComponent text = new ChatComponentText(filename)
-				    .setChatStyle(new ChatStyle().setUnderlined(true).setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
-				messageReceiver.accept(new ChatComponentTranslation("screenshot.success", text));
-			} catch (Throwable e) {
-				EmiLog.error("Failed to write screenshot", e);
-				messageReceiver.accept(new ChatComponentTranslation("screenshot.failure", e.getMessage()));
-			}
-		});
+			IChatComponent text = new ChatComponentText(filename)
+				.setChatStyle(new ChatStyle().setUnderlined(true).setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
+			messageReceiver.accept(new ChatComponentTranslation("screenshot.success", text));
+		} catch (Throwable e) {
+			EmiLog.error("Failed to write screenshot", e);
+			messageReceiver.accept(new ChatComponentTranslation("screenshot.failure", e.getMessage()));
+		}
 	}
 
-	private static BufferedImage takeScreenshot(int width, int height) {
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+	private static BufferedImage takeScreenshot(Framebuffer framebuffer) {
+		framebuffer.bindFramebuffer(false);
+		BufferedImage image = new BufferedImage(framebuffer.framebufferWidth, framebuffer.framebufferHeight, BufferedImage.TYPE_INT_ARGB);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(framebuffer.framebufferWidth * framebuffer.framebufferHeight * 4);
 
-		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		GL11.glReadPixels(0, 0, framebuffer.framebufferWidth, framebuffer.framebufferHeight, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 
-		int[] data = ((java.awt.image.DataBufferInt) image.getRaster().getDataBuffer()).getData();
-		for (int y = 0; y < height; y++) {
-		    for (int x = 0; x < width; x++) {
-				int i = (y * width + x) * 4;
+		int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+		for (int y = 0; y < framebuffer.framebufferHeight; y++) {
+			for (int x = 0; x < framebuffer.framebufferWidth; x++) {
+				int i = (y * framebuffer.framebufferWidth + x) * 4;
 				int r = buffer.get(i) & 0xFF;
 				int g = buffer.get(i + 1) & 0xFF;
 				int b = buffer.get(i + 2) & 0xFF;
 				int a = buffer.get(i + 3) & 0xFF;
-				data[(height - 1 - y) * width + x] = (a << 24) | (r << 16) | (g << 8) | b;
-		    }
+				data[(framebuffer.framebufferHeight - 1 - y) * framebuffer.framebufferWidth + x] = (a << 24) | (r << 16) | (g << 8) | b;
+			}
 		}
 
 		return image;

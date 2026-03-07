@@ -179,11 +179,11 @@ public class DrawContext extends Gui {
 		int i = (int) this.client.gameSettings.chatOpacity;
 		if (i != 0) {
 			int j = 2;
-			int var10001 = x - 2;
-			int var10002 = y - 2;
-			int var10003 = x + width + 2;
+			int var10001 = x - j;
+			int var10002 = y - j;
+			int var10003 = x + width + j;
 			Objects.requireNonNull(textRenderer);
-			this.fill(var10001, var10002, var10003, y + 9 + 2, ColorHelper.Argb.mixColor(i, color));
+			this.fill(var10001, var10002, var10003, y + 9 + j, ColorHelper.Argb.mixColor(i, color));
 		}
 
 		return this.drawText(textRenderer, text, x, y, color, true);

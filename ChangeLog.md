@@ -1,9 +1,10 @@
 # 1.1.2-beta3
 
-* Feature: Resource pack recipes support (NYI)
+* Feature: Resource pack recipes support
 * Fix: Sometimes colors of the recipe screen elements were wrong
 * Fix: Crashes when loading with DragonAPI
 * Fix: Change scale of the recipe tree screen leads to coloring errors
+* Fix: The recipe screenshot path is wrong
 * Change: Optimized code
 
 # 1.1.22-beta2

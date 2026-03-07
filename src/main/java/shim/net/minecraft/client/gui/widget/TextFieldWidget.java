@@ -1,5 +1,10 @@
 package shim.net.minecraft.client.gui.widget;
 
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dev.emi.emi.input.EmiInput;
@@ -11,14 +16,10 @@ import net.minecraft.util.MathHelper;
 import shim.net.minecraft.client.gui.Drawable;
 import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Text;
-import shim.org.lwjgl.glfw.GLFW;
+
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
-
-import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import shim.org.lwjgl.glfw.GLFW;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -50,8 +51,8 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 	private BiFunction<String, Integer, OrderedText> renderTextProvider = (string, firstCharacterIndex) -> Text.literal(string).asOrderedText();
 	@Nullable
 	private Text placeholder;
-    private int frameColor = 0;
-    protected Minecraft client = Minecraft.getMinecraft();
+	private int frameColor = 0;
+	protected Minecraft client = Minecraft.getMinecraft();
 
 	public TextFieldWidget(FontRenderer textRenderer, int x, int y, int width, int height, Text text) {
 		this(textRenderer, x, y, width, height, null, text);
@@ -296,50 +297,50 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 			}
 			return true;
 		}
-        return switch (keyCode) {
-            case GLFW.GLFW_KEY_LEFT -> {
-                if (EmiInput.isControlDown()) {
-                    this.setCursor(this.getWordSkipPosition(-1));
-                } else {
-                    this.moveCursor(-1);
-                }
-                yield true;
-            }
-            case GLFW.GLFW_KEY_RIGHT -> {
-                if (EmiInput.isControlDown()) {
-                    this.setCursor(this.getWordSkipPosition(1));
-                } else {
-                    this.moveCursor(1);
-                }
-                yield true;
-            }
-            case GLFW.GLFW_KEY_BACKSPACE -> {
-                if (this.editable) {
-                    this.selecting = false;
-                    this.erase(-1);
-                    this.selecting = EmiInput.isShiftDown();
-                }
-                yield true;
-            }
-            case GLFW.GLFW_KEY_DELETE -> {
-                if (this.editable) {
-                    this.selecting = false;
-                    this.erase(1);
-                    this.selecting = EmiInput.isShiftDown();
-                }
-                yield true;
-            }
-            case GLFW.GLFW_KEY_HOME -> {
-                this.setCursorToStart();
-                yield true;
-            }
-            case GLFW.GLFW_KEY_END -> {
-                this.setCursorToEnd();
-                yield true;
-            }
-            default -> false;
-        };
-    }
+		return switch (keyCode) {
+			case GLFW.GLFW_KEY_LEFT -> {
+				if (EmiInput.isControlDown()) {
+					this.setCursor(this.getWordSkipPosition(-1));
+				} else {
+					this.moveCursor(-1);
+				}
+				yield true;
+			}
+			case GLFW.GLFW_KEY_RIGHT -> {
+				if (EmiInput.isControlDown()) {
+					this.setCursor(this.getWordSkipPosition(1));
+				} else {
+					this.moveCursor(1);
+				}
+				yield true;
+			}
+			case GLFW.GLFW_KEY_BACKSPACE -> {
+				if (this.editable) {
+					this.selecting = false;
+					this.erase(-1);
+					this.selecting = EmiInput.isShiftDown();
+				}
+				yield true;
+			}
+			case GLFW.GLFW_KEY_DELETE -> {
+				if (this.editable) {
+					this.selecting = false;
+					this.erase(1);
+					this.selecting = EmiInput.isShiftDown();
+				}
+				yield true;
+			}
+			case GLFW.GLFW_KEY_HOME -> {
+				this.setCursorToStart();
+				yield true;
+			}
+			case GLFW.GLFW_KEY_END -> {
+				this.setCursorToEnd();
+				yield true;
+			}
+			default -> false;
+		};
+	}
 
 	public boolean isActive() {
 		return this.isVisible() && this.isFocused() && this.isEditable();
@@ -385,10 +386,10 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 			return;
 		}
 		if (this.drawsBackground()) {
-            color = this.isFocused() ? 0xFFFFFFFF : 0xFFA0A0A0;
-            color = this.frameColor == 0 ? color : this.frameColor;
-            drawRect(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, color);
-            drawRect(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, 0xFF000000);
+			color = this.isFocused() ? 0xFFFFFFFF : 0xFFA0A0A0;
+			color = this.frameColor == 0 ? color : this.frameColor;
+			raw.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, color);
+			raw.fill(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1, 0xFF000000);
 		}
 		color = this.editable ? this.editableColor : this.uneditableColor;
 		int j = this.selectionStart - this.firstCharacterIndex;
@@ -425,7 +426,7 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 		}
 		if (bl2) {
 			if (bl3) {
-				drawRect(o, m - 1, o + 1, m + 1 + this.textRenderer.FONT_HEIGHT, 0xFFD0D0D0);
+				raw.fill(o, m - 1, o + 1, m + 1 + this.textRenderer.FONT_HEIGHT, 0xFFD0D0D0);
 			} else {
 				this.textRenderer.drawStringWithShadow(HORIZONTAL_CURSOR, o, m, color);
 			}
@@ -456,7 +457,7 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 		}
 		glEnable(GL_COLOR_LOGIC_OP);
 		glLogicOp(GL_OR_REVERSE);
-		drawRect(x1, y1, x2, y2, -16776961);
+		raw.fill(x1, y1, x2, y2, -16776961);
 		glDisable(GL_COLOR_LOGIC_OP);
 	}
 
@@ -492,7 +493,7 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 		this.uneditableColor = uneditableColor;
 	}
 
-    public void setFrameColor(int frameColor) {
+	public void setFrameColor(int frameColor) {
 		this.frameColor = frameColor;
 	}
 

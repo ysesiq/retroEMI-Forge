@@ -1,6 +1,7 @@
 package shim.com.mojang.blaze3d.systems;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.shader.Framebuffer;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.BufferUtils;
@@ -13,7 +14,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class RenderSystem {
 
-	public static void enableDepthTest() {
+    public static void enableDepthTest() {
 		glEnable(GL_DEPTH_TEST);
 	}
 
@@ -55,6 +56,7 @@ public class RenderSystem {
 	}
 
 	public static MatrixStack getModelViewStack() {
+        GL11.glMatrixMode(GL_MODELVIEW);
 		return MatrixStack.INSTANCE;
 	}
 
@@ -66,6 +68,21 @@ public class RenderSystem {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadMatrix(matrixToFloatBuffer(matrix4f));
 	}
+
+    public static MatrixStack getProjectionMatrix() {
+        GL11.glMatrixMode(GL_PROJECTION);
+        return MatrixStack.INSTANCE;
+    }
+
+    public static void setProjectionMatrix(MatrixStack projection) {
+        GL11.glMatrixMode(GL_PROJECTION);
+        projection.pushMatrix();
+        projection.identity();
+    }
+
+    public static void viewport(int x, int y, int width, int height) {
+        GL11.glViewport(x, y, width, height);
+    }
 
 	public static FloatBuffer matrixToFloatBuffer(Matrix4f matrix) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);

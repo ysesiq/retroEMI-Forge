@@ -37,4 +37,8 @@ public class MatrixStack {
     public void pop() {
         GL11.glPopMatrix();
     }
+
+    public void identity() {
+        GL11.glLoadIdentity();
+    }
 }
