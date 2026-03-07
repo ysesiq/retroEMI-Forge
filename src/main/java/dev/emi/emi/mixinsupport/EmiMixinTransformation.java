@@ -3,7 +3,13 @@ package dev.emi.emi.mixinsupport;
 import com.google.common.collect.Maps;
 import dev.emi.emi.mixinsupport.annotation.Transform;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.lib.tree.*;
+import org.spongepowered.asm.lib.tree.AbstractInsnNode;
+import org.spongepowered.asm.lib.tree.AnnotationNode;
+import org.spongepowered.asm.lib.tree.ClassNode;
+import org.spongepowered.asm.lib.tree.FieldInsnNode;
+import org.spongepowered.asm.lib.tree.FieldNode;
+import org.spongepowered.asm.lib.tree.MethodInsnNode;
+import org.spongepowered.asm.lib.tree.MethodNode;
 import org.spongepowered.asm.util.Annotations;
 
 import java.util.Map;

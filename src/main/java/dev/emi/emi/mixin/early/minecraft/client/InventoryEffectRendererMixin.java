@@ -9,14 +9,16 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.inventory.Container;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = InventoryEffectRenderer.class, priority = 2000)
 public abstract class InventoryEffectRendererMixin extends GuiContainer {
-    @Shadow private boolean field_147045_u;
+    @Shadow
+    private boolean field_147045_u;
 
 
     public InventoryEffectRendererMixin(Container handlerScreen) {

@@ -8,7 +8,14 @@ import static dev.emi.emi.api.recipe.VanillaEmiRecipeCategories.INFO;
 import static dev.emi.emi.api.recipe.VanillaEmiRecipeCategories.SMELTING;
 import static dev.emi.emi.api.recipe.VanillaEmiRecipeCategories.WORLD_INTERACTION;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -77,6 +84,19 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemHoe;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeFireworks;
+import net.minecraft.item.crafting.RecipesArmorDyes;
+import net.minecraft.item.crafting.RecipesMapCloning;
+import net.minecraft.item.crafting.RecipesMapExtending;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.potion.PotionEffect;
 import shim.net.minecraft.registry.tag.ItemKey;
 import net.minecraft.client.Minecraft;
@@ -87,8 +107,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.ContainerWorkbench;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.registry.tag.TagKey;
 import net.minecraftforge.fluids.Fluid;
@@ -282,7 +300,7 @@ public class VanillaPlugin implements EmiPlugin {
 			}
 		}
 
-		for (Map.Entry<ItemStack, ItemStack> recipe : ((Map<ItemStack, ItemStack>)FurnaceRecipes.smelting().getSmeltingList()).entrySet()) {
+		for (Map.Entry<ItemStack, ItemStack> recipe : ((Map<ItemStack, ItemStack>) FurnaceRecipes.smelting().getSmeltingList()).entrySet()) {
 			ItemStack in = recipe.getKey();
 			ItemStack out = recipe.getValue();
 			String id = RetroEMI.getId(in) + (in.getHasSubtypes() ? "#" + in.getItemDamage() : "") + "/" + RetroEMI.getId(out) + (out.getHasSubtypes() ? "#" + out.getItemDamage() : "");

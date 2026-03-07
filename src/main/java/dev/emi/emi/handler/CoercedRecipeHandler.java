@@ -12,7 +12,11 @@ import dev.emi.emi.mixin.accessor.InventoryCraftingAccessor;
 import dev.emi.emi.mixin.accessor.SlotAccessor;
 import dev.emi.emi.mixin.accessor.SlotCraftingAccessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotCrafting;
 
 public class CoercedRecipeHandler<T extends Container> implements StandardRecipeHandler<T> {
 	private SlotCrafting output;

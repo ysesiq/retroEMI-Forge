@@ -1,5 +1,14 @@
 package dev.emi.emi.screen;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.google.common.collect.Lists;
 import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
@@ -75,15 +84,6 @@ import shim.net.minecraft.client.gui.widget.TextFieldWidget;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.Text;
 import shim.org.lwjgl.glfw.GLFW;
-
-import java.awt.*;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.StringSelection;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class EmiScreenManager {
 	private static final int PADDING_SIZE = 1;

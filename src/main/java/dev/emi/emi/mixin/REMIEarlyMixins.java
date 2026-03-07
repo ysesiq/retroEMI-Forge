@@ -1,11 +1,16 @@
 package dev.emi.emi.mixin;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import dev.emi.emi.runtime.EmiLog;
 
-import java.util.*;
 
 @IFMLLoadingPlugin.Name("REMIEarlyMixins")
 @IFMLLoadingPlugin.MCVersion("1.7.10")
@@ -35,7 +40,7 @@ public class REMIEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoader {
                 }
             }
         }
-        EmiLog.LOG.info("Not loading the following EARLY mixins: {}");
+        EmiLog.LOG.info("Not loading the following EARLY mixins: {}", notLoading);
 
         return mixins;
     }
