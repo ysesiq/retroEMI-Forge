@@ -49,6 +49,4 @@ jobs:
           name: build-artifacts
           path: |
             build/libs/*.jar
-            !build/libs/*-sources.jar
-            !build/libs/*-dev.jar
           retention-days: 30
