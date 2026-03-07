@@ -98,8 +98,8 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 			JsonObject json = new JsonObject();
 			json.addProperty("type", getType());
 			json.addProperty("id", stack.getId().toString());
-            json.addProperty("subtype", stack.getSubtype());
-            if (nbt != null) {
+			json.addProperty("subtype", stack.getSubtype());
+			if (nbt != null) {
 				json.addProperty("nbt", nbt);
 			}
 			if (stack.getAmount() != 1) {
@@ -108,7 +108,7 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 			if (stack.getChance() != 1) {
 				json.addProperty("chance", stack.getChance());
 			}
-            if (!stack.getRemainder().isEmpty()) {
+			if (!stack.getRemainder().isEmpty()) {
 				EmiStack remainder = stack.getRemainder();
 				if (!remainder.getRemainder().isEmpty()) {
 					remainder = remainder.copy().setRemainder(EmiStack.EMPTY);
