@@ -1,5 +1,3 @@
-# 1.1.22-beta3
-
 * Feature: Reimplemented EMI Data
 * Fix: Sometimes colors of the recipe screen elements were wrong
 * Fix: Crashes when loading with DragonAPI

@@ -1,41 +1,28 @@
 .gradle
-.settings
-/.idea/
-/.vscode/
-/run/
-/build/
-/eclipse/
-.classpath
+**/build/
+!src/**/build/
+run/
+out/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# Eclipse Gradle plugin generated files
+# Eclipse Core
 .project
-/bin/
-/config/
-/crash-reports/
-/logs/
-options.txt
-/saves/
-usernamecache.json
-banned-ips.json
-banned-players.json
-eula.txt
-ops.json
-server.properties
-servers.dat
-usercache.json
-whitelist.json
-/out/
-*.iml
-*.ipr
-*.iws
-src/main/resources/mixins.*([!.]).json
-*.bat
-*.DS_Store
-!gradlew.bat
-.factorypath
-addon.local.gradle
-addon.local.gradle.kts
-addon.late.local.gradle
-addon.late.local.gradle.kts
-layout.json
-misc.xml
-modules.xml
-vcs.xml
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# IDEA config
+.idea
+
+.vscode

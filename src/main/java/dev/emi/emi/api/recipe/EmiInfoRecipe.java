@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.jetbrains.annotations.Nullable;
 
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -28,8 +28,8 @@ public class EmiInfoRecipe implements EmiRecipe {
 	public EmiInfoRecipe(List<EmiIngredient> stacks, List<Text> text, @Nullable ResourceLocation id) {
 		this.stacks = stacks;
 		this.text = !FMLCommonHandler.instance().getSide().isServer() ? text.stream().flatMap(
-				t -> Arrays.stream(CLIENT.fontRenderer.wrapFormattedStringToWidth(t.asString().replace("\\n", "\n"), getDisplayWidth() - 4).split("\n")).map(Text::literal)
-						.map(Text::asOrderedText)).collect(Collectors.toList()) : new ArrayList<>();
+				t -> CLIENT.fontRenderer.listFormattedStringToWidth(t.asString(), getDisplayWidth() - 4).stream()).map(Text::literal)
+						.map(Text::asOrderedText).collect(Collectors.toList()) : new ArrayList<>();
 		this.id = id;
 	}
 
