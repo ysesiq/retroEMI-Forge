@@ -7,6 +7,8 @@
 * Fix: The recipe screenshot path is wrong
 * Improvement: Optimized code
 
+---
+
 # 1.1.22-beta2
 
 * Feature: Support JSON files (Including language & data files)

@@ -39,16 +39,6 @@ jobs:
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Generate changelog
-        id: changelog
-        run: |
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-          if [ -z "$PREVIOUS_TAG" ]; then
-            echo "CHANGELOG=$(git log --pretty=format:'- %s (%h)' HEAD)" >> $GITHUB_OUTPUT
-          else
-            echo "CHANGELOG=$(git log --pretty=format:'- %s (%h)' $PREVIOUS_TAG..HEAD)" >> $GITHUB_OUTPUT
-          fi
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
