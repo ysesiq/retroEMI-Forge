@@ -1,6 +1,6 @@
-# 1.1.2-beta3
+# 1.1.22-beta3
 
-* Feature: Resource pack recipes support
+* Feature: Reimplemented EMI Data
 * Fix: Sometimes colors of the recipe screen elements were wrong
 * Fix: Crashes when loading with DragonAPI
 * Fix: Change scale of the recipe tree screen leads to coloring errors
@@ -25,3 +25,4 @@
 * Feature: Recipe screenshot
 * Improvement: Removed NilLoader support
 * Improvement: Update MC version to 1.7.10
+* Improvement: Optimized code
