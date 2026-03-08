@@ -148,12 +148,12 @@ public class EmiReloadManager {
 						EmiReloadLog.warn("Recipe Manager is null");
 						break;
 					}
-					step(EmiPort.literal("Loading plugin"));
+					step(EmiPort.literal("Finding plugins"));
 					List<EmiPluginContainer> plugins = Lists.newArrayList();
 					plugins.addAll(EmiAgnos.getPlugins().stream()
 						.sorted((a, b) -> Integer.compare(entrypointPriority(a), entrypointPriority(b))).collect(java.util.stream.Collectors.toList()));
 
-					if (EmiAgnos.isModLoaded("NotEnoughItems")) {
+					if (NemiPlugin.isNEILoaded) {
 						plugins.add(new EmiPluginContainer(new NemiPlugin(), "nemi"));
 					}
 					EmiInitRegistry initRegistry = new EmiInitRegistryImpl();
