@@ -32,8 +32,73 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Extract changelogs from ChangeLog.md
+        id: extract_changelog
+        run: |
+          cat ChangeLog.md > changelog.txt
+
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          cat changelog.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Get previous tag and generate links
+        id: release_info
+        run: |
+          CURRENT_TAG="${{ github.ref_name }}"
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG_URL="${{ github.server_url }}/${{ github.repository }}/commits/${CURRENT_TAG}"
+            COMMITS_RANGE="${CURRENT_TAG}"
+          else
+            CHANGELOG_URL="${{ github.server_url }}/${{ github.repository }}/compare/${PREVIOUS_TAG}...${CURRENT_TAG}"
+            COMMITS_RANGE="${PREVIOUS_TAG}..${CURRENT_TAG}"
+          fi
+
+          echo "CHANGELOG_URL=${CHANGELOG_URL}" >> $GITHUB_OUTPUT
+
+          git log --pretty=format:'%ae' $COMMITS_RANGE | sort -u > contributor_emails.txt
+
+          CONTRIBUTORS_MD=""
+          CONTRIBUTOR_COUNT=0
+
+          while IFS= read -r email; do
+            if [[ "$email" == *"dependabot"* ]] || [[ "$email" == *"renovate"* ]]; then
+              continue
+            fi
+
+            RESPONSE=$(curl -s "https://api.github.com/search/users?q=${email}+in:email")
+            LOGIN=$(echo "$RESPONSE" | jq -r '.items[0].login // empty')
+
+            if [ -n "$LOGIN" ]; then
+              AVATAR_URL="https://github.com/${LOGIN}.png"
+              PROFILE_URL="https://github.com/${LOGIN}"
+
+              CONTRIBUTORS_MD="${CONTRIBUTORS_MD}[![${LOGIN}](${AVATAR_URL}?size=50)](${PROFILE_URL}) "
+              CONTRIBUTOR_COUNT=$((CONTRIBUTOR_COUNT + 1))
+            fi
+          done < contributor_emails.txt
+
+          if [ "$CONTRIBUTOR_COUNT" -eq 0 ]; then
+            EMAIL=$(git log --pretty=format:'%ae' -n 1)
+            RESPONSE=$(curl -s "https://api.github.com/search/users?q=${EMAIL}+in:email")
+            LOGIN=$(echo "$RESPONSE" | jq -r '.items[0].login // empty')
+
+            if [ -n "$LOGIN" ]; then
+              AVATAR_URL="https://github.com/${LOGIN}.png"
+              PROFILE_URL="https://github.com/${LOGIN}"
+              CONTRIBUTORS_MD="[![${LOGIN}](${AVATAR_URL}?size=50)](${PROFILE_URL}) "
+              CONTRIBUTOR_COUNT=1
+            fi
+          fi
+
+          echo "CONTRIBUTORS_MD=${CONTRIBUTORS_MD}" >> $GITHUB_OUTPUT
+          echo "CONTRIBUTOR_COUNT=${CONTRIBUTOR_COUNT}" >> $GITHUB_OUTPUT
+
       - name: Build release with Gradle
         run: ./gradlew build --no-daemon --stacktrace
+        env:
+          RELEASE: 'true'
 
       - name: Get version from tag
         id: get_version
@@ -45,19 +110,29 @@ jobs:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
           body: |
-            ${{ steps.changelog.outputs.CHANGELOG }}
+
+            ${{ steps.extract_changelog.outputs.CHANGELOG }}
+
+            **Full Changelog**: ${{ steps.release_info.outputs.CHANGELOG_URL }}
+
+            ---
+
+            ## Contributors (${{ steps.release_info.outputs.CONTRIBUTOR_COUNT }})
+
+            ${{ steps.release_info.outputs.CONTRIBUTORS_MD }}
 
             ---
             **Minecraft Version**: 1.7.10
             **Forge Version**: 10.13.4.1614
+            **Uni Mixins**: >=0.1
+            **Gtnh Lib**: >=0.6.0
           draft: false
           prerelease: ${{ contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha') }}
           files: |
             build/libs/*.jar
-            !build/libs/*-sources.jar
-            !build/libs/*-dev.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE: 'true'
 
 #  publish-maven:
 #    name: Publish to Maven
@@ -89,3 +164,4 @@ jobs:
 #        env:
 #          MAVEN_USER: ${{ secrets.MAVEN_USER }}
 #          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+#          RELEASE: 'true'
