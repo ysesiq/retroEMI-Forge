@@ -37,9 +37,9 @@ repositories {
 allprojects {
     base.archivesName = project.modId
     ext.mavenVersion = "${rootProject.version}"
-//	if (System.getenv("RELEASE") == null) {
-//		ext.mavenVersion += "-SNAPSHOT"
-//	}
+	if (System.getenv("RELEASE") == null) {
+		ext.mavenVersion += "-SNAPSHOT"
+	}
     ext.mavenVersion += "+${rootProject.minecraftVersion}"
     version = "${project.ext.mavenVersion}+${project.enabled_platforms}"
 }
