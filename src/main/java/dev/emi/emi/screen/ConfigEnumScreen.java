@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import shim.org.lwjgl.glfw.GLFW;
 
-import com.github.bsideup.jabel.Desugar;
 import com.rewindmc.retroemi.REMIScreen;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
@@ -82,7 +81,6 @@ public class ConfigEnumScreen<T> extends REMIScreen {
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
-    @Desugar
 	public static record Entry<T>(T value, Text name, List<TooltipComponent> tooltip) {
 	}
 

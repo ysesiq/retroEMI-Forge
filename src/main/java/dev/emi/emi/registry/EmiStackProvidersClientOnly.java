@@ -1,7 +1,5 @@
 package dev.emi.emi.registry;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -16,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class EmiStackProvidersClientOnly {
 				Minecraft client = Minecraft.getMinecraft();
 				List<IRecipe> list = CraftingManager.getInstance().getRecipeList();
 				for (var r : list) {
-					if (r.matches(inv, client.theWorld)) {
+					if (r.matches(inv, client.world)) {
 						ResourceLocation id = EmiPort.getId(r);
 						EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
 						if (recipe != null) {

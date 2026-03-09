@@ -25,8 +25,8 @@ public class EmiFuelRecipe implements EmiRecipe {
 		this.stack = stack;
 		this.time = time;
 		this.id = id;
-		if (stack.getEmiStacks().get(0).getItemStack().getItem().equals(Items.lava_bucket)) {
-			stack.getEmiStacks().get(0).setRemainder(EmiStack.of(Items.bucket));
+		if (stack.getEmiStacks().get(0).getItemStack().getItem().equals(Items.LAVA_BUCKET)) {
+			stack.getEmiStacks().get(0).setRemainder(EmiStack.of(Items.BUCKET));
 		}
 	}
 

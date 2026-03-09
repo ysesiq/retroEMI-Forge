@@ -24,16 +24,16 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 
 	public EmiFireworkRocketRecipe(ResourceLocation id) {
 		super(shim.java.List.of(
-				EmiStack.of(Items.paper),
-						EmiStack.of(Items.firework_charge),
-						EmiStack.of(Items.gunpowder)),
-				EmiStack.of(Items.fireworks), id);
+				EmiStack.of(Items.PAPER),
+						EmiStack.of(Items.FIREWORK_CHARGE),
+						EmiStack.of(Items.GUNPOWDER)),
+				EmiStack.of(Items.FIREWORKS), id);
 	}
 
 	@Override
 	public SlotWidget getInputWidget(int slot, int x, int y) {
 		if (slot == 0) {
-			return new SlotWidget(EmiStack.of(Items.paper), x, y);
+			return new SlotWidget(EmiStack.of(Items.PAPER), x, y);
 		} else {
 			final int s = slot - 1;
 			return new GeneratedSlotWidget(r -> {
@@ -52,7 +52,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 	}
 
 	private EmiStack getFireworkRocket(Random random) {
-		ItemStack stack = new ItemStack(Items.fireworks);
+		ItemStack stack = new ItemStack(Items.FIREWORKS);
 		NBTTagCompound tag = new NBTTagCompound();
 		NBTTagCompound fireworks = new NBTTagCompound();
 		NBTTagList explosions = new NBTTagList();
@@ -60,9 +60,9 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 		List<EmiStack> items = getItems(random);
 		int gunpowder = 0;
 		for (EmiStack item : items) {
-			if (item.getId() == EmiStack.of(Items.firework_charge).getId()) {
+			if (item.getId() == EmiStack.of(Items.FIREWORK_CHARGE).getId()) {
 				explosions.appendTag(item.getNbt().getTagList("Explosion", 0));
-			} else if (item.isEqual(EmiStack.of(Items.gunpowder))) {
+			} else if (item.isEqual(EmiStack.of(Items.GUNPOWDER))) {
 				gunpowder++;
 			}
 		}
@@ -81,7 +81,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 		List<EmiStack> items = Lists.newArrayList();
 		int amount = random.nextInt(3);
 		for (int i = 0; i <= amount; i++) {
-			items.add(EmiStack.of(Items.gunpowder));
+			items.add(EmiStack.of(Items.GUNPOWDER));
 		}
 		amount = random.nextInt(8 - items.size());
 		for (int i = 0; i <= amount; i++) {
@@ -101,7 +101,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 	}
 
 	private EmiStack getFireworkStar(Random random) {
-		ItemStack stack = new ItemStack(Items.firework_charge);
+		ItemStack stack = new ItemStack(Items.FIREWORK_CHARGE);
 		NBTTagCompound tag = new NBTTagCompound();
 		NBTTagCompound explosion = new NBTTagCompound();
 		int items = 0;

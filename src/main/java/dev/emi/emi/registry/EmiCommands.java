@@ -3,6 +3,8 @@ package dev.emi.emi.registry;
 import java.util.List;
 
 import dev.emi.emi.EmiPort;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 import dev.emi.emi.api.EmiApi;
@@ -22,17 +24,17 @@ public class EmiCommands extends CommandBase {
 	public static final byte TREE_RESOLUTION = 0x12;
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "emi";
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender sender) {
+	public String getUsage(ICommandSender sender) {
 		return "commands.emi.usage";
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] userInputStrings) {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] userInputStrings) throws WrongUsageException {
         if (sender instanceof EntityPlayerMP player) {
             if (userInputStrings.length >= 2) {
                 if (userInputStrings[0].equals("view")) {
@@ -73,7 +75,7 @@ public class EmiCommands extends CommandBase {
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] userInputStrings) {
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] userInputStrings, @Nullable BlockPos targetPos) {
 		if (userInputStrings.length == 1) {
 			return getListOfStringsMatchingLastWord(userInputStrings, "view", "tree");
 		}

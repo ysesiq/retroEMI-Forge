@@ -34,8 +34,8 @@ public class CommandS2CPacket implements EmiPacket {
 	public void write(PacketByteBuf buf) {
 		buf.writeByte(type);
 		if (type == EmiCommands.VIEW_RECIPE || type == EmiCommands.TREE_GOAL || type == EmiCommands.TREE_RESOLUTION) {
-			buf.writeString(id.getResourcePath());
-			buf.writeString(id.getResourceDomain());
+			buf.writeString(id.getPath());
+			buf.writeString(id.getNamespace());
 		}
 	}
 

@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import shim.net.minecraft.client.resource.language.I18n;
 import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -53,7 +54,6 @@ import dev.emi.emi.screen.widget.config.SubGroupNameWidget;
 import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.StringTranslate;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
@@ -99,7 +99,7 @@ public class ConfigScreen extends REMIScreen {
 		ConfigValue annot = field.getAnnotation(ConfigValue.class);
 		String key = "config.emi.tooltip." + annot.value().replace('-', '_');
 		Comment comment = field.getAnnotation(Comment.class);
-		if (StringTranslate.getInstance().containsTranslateKey(key)) {
+		if (I18n.hasTranslation(key)) {
 			text = Arrays.stream(RetroEMI.translate(key).split("\n"))
 					.map(EmiPort::literal).map(EmiTooltipComponents::of).collect(java.util.stream.Collectors.toList());
 		} else if (comment != null) {

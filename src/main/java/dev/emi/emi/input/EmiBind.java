@@ -1,9 +1,8 @@
 package dev.emi.emi.input;
 
-import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.Lists;
 import dev.emi.emi.EmiPort;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.client.util.InputUtil;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Text;
@@ -57,7 +56,7 @@ public class EmiBind {
 
 	public Text getBindText() {
 		if (!isBound()) {
-			return EmiPort.literal("[]", EnumChatFormatting.GOLD);
+			return EmiPort.literal("[]", TextFormatting.GOLD);
 		} else {
 			ModifiedKey bind = boundKeys.get(0);
 			for (ModifiedKey key : boundKeys) {
@@ -66,9 +65,9 @@ public class EmiBind {
 					break;
 				}
 			}
-			return EmiPort.literal("[", EnumChatFormatting.GOLD)
-				.append(bind.getKeyText(EnumChatFormatting.GOLD))
-				.append(EmiPort.literal("]", EnumChatFormatting.GOLD));
+			return EmiPort.literal("[", TextFormatting.GOLD)
+				.append(bind.getKeyText(TextFormatting.GOLD))
+				.append(EmiPort.literal("]", TextFormatting.GOLD));
 		}
 	}
 
@@ -154,7 +153,6 @@ public class EmiBind {
 		updateBinds();
 	}
 
-    @Desugar
 	public static record ModifiedKey(InputUtil.Key key, int modifiers) {
 
 		public static ModifiedKey of(int code, int modifiers) {
@@ -188,7 +186,7 @@ public class EmiBind {
 			return key == InputUtil.UNKNOWN_KEY;
 		}
 
-		public MutableText getKeyText(EnumChatFormatting formatting) {
+		public MutableText getKeyText(TextFormatting formatting) {
 			MutableText text = EmiPort.literal("", formatting);
 			appendModifiers(text, modifiers());
 			EmiPort.append(text, key().getLocalizedText());

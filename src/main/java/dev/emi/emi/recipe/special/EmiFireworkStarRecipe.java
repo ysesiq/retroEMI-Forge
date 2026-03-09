@@ -24,24 +24,24 @@ public class EmiFireworkStarRecipe extends EmiPatternCraftingRecipe {
 	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
 
 	private static final List<ItemStack> SHAPES =
-        shim.java.List.of(new ItemStack(Items.firework_charge), new ItemStack(Items.feather), new ItemStack(Items.gold_nugget), new ItemStack(Items.skull, 1, 0),
-					new ItemStack(Items.skull, 1, 1), new ItemStack(Items.skull, 1, 2), new ItemStack(Items.skull, 1, 3), new ItemStack(Items.skull, 1, 4));
+        shim.java.List.of(new ItemStack(Items.FIREWORK_CHARGE), new ItemStack(Items.FEATHER), new ItemStack(Items.GOLD_NUGGET), new ItemStack(Items.SKULL, 1, 0),
+					new ItemStack(Items.SKULL, 1, 1), new ItemStack(Items.SKULL, 1, 2), new ItemStack(Items.SKULL, 1, 3), new ItemStack(Items.SKULL, 1, 4));
 
-	private static final List<Item> EFFECTS = shim.java.List.of(Items.diamond, Items.glowstone_dust);
+	private static final List<Item> EFFECTS = shim.java.List.of(Items.DIAMOND, Items.GLOWSTONE_DUST);
 
 	public EmiFireworkStarRecipe(ResourceLocation id) {
 		super(shim.java.List.of(
 				EmiIngredient.of(DYES.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
 						EmiIngredient.of(SHAPES.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
 						EmiIngredient.of(EFFECTS.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
-						EmiStack.of(Items.gunpowder)),
-				EmiStack.of(Items.firework_charge), id);
+						EmiStack.of(Items.GUNPOWDER)),
+				EmiStack.of(Items.FIREWORK_CHARGE), id);
 	}
 
 	@Override
 	public SlotWidget getInputWidget(int slot, int x, int y) {
 		if (slot == 0) {
-			return new SlotWidget(EmiStack.of(Items.gunpowder), x, y);
+			return new SlotWidget(EmiStack.of(Items.GUNPOWDER), x, y);
 		} else {
 			final int s = slot - 1;
 			return new GeneratedSlotWidget(r -> {
@@ -88,7 +88,7 @@ public class EmiFireworkStarRecipe extends EmiPatternCraftingRecipe {
 	}
 
 	private EmiStack getFireworkStar(Random random) {
-		ItemStack stack = new ItemStack(Items.firework_charge);
+		ItemStack stack = new ItemStack(Items.FIREWORK_CHARGE);
 		NBTTagCompound tag = new NBTTagCompound();
 		NBTTagCompound explosion = new NBTTagCompound();
 		boolean hasShape = false;
@@ -102,20 +102,20 @@ public class EmiFireworkStarRecipe extends EmiPatternCraftingRecipe {
 		List<Integer> colors = Lists.newArrayList();
 
 		for (ItemStack item : items) {
-			if (Items.glowstone_dust.equals(item.getItem())) {
+			if (Items.GLOWSTONE_DUST.equals(item.getItem())) {
 				explosion.setByte("Flicker", largeBall);
-			} else if (Items.diamond.equals(item.getItem())) {
+			} else if (Items.DIAMOND.equals(item.getItem())) {
 				explosion.setByte("Trail", largeBall);
-			} else if (Items.fire_charge.equals(item.getItem())) {
+			} else if (Items.FIREWORK_CHARGE.equals(item.getItem())) {
 				explosion.setByte("Type", largeBall);
 				hasShape = true;
-			} else if (Items.gold_nugget.equals(item.getItem())) {
+			} else if (Items.GOLD_NUGGET.equals(item.getItem())) {
 				explosion.setByte("Type", star);
 				hasShape = true;
-			} else if (Items.feather.equals(item.getItem())) {
+			} else if (Items.FEATHER.equals(item.getItem())) {
 				explosion.setByte("Type", burst);
 				hasShape = true;
-			} else if (Items.skull.equals(item.getItem())) {
+			} else if (Items.SKULL.equals(item.getItem())) {
 				explosion.setByte("Type", creeper);
 				hasShape = true;
 			} else {

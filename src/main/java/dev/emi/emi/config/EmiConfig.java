@@ -77,9 +77,9 @@ public class EmiConfig {
 	public static boolean searchTagsByDefault = false;
 
 	// UI
-//	@Comment("Which action should be performed when clicking the recipe book.")
-//	@ConfigValue("ui.recipe-book-action")
-//	public static RecipeBookAction recipeBookAction = RecipeBookAction.TOGGLE_CRAFTABLES;
+	@Comment("Which action should be performed when clicking the recipe book.")
+	@ConfigValue("ui.recipe-book-action")
+	public static RecipeBookAction recipeBookAction = RecipeBookAction.TOGGLE_CRAFTABLES;
 
 	@Comment("Where to display status effects in the inventory.")
 	@ConfigValue("ui.effect-location")
@@ -107,10 +107,10 @@ public class EmiConfig {
 	@ConfigValue("ui.fluid-unit")
 	public static FluidUnit fluidUnit = EmiAgnos.isForge() ? FluidUnit.MILLIBUCKETS : FluidUnit.LITERS;
 
-//	@Comment("Whether to use the batched render system. Batching is faster, but may have incompatibilities"
-//		+ " with shaders or other mods.")
-//	@ConfigValue("ui.use-batched-renderer")
-//	public static boolean useBatchedRenderer = true;
+	@Comment("Whether to use the batched render system. Batching is faster, but may have incompatibilities"
+		+ " with shaders or other mods.")
+	@ConfigValue("ui.use-batched-renderer")
+	public static boolean useBatchedRenderer = true;
 
 	@Comment("Whether to have the search bar in the center of the screen, instead of to the side.")
 	@ConfigValue("ui.center-search-bar")

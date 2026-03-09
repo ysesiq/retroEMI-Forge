@@ -67,7 +67,7 @@ public class InventoryRecipeHandler implements StandardRecipeHandler<ContainerPl
 
 	@Override
 	public @Nullable Slot getOutputSlot(ContainerPlayer handler) {
-		return (Slot) handler.inventorySlots.get(0);
+		return handler.inventorySlots.get(0);
 	}
 
 	@Override

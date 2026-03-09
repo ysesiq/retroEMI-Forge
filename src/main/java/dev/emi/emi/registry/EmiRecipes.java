@@ -37,13 +37,9 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringTranslate;
-import shim.net.minecraft.util.SyntheticIdentifier;
+import shim.net.minecraft.client.resource.language.I18n;
 
 public class EmiRecipes {
 	public static volatile Worker activeWorker = null;
@@ -176,7 +172,7 @@ public class EmiRecipes {
 				}
 				byCategory.computeIfAbsent(category, a -> Lists.newArrayList()).add(recipe);
 				if (id != null) {
-					if (byId.containsKey(id) && !id.getResourceDomain().equals("shaped_ore") && !id.getResourceDomain().equals("shapeless_ore")) {
+					if (byId.containsKey(id) && !id.getNamespace().equals("shaped_ore") && !id.getNamespace().equals("shapeless_ore")) {
 						duplicateIds.put(id, duplicateIds.getOrDefault(id, 1) + 1);
 					} else {
 						byId.put(id, recipe);
@@ -202,7 +198,7 @@ public class EmiRecipes {
 
 			for (EmiRecipeCategory category : byCategory.keySet()) {
 				String key = EmiUtil.translateId("emi.category.", category.getId());
-				if (category.getName().equals(EmiPort.translatable(key)) && !StringTranslate.getInstance().containsTranslateKey(key)) {
+				if (category.getName().equals(EmiPort.translatable(key)) && !I18n.hasTranslation(key)) {
 					EmiReloadLog.warn("Untranslated recipe category " + category.getId());
 				}
 				List<EmiRecipe> cRecipes = byCategory.get(category);

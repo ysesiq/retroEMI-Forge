@@ -3,8 +3,6 @@ package dev.emi.emi.platform.forge;
 import com.rewindmc.retroemi.EmiResourceManager;
 import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
 import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
@@ -20,19 +18,21 @@ import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadManager;
 import dev.emi.emi.screen.EmiScreenBase;
 import dev.emi.emi.screen.EmiScreenManager;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import shim.net.minecraft.resource.ResourceReloader;
 
 public class EmiClientForge {
 
 	public static void clientInit() {
 		EmiClient.init();
-		EmiNetwork.initClient(packet -> ((PlayerControllerMPAccessor) Minecraft.getMinecraft().playerController).getNetClientHandler().addToSendQueue(EmiForge.toVanilla(packet)));
+		EmiNetwork.initClient(packet -> ((PlayerControllerMPAccessor) Minecraft.getMinecraft().playerController).getNetClientHandler().sendPacket(EmiForge.toVanilla(packet)));
 		PacketReader.registerClientPacketReader(EmiNetwork.PING, PingS2CPacket::new);
 		PacketReader.registerClientPacketReader(EmiNetwork.COMMAND, CommandS2CPacket::new);
 		PacketReader.registerClientPacketReader(EmiNetwork.CHESS, EmiChessPacket.S2C::new);
@@ -59,7 +59,7 @@ public class EmiClientForge {
 	@SubscribeEvent
 	public void renderScreenForeground(GuiScreenEvent.DrawScreenEvent.Pre event) {
 		EmiDrawContext context = EmiDrawContext.instance();
-		GuiScreen screen = event.gui;
+		GuiScreen screen = event.getGui();
 		if (!(screen instanceof GuiContainer)) {
 			return;
 		}
@@ -68,7 +68,7 @@ public class EmiClientForge {
 			context.push();
 			context.matrices().translate(-((GuiContainerAccessor) screen).getGuiLeft(), -((GuiContainerAccessor) screen).getGuiTop(), 0.0);
 			EmiPort.setPositionTexShader();
-			EmiScreenManager.drawBackground(context, event.mouseX, event.mouseY, event.renderPartialTicks);
+			EmiScreenManager.drawBackground(context, event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
 			context.pop();
 		}
 	}
@@ -76,7 +76,7 @@ public class EmiClientForge {
 	@SubscribeEvent
 	public void postRenderScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
 		EmiDrawContext context = EmiDrawContext.instance();
-		GuiScreen screen = event.gui;
+		GuiScreen screen = event.getGui();
 		if (!(screen instanceof GuiContainer)) {
 			return;
 		}
@@ -84,8 +84,8 @@ public class EmiClientForge {
 		if (base != null) {
 			context.push();
 			EmiPort.setPositionTexShader();
-			EmiScreenManager.render(context, event.mouseX, event.mouseY, event.renderPartialTicks);
-			EmiScreenManager.drawForeground(context, event.mouseX, event.mouseY, event.renderPartialTicks);
+			EmiScreenManager.render(context, event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
+			EmiScreenManager.drawForeground(context, event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
 			context.pop();
 		}
 	}
@@ -99,7 +99,7 @@ public class EmiClientForge {
 
 	@SubscribeEvent
 	public void onClientConnectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-		if (!event.isLocal) {
+		if (!event.isLocal()) {
 			EmiReloadManager.reload();
 			EmiClientForge.recipesReloaded();
 			EmiClientForge.tagsReloaded();

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+import net.minecraft.inventory.ClickType;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
@@ -156,11 +157,11 @@ public class EmiRecipeFiller {
 							if (EmiStack.of(s.getStack()).isEqual(stack)) {
 								for (DiscoveredItem di : d) {
 									if (RetroEMI.canCombine(ss, di.stack)) {
-										di.amount += ss.stackSize;
+										di.amount += ss.getCount();
 										continue slotLoop;
 									}
 								}
-								d.add(new DiscoveredItem(stack, ss, ss.stackSize, (int) ingredient.getAmount(), ss.getMaxStackSize()));
+								d.add(new DiscoveredItem(stack, ss, ss.getCount(), (int) ingredient.getAmount(), ss.getMaxStackSize()));
 							}
 						}
 					}
@@ -187,7 +188,7 @@ public class EmiRecipeFiller {
 						return null;
 					}
 					weightDivider.put(biggest.ingredient, weightDivider.getOrDefault(biggest.ingredient, 0) + biggest.consumed);
-					biggest.max = Math.min(biggest.max, 64 /*slot.getStack().getMaxStackSize()*/);
+					biggest.max = Math.min(biggest.max, 64 /*slot.getStack().getMaxgetCount()()*/);
 					discovered.add(biggest);
 				}
 				if (discovered.isEmpty()) {
@@ -227,7 +228,7 @@ public class EmiRecipeFiller {
 					if (di != null) {
 						ItemStack is = di.stack.copy();
 						int a = di.catalyst() ? di.consumed : di.consumed * maxAmount;
-						is.stackSize = (a);
+						is.setCount(a);
 						desired.add(is);
 					} else {
 						desired.add(ItemStacks.EMPTY);
@@ -291,13 +292,13 @@ public class EmiRecipeFiller {
 		GuiContainer screen, List<ItemStack> stacks, EmiCraftContext.Destination destination) {
 		Minecraft client = Minecraft.getMinecraft();
 		T screenHandler = (T) screen.inventorySlots;
-		if (handler != null && client.thePlayer.inventory.getItemStack() == null) {
+		if (handler != null && client.player.inventory.getItemStack() == null) {
 			PlayerControllerMP manager = client.playerController;
-			EntityPlayer player = client.thePlayer;
+			EntityPlayer player = client.player;
 			List<Slot> clear = handler.getCraftingSlots(screenHandler);
 			for (Slot slot : clear) {
 				if (slot != null) {
-					manager.windowClick(screenHandler.windowId, slot.slotNumber, 0, 1, player);
+					manager.windowClick(screenHandler.windowId, slot.slotNumber, 0, ClickType.QUICK_MOVE, player);
 				}
 			}
 			List<Slot> inputs = handler.getInputSources(screenHandler);
@@ -318,23 +319,23 @@ public class EmiRecipeFiller {
 				if (crafting == null) {
 					return false;
 				}
-				int needed = stack.stackSize;
+				int needed = stack.getCount();
 				for (Slot input : inputs) {
 					if (slots.contains(input) || input.getStack() == null) {
 						continue;
 					}
 					ItemStack is = input.getStack().copy();
 					if (RetroEMI.canCombine(is, stack)) {
-						manager.windowClick(screenHandler.windowId, input.slotNumber, 0, 0, player);
-						if (is.stackSize <= needed) {
-							needed -= is.stackSize;
-							manager.windowClick(screenHandler.windowId, crafting.slotNumber, 0, 0, player);
+						manager.windowClick(screenHandler.windowId, input.slotNumber, 0, ClickType.PICKUP, player);
+						if (is.getCount() <= needed) {
+							needed -= is.getCount();
+							manager.windowClick(screenHandler.windowId, crafting.slotNumber, 0, ClickType.PICKUP, player);
 						} else {
 							while (needed > 0) {
-								manager.windowClick(screenHandler.windowId, crafting.slotNumber, 1, 0, player);
+								manager.windowClick(screenHandler.windowId, crafting.slotNumber, 1, ClickType.PICKUP, player);
 								needed--;
 							}
-							manager.windowClick(screenHandler.windowId, input.slotNumber, 0, 0, player);
+							manager.windowClick(screenHandler.windowId, input.slotNumber, 0, ClickType.PICKUP, player);
 						}
 					}
 					if (needed == 0) {
@@ -346,9 +347,9 @@ public class EmiRecipeFiller {
 			Slot slot = handler.getOutputSlot(screenHandler);
 			if (slot != null) {
 				if (destination == EmiCraftContext.Destination.CURSOR) {
-					manager.windowClick(screenHandler.windowId, slot.slotNumber, 0, 0, player);
+					manager.windowClick(screenHandler.windowId, slot.slotNumber, 0, ClickType.PICKUP, player);
 				} else if (destination == EmiCraftContext.Destination.INVENTORY) {
-					manager.windowClick(screenHandler.windowId, slot.slotNumber, 0, 1, player);
+					manager.windowClick(screenHandler.windowId, slot.slotNumber, 0, ClickType.QUICK_MOVE, player);
 				}
 			}
 			return true;

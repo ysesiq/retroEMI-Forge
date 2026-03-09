@@ -1,10 +1,7 @@
 package dev.emi.emi.chess;
 
-import com.github.bsideup.jabel.Desugar;
-
 import java.util.List;
 
-@Desugar
 record ChessPiece(PieceType type, PieceColor color) {
 	private static final List<ChessPiece> PIECES = shim.java.List.of(
 		new ChessPiece(PieceType.PAWN, PieceColor.WHITE),

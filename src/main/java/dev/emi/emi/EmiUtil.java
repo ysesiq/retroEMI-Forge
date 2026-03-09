@@ -34,15 +34,15 @@ public class EmiUtil {
 	public static final Random RANDOM = new Random();
 
 	public static String subId(ResourceLocation id) {
-		return id.getResourceDomain() + "/" + id.getResourcePath();
+		return id.getNamespace() + "/" + id.getPath();
 	}
 
 	public static String subId(Block block) {
-		return subId(EmiPort.id(EmiPort.getBlockRegistry().getNameForObject(block)));
+		return subId(EmiPort.getBlockRegistry().getNameForObject(block));
 	}
 
 	public static String subId(Item item) {
-		return subId(EmiPort.id(EmiPort.getItemRegistry().getNameForObject(item)));
+		return subId(EmiPort.getItemRegistry().getNameForObject(item));
 	}
 
 	public static String subId(Fluid fluid) {
@@ -59,7 +59,7 @@ public class EmiUtil {
 	}
 
 	public static String translateId(String prefix, ResourceLocation id) {
-		return prefix + id.getResourceDomain() + "." + id.getResourcePath().replace('/', '.');
+		return prefix + id.getNamespace() + "." + id.getPath().replace('/', '.');
 	}
 
 	public static String getModName(String namespace) {

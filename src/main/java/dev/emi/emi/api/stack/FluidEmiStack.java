@@ -98,7 +98,7 @@ public class FluidEmiStack extends EmiStack {
 		if (amount > 1) {
 			list.add(EmiTooltipComponents.getAmount(this));
 		}
-		String namespace = this.getId().getResourceDomain();
+		String namespace = this.getId().getNamespace();
 		EmiTooltipComponents.appendModName(list, namespace);
 		list.addAll(super.getTooltip());
 		return list;

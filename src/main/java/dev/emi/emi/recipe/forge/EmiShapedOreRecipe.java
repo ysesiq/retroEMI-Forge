@@ -29,11 +29,11 @@ public class EmiShapedOreRecipe extends EmiCraftingRecipe {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 int width = getWidth(recipe);
-                int height = recipe.getRecipeSize() / width;
-                if (x >= width || y >= height || i >= recipe.getInput().length) {
+                int height = recipe.getRecipeHeight();
+                if (x >= width || y >= height || i >= recipe.getIngredients().size()) {
                     list.add(EmiStack.EMPTY);
                 } else {
-                    list.add(fromOreInput(recipe.getInput()[i++]));
+                    list.add(fromOreInput(recipe.getIngredients().get(i++)));
                 }
             }
         }
@@ -47,7 +47,7 @@ public class EmiShapedOreRecipe extends EmiCraftingRecipe {
             if (list.isEmpty()) {
                 return EmiStack.EMPTY;
             } else {
-                if (list.get(0) instanceof ItemStack) {
+                if (list.getFirst() instanceof ItemStack) {
                     return EmiIngredient.of(streamForgeList(list).map(stack -> (ItemStack) stack).map(EmiStack::ofPotentialTag).collect(Collectors.toList()));
                 }
             }

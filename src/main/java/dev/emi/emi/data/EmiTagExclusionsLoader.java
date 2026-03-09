@@ -29,7 +29,7 @@ public class EmiTagExclusionsLoader extends SinglePreparationResourceReloader<Ta
 	public TagExclusions prepare(IResourceManager manager, Profiler profiler) {
 		TagExclusions exclusions = new TagExclusions();
 		for (ResourceLocation id : EmiPort.findResources(manager, "tag/exclusions", i -> i.endsWith(".json"))) {
-			if (!id.getResourceDomain().equals("emi")) {
+			if (!id.getNamespace().equals("emi")) {
 				continue;
 			}
 			try {
@@ -48,13 +48,13 @@ public class EmiTagExclusionsLoader extends SinglePreparationResourceReloader<Ta
 									ResourceLocation eid = EmiPort.id(el.getAsString());
 									if (key.equals("exclusions")) {
 										exclusions.add(eid);
-										if (eid.getResourceDomain().equals("c")) {
-											exclusions.add(EmiPort.id("forge", eid.getResourcePath()));
+										if (eid.getNamespace().equals("c")) {
+											exclusions.add(EmiPort.id("forge", eid.getPath()));
 										}
 									} else {
 										exclusions.add(type, eid);
-										if (eid.getResourceDomain().equals("c")) {
-											exclusions.add(type, EmiPort.id("forge", eid.getResourcePath()));
+										if (eid.getNamespace().equals("c")) {
+											exclusions.add(type, EmiPort.id("forge", eid.getPath()));
 										}
 									}
 								}

@@ -16,21 +16,21 @@ public class EmiMapCloningRecipe extends EmiPatternCraftingRecipe {
 
 	public EmiMapCloningRecipe(ResourceLocation id) {
 		super(List.of(
-						EmiStack.of(Items.filled_map),
-						EmiStack.of(Items.map)),
-				EmiStack.of(Items.filled_map), id);
+						EmiStack.of(Items.FILLED_MAP),
+						EmiStack.of(Items.MAP)),
+				EmiStack.of(Items.FILLED_MAP), id);
 	}
 
 	@Override
 	public SlotWidget getInputWidget(int slot, int x, int y) {
 		if (slot == 0) {
-			return new SlotWidget(EmiStack.of(Items.filled_map), x, y);
+			return new SlotWidget(EmiStack.of(Items.FILLED_MAP), x, y);
 		} else {
 			final int s = slot - 1;
 			return new GeneratedSlotWidget(r -> {
 				int amount = r.nextInt(8) + 1;
 				if (s < amount) {
-					return EmiStack.of(Items.map);
+					return EmiStack.of(Items.MAP);
 				}
 				return EmiStack.EMPTY;
 			}, unique, x, y);
@@ -39,7 +39,7 @@ public class EmiMapCloningRecipe extends EmiPatternCraftingRecipe {
 
 	@Override
 	public SlotWidget getOutputWidget(int x, int y) {
-		return new GeneratedSlotWidget(r -> EmiStack.of(Items.filled_map, r.nextInt(8) + 2), unique, x, y);
+		return new GeneratedSlotWidget(r -> EmiStack.of(Items.FILLED_MAP, r.nextInt(8) + 2), unique, x, y);
 	}
 
 	public EmiStack getAmount(Random random, Item item) {

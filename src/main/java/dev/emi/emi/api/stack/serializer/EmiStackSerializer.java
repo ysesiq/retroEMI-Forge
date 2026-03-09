@@ -64,7 +64,7 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 			try {
 				NBTTagCompound nbtComp = null;
 				if (nbt != null) {
-					nbtComp = (NBTTagCompound) JsonToNBT.func_150315_a(nbt);
+					nbtComp = JsonToNBT.getTagFromJson(nbt);
 				}
 				EmiStack stack = create(id, nbtComp, amount, subtype);
 				if (chance != 1) {

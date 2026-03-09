@@ -37,8 +37,8 @@ public class CoercedRecipeHandler<T extends Container> implements StandardRecipe
 		Minecraft client = Minecraft.getMinecraft();
 		List<Slot> slots = Lists.newArrayList();
 		if (output != null) {
-			for (Slot slot : (List<Slot>) handler.inventorySlots) {
-				if (slot.canTakeStack(client.thePlayer) && slot != output) {
+			for (Slot slot : handler.inventorySlots) {
+				if (slot.canTakeStack(client.player) && slot != output) {
 					slots.add(slot);
 				}
 			}

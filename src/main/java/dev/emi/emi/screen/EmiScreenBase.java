@@ -7,6 +7,7 @@ import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.recipebook.GuiRecipeBook;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,16 +83,16 @@ public class EmiScreenBase {
 		}
 		if (screen instanceof GuiContainer hs) {
 			GuiContainerAccessor hsa = (GuiContainerAccessor) hs;
-//			if (hsa.getTheSlot() != null && hsa.getTheSlot().getHasStack()) {
+			if (hsa.getTheSlot() != null && hsa.getTheSlot().getHasStack()) {
 				int extra = 0;
-//				if (hs instanceof RecipeBookProvider provider) {
-//					if (provider.getRecipeBookWidget().isOpen()) {
-//						extra = 177;
-//					}
-//				}
+				if (hs instanceof GuiRecipeBook provider) {
+					if (provider.getRecipeBookWidget().isOpen()) {
+						extra = 177;
+					}
+				}
 				Bounds bounds = new Bounds(hsa.getGuiLeft() - extra, hsa.getYSize(), hsa.getXSize() + extra, hsa.getGuiTop());
 				return new EmiScreenBase(screen, bounds);
-//			}
+			}
 		} else if (screen instanceof RecipeScreen rs) {
 			return new EmiScreenBase(rs, rs.getBounds());
 		}

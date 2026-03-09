@@ -13,7 +13,7 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.AbstractParentElement;
@@ -116,7 +116,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		int mid = this.left + this.width / 2;
 		int rowLeft = mid - rowWidth;
 		int rowRight = mid + rowWidth;
-		int m = MathHelper.floor_double(y - (double) this.top) + (int) this.getScrollAmount() - 4;
+		int m = MathHelper.floor(y - (double) this.top) + (int) this.getScrollAmount() - 4;
 		if (x < this.getScrollbarPositionX() && x >= rowLeft && x <= rowRight && m >= 0) {
 			int h = 0;
 			for (int i = 0; i < this.getEntryCount(); i++) {
@@ -155,7 +155,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		int m;
 		int i = this.getScrollbarPositionX();
 		int j = i + 6;
-		Tessellator tessellator = Tessellator.instance;
+		Tessellator tessellator = Tessellator.getInstance();
         EmiDrawContext context = EmiDrawContext.wrap(draw);
 		this.hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
 
@@ -225,7 +225,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		if ((o = this.getMaxScroll()) > 0) {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			m = (int) ((float) ((this.bottom - this.top) * (this.bottom - this.top)) / (float) this.getMaxPosition());
-			m = MathHelper.clamp_int(m, 32, this.bottom - this.top - 8);
+			m = MathHelper.clamp(m, 32, this.bottom - this.top - 8);
 			n = (int) this.getScrollAmount() * (this.bottom - this.top - m) / o + this.top;
 			if (n < this.top) {
 				n = this.top;
@@ -287,7 +287,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 	}
 
 	public void setScrollAmount(double amount) {
-		this.scrollAmount = MathHelper.clamp_float((float) amount, 0.0f, (float) this.getMaxScroll());
+		this.scrollAmount = MathHelper.clamp((float) amount, 0.0f, (float) this.getMaxScroll());
 	}
 
 	public int getMaxScroll() {
@@ -374,7 +374,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		} else {
 			double d = Math.max(1, this.getMaxScroll());
 			int i = this.bottom - this.top;
-			int j = MathHelper.clamp_int((int) ((float) (i * i) / (float) this.getMaxPosition()), 32, i - 8);
+			int j = MathHelper.clamp((int) ((float) (i * i) / (float) this.getMaxPosition()), 32, i - 8);
 			double e = Math.max(1.0, d / (double) (i - j));
 			this.setScrollAmount(this.getScrollAmount() + deltaY * e);
 		}
@@ -426,7 +426,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		if (!this.children().isEmpty()) {
 			int k;
 			int j = this.children().indexOf(this.getSelectedOrNull());
-			while (j != (k = MathHelper.clamp_int(j + i, 0, this.getEntryCount() - 1))) {
+			while (j != (k = MathHelper.clamp(j + i, 0, this.getEntryCount() - 1))) {
 				Entry entry = (Entry) this.children().get(k);
 				if (predicate.test(entry)) {
 					this.setSelected(entry);
@@ -445,7 +445,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 
 	protected void renderList(DrawContext draw, int x, int y, int mouseX, int mouseY, float delta) {
 		int i = this.getEntryCount();
-		Tessellator tess = Tessellator.instance;
+		Tessellator tess = Tessellator.getInstance();
         EmiDrawContext context = EmiDrawContext.wrap(draw);
 		for (int j = 0; j < i; ++j) {
 			int p;

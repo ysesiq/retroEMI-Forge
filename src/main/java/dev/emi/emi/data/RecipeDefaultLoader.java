@@ -31,11 +31,11 @@ public class RecipeDefaultLoader extends SinglePreparationResourceReloader<Recip
 	protected RecipeDefaults prepare(IResourceManager manager, Profiler profiler) {
 		RecipeDefaults defaults = new RecipeDefaults();
 		for (ResourceLocation id : EmiPort.findResources(manager, "recipe/defaults", i -> i.endsWith(".json"))) {
-			if (!id.getResourceDomain().equals("emi")) {
+			if (!id.getNamespace().equals("emi")) {
 				continue;
 			}
 			try {
-				for (IResource resource : (List<IResource>) manager.getAllResources(id)) {
+				for (IResource resource : manager.getAllResources(id)) {
 					InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream(resource));
 					JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
 					loadDefaults(defaults, json);

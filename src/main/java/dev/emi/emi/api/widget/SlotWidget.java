@@ -19,7 +19,7 @@ import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.screen.RecipeScreen;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import dev.emi.emi.screen.tooltip.RecipeCostTooltipComponent;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -234,7 +234,7 @@ public class SlotWidget extends Widget {
 		EmiRecipe recipe = getRecipe();
 		if (recipe != null) {
 			if (recipe.getId() != null && EmiConfig.showRecipeIds) {
-				list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(recipe.getId().toString(), EnumChatFormatting.GRAY))));
+				list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(recipe.getId().toString(), TextFormatting.GRAY))));
 			}
 			if (canResolve() && EmiConfig.helpLevel.has(HelpLevel.NORMAL)) {
 				if (EmiConfig.viewRecipes.isBound()) {

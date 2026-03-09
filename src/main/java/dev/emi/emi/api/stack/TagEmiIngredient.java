@@ -13,7 +13,7 @@ import dev.emi.emi.screen.tooltip.EmiTextTooltipWrapper;
 import dev.emi.emi.screen.tooltip.RemainderTooltipComponent;
 import dev.emi.emi.screen.tooltip.TagTooltipComponent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import shim.net.minecraft.client.gui.DrawContext;
@@ -155,14 +155,14 @@ public class TagEmiIngredient implements EmiIngredient {
 		List<TooltipComponent> list = Lists.newArrayList();
 		list.add(new EmiTextTooltipWrapper(this, EmiPort.ordered(tagKey.getTagName())));
 		if (EmiUtil.showAdvancedTooltips()) {
-			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal("#" + id, EnumChatFormatting.DARK_GRAY))));
+			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal("#" + id, TextFormatting.DARK_GRAY))));
 		}
 //		if (tagKey.isOf(EmiPort.getFluidRegistry()) && amount > 1) {
 //			list.add(TooltipComponent.of(EmiPort.ordered(EmiRenderHelper.getAmountText(this, amount))));
 //		}
 		if (EmiConfig.appendModId) {
-			String mod = EmiUtil.getModName(id.getResourceDomain());
-			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(mod, EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC))));
+			String mod = EmiUtil.getModName(id.getNamespace());
+			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(mod, TextFormatting.BLUE, TextFormatting.ITALIC))));
 		}
 		list.add(new TagTooltipComponent(stacks));
 		for (EmiStack stack : stacks) {

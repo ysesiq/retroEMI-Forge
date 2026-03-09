@@ -62,9 +62,9 @@ public abstract class EmiChessPacket implements EmiPacket {
 
 		@Override
 		public void apply(EntityPlayer player) {
-			EntityPlayer opponent = player.worldObj.getPlayerEntityByName(uuid);
+			EntityPlayer opponent = player.world.getPlayerEntityByName(uuid);
 			if (opponent instanceof EntityPlayerMP spe) {
-				EmiNetwork.sendToClient(spe, new S2C(player.getCommandSenderName(), type, start, end));
+				EmiNetwork.sendToClient(spe, new S2C(player.getName(), type, start, end));
 			}
 		}
 	}

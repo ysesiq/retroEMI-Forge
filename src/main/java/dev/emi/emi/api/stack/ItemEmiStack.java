@@ -3,7 +3,6 @@ package dev.emi.emi.api.stack;
 import com.google.common.collect.Lists;
 import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
-import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.render.EmiRender;
@@ -13,11 +12,12 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.StackBatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import shim.net.minecraft.client.gui.DrawContext;
@@ -43,7 +43,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 	private boolean unbatchable;
 
 	public ItemEmiStack(ItemStack stack) {
-		this(stack, stack.stackSize);
+		this(stack, stack.getCount());
 	}
 
 	public ItemEmiStack(ItemStack stack, long amount) {
@@ -180,7 +180,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 
 	@Override
 	public List<Text> getTooltipText() {
-		return ((List<String>) getItemStack().getTooltip(client.thePlayer, TooltipContext.BASIC))
+		return getItemStack().getTooltip(client.player, ITooltipFlag.TooltipFlags.NORMAL)
 			.stream().map(Text::literal).collect(Collectors.toList());
 	}
 
@@ -194,10 +194,10 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 			//String mod = EmiUtil.getModName(namespace);
 			//list.add(TooltipComponent.of(Text.literal(mod).formatted(Formatting.BLUE, Formatting.ITALIC)));
 			if (EmiConfig.appendModId || EmiConfig.appendItemModId) {
-				String stackNamespace = GameData.getItemRegistry().getNameForObject(stack.getItem());
+				String stackNamespace = stack.getItem().getRegistryName().getNamespace();
 				String modNamespaceBase = stackNamespace.replaceAll(":.*", "");
 				String modNamespace = modNamespaceBase.substring(0, 1).toUpperCase() + modNamespaceBase.substring(1);
-				list.add(TooltipComponent.of(Text.literal(modNamespace).formatted(EnumChatFormatting.BLUE, EnumChatFormatting.ITALIC)));
+				list.add(TooltipComponent.of(Text.literal(modNamespace).formatted(TextFormatting.BLUE, TextFormatting.ITALIC)));
 			}
 			list.addAll(super.getTooltip());
 		}

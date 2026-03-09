@@ -199,7 +199,7 @@ public class EmiData {
 				EmiPort.id("emi:recipe_additions"), "recipe/additions", Lists::newArrayList,
 				(list, json, oid) -> {
 					String s = JsonHelper.getString(json, "type", "");
-					ResourceLocation id = EmiPort.id("emi:/generated/" + oid.getResourcePath());
+					ResourceLocation id = EmiPort.id("emi:/generated/" + oid.getPath());
 					if (s.equals("emi:info")) {
 						list.add(() -> new EmiInfoRecipe(getArrayOrSingleton(json, "stacks").map(EmiIngredientSerializer::getDeserialized).collect(Collectors.toList()),
 							getArrayOrSingleton(json, "text").map(t -> (Text) EmiPort.translatable(t.getAsString())).collect(Collectors.toList()),

@@ -161,7 +161,7 @@ public class EmiFavorites {
 			if (stack instanceof EmiStack es && context != null && context.getId() != null) {
 				es = es.copy();
 				if (es instanceof ItemEmiStack ies) {
-					ies.getItemStack().stackSize = 1;
+					ies.getItemStack().setCount(1);
 				}
 				if (!es.isEmpty()) {
 					for (int i = 0; i < favorites.size(); i++) {

@@ -10,6 +10,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -186,7 +187,7 @@ public abstract class EmiStack implements EmiIngredient {
         if (stack == null || stack.getItem() == null) {
             return EmiStack.EMPTY;
         }
-        return fromPotentialTag(stack, stack.stackSize);
+        return fromPotentialTag(stack, stack.getCount());
     }
 
     public static EmiIngredient ofPotentialTag(ItemStack stack, long amount) {
@@ -198,8 +199,8 @@ public abstract class EmiStack implements EmiIngredient {
 
     private static EmiIngredient fromPotentialTag(ItemStack stack, long amount) {
         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-            List<ItemStack> stacks = new ArrayList<>();
-            stack.getItem().getSubItems(stack.getItem(), CreativeTabs.tabMisc, stacks);
+            NonNullList<ItemStack> stacks = NonNullList.create();
+            stack.getItem().getSubItems(CreativeTabs.MISC, stacks);
             return EmiIngredient.of(stacks.stream().map(EmiStack::of).collect(Collectors.toList()));
         } else {
             return new ItemEmiStack(stack, amount);

@@ -58,10 +58,10 @@ public class EmiShapedRecipe extends EmiCraftingRecipe {
 		int i = 0;
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				if (x >= recipe.recipeWidth || y >= recipe.recipeHeight || i >= Arrays.stream(recipe.recipeItems).collect(Collectors.toList()).size()) {
+				if (x >= recipe.recipeWidth || y >= recipe.recipeHeight || i >= Arrays.stream(recipe.recipeItems.toArray()).collect(Collectors.toList()).size()) {
 					list.add(EmiStack.EMPTY);
 				} else {
-					list.add(EmiStack.of((Arrays.stream(recipe.recipeItems).collect(Collectors.toList()).get(i++))));
+					list.add(EmiStack.of((Arrays.stream(recipe.recipeItems.toArray()).collect(Collectors.toList()).get(i++))));
 				}
 			}
 		}

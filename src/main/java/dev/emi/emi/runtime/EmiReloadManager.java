@@ -141,7 +141,7 @@ public class EmiReloadManager {
 						continue;
 					}
 					Minecraft client = Minecraft.getMinecraft();
-					if (client.theWorld == null) {
+					if (client.world == null) {
 						EmiReloadLog.warn("World is null");
 						break;
 					} else if (CraftingManager.getInstance() == null) {

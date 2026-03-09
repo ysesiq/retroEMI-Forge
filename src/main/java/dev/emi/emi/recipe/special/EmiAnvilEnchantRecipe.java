@@ -82,7 +82,7 @@ public class EmiAnvilEnchantRecipe implements EmiRecipe {
 	}
 
     private EmiStack getBook() {
-        ItemStack item = new ItemStack(Items.enchanted_book);
+        ItemStack item = new ItemStack(Items.ENCHANTED_BOOK);
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList StoredEnchantments = new NBTTagList();
         NBTTagCompound enchant = new NBTTagCompound();

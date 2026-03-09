@@ -25,7 +25,7 @@ public class EmiFireworkStarFadeRecipe extends EmiPatternCraftingRecipe {
 	public EmiFireworkStarFadeRecipe(ResourceLocation id) {
 		super(shim.java.List.of(
 			EmiIngredient.of(DYES.stream().map(i -> (EmiIngredient) EmiStack.of(i)).collect(Collectors.toList())),
-			EmiStack.of(Items.firework_charge)), EmiStack.of(Items.firework_charge), id);
+			EmiStack.of(Items.FIREWORK_CHARGE)), EmiStack.of(Items.FIREWORK_CHARGE), id);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class EmiFireworkStarFadeRecipe extends EmiPatternCraftingRecipe {
 	}
 
 	private EmiStack getFireworkStar(Random random, Boolean faded) {
-		ItemStack stack = new ItemStack(Items.firework_charge);
+		ItemStack stack = new ItemStack(Items.FIREWORK_CHARGE);
 		NBTTagCompound tag = new NBTTagCompound();
 		NBTTagCompound explosion = new NBTTagCompound();
 		int items = 0;

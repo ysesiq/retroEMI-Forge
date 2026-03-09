@@ -117,11 +117,11 @@ class ChessEmiStack extends EmiStack {
                     list.add(new ChessTooltipComponent(ChessPiece.of(PieceType.PAWN, PieceColor.BLACK), ChessPiece.of(PieceType.KING, PieceColor.BLACK),
                         EmiPort.translatable("emi.chess.tooltip.invite")));
                     if (EmiChess.get().pending != null) {
-                        EntityPlayer player = client.theWorld.getPlayerEntityByName(EmiChess.get().pending);
+                        EntityPlayer player = client.world.getPlayerEntityByName(EmiChess.get().pending);
                         if (player != null) {
                             list.add(new ChessTooltipComponent(ChessPiece.of(PieceType.KING, PieceColor.WHITE), ChessPiece.of(PieceType.KING, PieceColor.BLACK),
-                                EmiPort.translatable("emi.chess.tooltip.accept", player.getCommandSenderName())));
-                            list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.chess.tooltip.decline", player.getCommandSenderName()))));
+                                EmiPort.translatable("emi.chess.tooltip.accept", player.getName())));
+                            list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.translatable("emi.chess.tooltip.decline", player.getName()))));
                         }
                     }
                 }

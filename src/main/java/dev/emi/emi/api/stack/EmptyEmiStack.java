@@ -58,7 +58,7 @@ public class EmptyEmiStack extends EmiStack {
 
 	@Override
 	public Object getKey() {
-		return Blocks.air;
+		return Blocks.AIR;
 	}
 
 	@Override

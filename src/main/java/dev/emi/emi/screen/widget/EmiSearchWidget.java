@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import shim.org.lwjgl.glfw.GLFW;
 
@@ -24,7 +25,6 @@ import net.minecraft.client.resources.I18n;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Style;
-import net.minecraft.util.EnumChatFormatting;
 import shim.net.minecraft.util.Pair;
 
 public class EmiSearchWidget extends TextFieldWidget {
@@ -94,11 +94,11 @@ public class EmiSearchWidget extends TextFieldWidget {
 				int start = matcher.start();
 				int end = matcher.end();
 				if (last < start) {
-					styles.add(new Pair<Integer, Style>(start, Style.EMPTY.withFormatting(EnumChatFormatting.WHITE)));
+					styles.add(new Pair<Integer, Style>(start, Style.EMPTY.withFormatting(TextFormatting.WHITE)));
 				}
 				String group = matcher.group();
 				if (group.startsWith("-")) {
-					styles.add(new Pair<Integer, Style>(start + 1, Style.EMPTY.withFormatting(EnumChatFormatting.RED)));
+					styles.add(new Pair<Integer, Style>(start + 1, Style.EMPTY.withFormatting(TextFormatting.RED)));
 					start++;
 					group = group.substring(1);
 				}
@@ -129,7 +129,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 				last = end;
 			}
 			if (last < string.length()) {
-				styles.add(new Pair<Integer, Style>(string.length(), Style.EMPTY.withFormatting(EnumChatFormatting.WHITE)));
+				styles.add(new Pair<Integer, Style>(string.length(), Style.EMPTY.withFormatting(TextFormatting.WHITE)));
 			}
 			this.styles = styles;
 			EmiSearch.search(string);

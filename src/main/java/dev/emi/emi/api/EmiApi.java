@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import dev.emi.emi.VanillaPlugin;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -54,7 +54,7 @@ public class EmiApi {
 	public static boolean isCheatMode() {
         return switch (EmiConfig.cheatMode) {
             case TRUE -> true;
-            case CREATIVE -> client.thePlayer == null || client.thePlayer.capabilities.isCreativeMode;
+            case CREATIVE -> client.player == null || client.player.capabilities.isCreativeMode;
             case FALSE -> false;
         };
     }
@@ -173,7 +173,7 @@ public class EmiApi {
 	public static void viewRecipeTree() {
 		if (client.currentScreen == null) {
 			//noinspection RedundantCast
-			client.displayGuiScreen(new GuiInventory((EntityPlayer) (Object) client.thePlayer));
+			client.displayGuiScreen(new GuiInventory((EntityPlayer) (Object) client.player));
 		}
 		GuiScreen s = client.currentScreen;
 		if (s instanceof GuiContainer hs) {
@@ -260,7 +260,7 @@ public class EmiApi {
 			EmiSidebars.lookup(stack);
 			if (getHandledScreen() == null) {
 				//noinspection RedundantCast
-				client.displayGuiScreen(new GuiInventory((EntityPlayer) (Object) client.thePlayer));
+				client.displayGuiScreen(new GuiInventory((EntityPlayer) (Object) client.player));
 			}
 			GuiScreen s = client.currentScreen;
 			if (s instanceof GuiContainer hs) {

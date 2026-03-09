@@ -5,7 +5,7 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiBind.ModifiedKey;
 import dev.emi.emi.screen.ConfigScreen;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
 import shim.net.minecraft.client.util.InputUtil;
@@ -51,20 +51,20 @@ public class EmiBindWidget extends ConfigEntryWidget {
 				button.setWidth(200);
 				button.x = x + width - 224;
 				if (screen.lastModifier == 0) {
-					button.setMessage(EmiPort.literal("...", EnumChatFormatting.YELLOW));
+					button.setMessage(EmiPort.literal("...", TextFormatting.YELLOW));
 				} else {
 					button.setMessage(new ModifiedKey(InputUtil.Type.KEYSYM
 						.createFromCode(screen.lastModifier), screen.activeModifiers)
-						.getKeyText(EnumChatFormatting.YELLOW));
+						.getKeyText(TextFormatting.YELLOW));
 				}
 			} else if (i < bind.boundKeys.size()) {
 				if (bind.boundKeys.get(i).isUnbound() && i > 0) {
 					button.setWidth(20);
 					button.x = x + width - 20;
 					button.y = y;
-					button.setMessage(EmiPort.literal("+", EnumChatFormatting.AQUA));
+					button.setMessage(EmiPort.literal("+", TextFormatting.AQUA));
 				} else {
-					button.setMessage(bind.boundKeys.get(i).getKeyText(EnumChatFormatting.RESET));
+					button.setMessage(bind.boundKeys.get(i).getKeyText(TextFormatting.RESET));
 				}
 			}
 			h += 24;

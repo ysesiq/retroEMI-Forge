@@ -9,6 +9,12 @@ import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 
 
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.ClickEvent;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import org.lwjgl.BufferUtils;
@@ -19,11 +25,6 @@ import dev.emi.emi.config.EmiConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.shader.Framebuffer;
 import shim.net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
 
 public class EmiScreenshotRecorder {
 	private static final String SCREENSHOTS_DIRNAME = "screenshots";
@@ -61,7 +62,7 @@ public class EmiScreenshotRecorder {
 
 		Framebuffer framebuffer = new Framebuffer(width * scale, height * scale, true);
 		framebuffer.setFramebufferColor(0f, 0f, 0f, 0f);
-		if (Minecraft.isRunningOnMac) framebuffer.framebufferClear();
+		if (Util.getOSType() == Util.EnumOS.OSX) framebuffer.framebufferClear();
 
 		framebuffer.bindFramebuffer(true);
 
@@ -87,11 +88,11 @@ public class EmiScreenshotRecorder {
 		framebuffer.unbindFramebuffer();
 		client.getFramebuffer().bindFramebuffer(true);
 
-		saveScreenshotInner(client.mcDataDir, path, framebuffer,
+		saveScreenshotInner(client.gameDir, path, framebuffer,
 			message -> client.ingameGUI.getChatGUI().printChatMessage(message));
 	}
 
-	private static void saveScreenshotInner(File gameDirectory, String suggestedPath, Framebuffer framebuffer, Consumer<IChatComponent> messageReceiver) {
+	private static void saveScreenshotInner(File gameDirectory, String suggestedPath, Framebuffer framebuffer, Consumer<ITextComponent> messageReceiver) {
 		BufferedImage nativeImage = takeScreenshot(framebuffer);
 
 		File screenshots = new File(gameDirectory, SCREENSHOTS_DIRNAME);
@@ -108,12 +109,12 @@ public class EmiScreenshotRecorder {
 		try {
 			ImageIO.write(nativeImage, "png", file);
 
-			IChatComponent text = new ChatComponentText(filename)
-				.setChatStyle(new ChatStyle().setUnderlined(true).setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
-			messageReceiver.accept(new ChatComponentTranslation("screenshot.success", text));
+            ITextComponent text = new TextComponentString(filename)
+                .setStyle(new Style().setUnderlined(true).setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file.getAbsolutePath())));
+			messageReceiver.accept(new TextComponentTranslation("screenshot.success", text));
 		} catch (Throwable e) {
 			EmiLog.error("Failed to write screenshot", e);
-			messageReceiver.accept(new ChatComponentTranslation("screenshot.failure", e.getMessage()));
+			messageReceiver.accept(new TextComponentTranslation("screenshot.failure", e.getMessage()));
 		}
 	}
 

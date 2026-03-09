@@ -1,8 +1,6 @@
 package dev.emi.emi;
 
 import com.rewindmc.retroemi.EmiResourceManager;
-import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
-import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.api.stack.Comparison;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
@@ -16,8 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.RegistryNamespaced;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
@@ -48,11 +47,11 @@ public final class EmiPort {
 		return Text.literal(s);
 	}
 
-	public static MutableText literal(String s, EnumChatFormatting formatting) {
+	public static MutableText literal(String s, TextFormatting formatting) {
 		return Text.literal(s).formatted(formatting);
 	}
 
-	public static MutableText literal(String s, EnumChatFormatting... formatting) {
+	public static MutableText literal(String s, TextFormatting... formatting) {
 		return Text.literal(s).formatted(formatting);
 	}
 
@@ -64,7 +63,7 @@ public final class EmiPort {
 		return Text.translatable(s);
 	}
 
-	public static MutableText translatable(String s, EnumChatFormatting formatting) {
+	public static MutableText translatable(String s, TextFormatting formatting) {
 		return Text.translatable(s).formatted(formatting);
 	}
 
@@ -100,7 +99,7 @@ public final class EmiPort {
 
 	public static boolean canTallFlowerDuplicate(BlockTallGrass tallFlowerBlock) {
 		try {
-			return tallFlowerBlock.canBlockStay(null, 0, 0, 0);
+			return tallFlowerBlock.canBlockStay(null, null, null);
 		} catch(Exception e) {
 			return false;
 		}
@@ -120,7 +119,7 @@ public final class EmiPort {
 //	}
 
 	public static int getGuiScale(Minecraft client) {
-		return new ScaledResolution(client, client.displayWidth, client.displayHeight).getScaleFactor();
+		return new ScaledResolution(client).getScaleFactor();
 	}
 
 	public static void setPositionTexShader() {
@@ -131,20 +130,20 @@ public final class EmiPort {
 		glEnable(GL_TEXTURE_2D);
 	}
 
-	public static FMLControlledNamespacedRegistry<Item> getItemRegistry() {
-		return GameData.getItemRegistry();
+	public static RegistryNamespaced<ResourceLocation, Item> getItemRegistry() {
+		return Item.REGISTRY;
 	}
 
-	public static FMLControlledNamespacedRegistry<Block> getBlockRegistry() {
-		return GameData.getBlockRegistry();
+	public static RegistryNamespaced<ResourceLocation, Block> getBlockRegistry() {
+		return Block.REGISTRY;
 	}
 
 	public static Map<String, Fluid> getFluidRegistry() {
 		return FluidRegistry.getRegisteredFluids();
 	}
 
-	public static Enchantment[] getEnchantmentRegistry() {
-		return Enchantment.enchantmentsList;
+	public static RegistryNamespaced<ResourceLocation, Enchantment> getEnchantmentRegistry() {
+		return Enchantment.REGISTRY;
 	}
 
 	public static ButtonWidget newButton(int x, int y, int w, int h, Text name, ButtonWidget.PressAction action) {
@@ -168,7 +167,7 @@ public final class EmiPort {
 	}
 
 	public static Stream<Item> getDisabledItems() {
-		return getItemRegistry().getKeys().stream().filter(i -> ((Item) Item.itemRegistry.getObject(i)).getCreativeTab() == null);
+		return getItemRegistry().getKeys().stream().filter(i -> ((Item) Item.REGISTRY.getObject(i)).getCreativeTab() == null);
 	}
 
 	public static ResourceLocation getId(IRecipe recipe) {
@@ -177,11 +176,8 @@ public final class EmiPort {
 
 	public static @Nullable IRecipe getRecipe(ResourceLocation id) {
         Minecraft client = Minecraft.getMinecraft();
-		if (client.theWorld != null && id != null) {
-            CraftingManager manager = CraftingManager.getInstance();
-			if (manager != null) {
-				return (IRecipe) manager.getRecipeList().stream().filter(i -> i.equals(id));
-			}
+		if (client.world != null && id != null) {
+            return CraftingManager.getRecipe(id);
 		}
 		return null;
 	}

@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
+import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
@@ -32,7 +33,7 @@ public class CreateItemC2SPacket implements EmiPacket {
 	@Override
 	public void apply(EntityPlayer player) {
 		if (player instanceof EntityPlayerMP esp &&
-				((esp.mcServer.getConfigurationManager().func_152596_g(esp.getGameProfile())) || player.capabilities.isCreativeMode) && //isPlayerOpped
+				((esp.server.getPlayerList().getOppedPlayers().getEntry(esp.getGameProfile()).getPermissionLevel() >= 2) || player.capabilities.isCreativeMode) && //isPlayerOpped
 				player.openContainer != null) {
 			if (ItemStacks.isEmpty(stack)) {
 				if (mode == 1) {
@@ -44,7 +45,7 @@ public class CreateItemC2SPacket implements EmiPacket {
 					RetroEMI.offerOrDrop(player, stack);
 				} else if (mode == 1) {
 					player.inventory.setItemStack(stack);
-					esp.playerNetServerHandler.sendPacket(new S2FPacketSetSlot(-1, 0, stack));
+					esp.connection.sendPacket(new SPacketSetSlot(-1, 0, stack));
 				}
 			}
 		}

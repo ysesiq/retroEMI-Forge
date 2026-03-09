@@ -5,13 +5,6 @@ import java.io.DataOutputStream;
 
 import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
 import dev.emi.emi.nemi.NemiPlugin;
 import dev.emi.emi.network.CreateItemC2SPacket;
@@ -24,8 +17,15 @@ import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.platform.EmiMain;
 import dev.emi.emi.registry.EmiCommands;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketCustomPayload;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import shim.net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -36,7 +36,7 @@ import net.minecraftforge.common.MinecraftForge;
 			required-after:gtnhlib@[0.6.0,);\
 			before:unimixins@[0.1,);\
 			""",
-	guiFactory = "dev.emi.emi.compat.EmiGuiFactory"
+	guiFactory = "dev.emi.emi.platform.forge.EmiGuiFactory"
 )
 public class EmiForge {
 
@@ -55,7 +55,7 @@ public class EmiForge {
 			MinecraftForge.EVENT_BUS.register(new EmiClientForge());
 		}
 		EmiNetwork.initServer((player, packet) -> {
-			player.playerNetServerHandler.sendPacket(toVanilla(packet));
+			player.connection.sendPacket(toVanilla(packet));
 		});
 		MinecraftForge.EVENT_BUS.register(this);
 		FMLCommonHandler.instance().bus().register(this);
@@ -78,7 +78,7 @@ public class EmiForge {
 	@SubscribeEvent
 	public void playerConnect(PlayerEvent.PlayerLoggedInEvent event) {
 		if (event.player instanceof EntityPlayerMP spe) {
-			EmiNetwork.sendToClient(spe, new PingS2CPacket(spe.mcServer.isDedicatedServer() || (spe.mcServer instanceof IntegratedServer integratedServer && integratedServer.getPublic())));
+			EmiNetwork.sendToClient(spe, new PingS2CPacket(spe.server.isDedicatedServer() || (spe.server instanceof IntegratedServer integratedServer && integratedServer.getPublic())));
 		}
 	}
 
@@ -89,11 +89,11 @@ public class EmiForge {
 		}
 	}
 
-	public static S3FPacketCustomPayload toVanilla(EmiPacket packet) {
+	public static SPacketCustomPayload toVanilla(EmiPacket packet) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		PacketByteBuf buf = PacketByteBuf.out(dos);
 		packet.write(buf);
-		return new S3FPacketCustomPayload(packet.getId().toString(), baos.toByteArray());
+		return new SPacketCustomPayload(packet.getId().toString(), baos.toByteArray());
 	}
 }

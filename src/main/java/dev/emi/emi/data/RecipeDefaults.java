@@ -6,13 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeManager;
@@ -21,6 +19,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class RecipeDefaults {
 	public final List<ResourceLocation> added = Lists.newArrayList();
@@ -55,7 +54,7 @@ public class RecipeDefaults {
 		Map<EmiIngredient, EmiRecipe> map = Maps.newHashMap();
 		if (!FMLCommonHandler.instance().getSide().isServer()) {
 			Minecraft client = Minecraft.getMinecraft();
-			if (client.theWorld == null) {
+			if (client.world == null) {
 				return map;
 			}
 		}
@@ -90,12 +89,10 @@ public class RecipeDefaults {
 	}
 
 
-	@Desugar
 	public static record Resolution(ResourceLocation recipe, List<JsonElement> stacks) {
 	}
 
 
-	@Desugar
 	public static record Tag(JsonElement tag, JsonElement stack) {
 	}
 }

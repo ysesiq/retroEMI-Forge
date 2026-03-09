@@ -1,8 +1,5 @@
 package dev.emi.emi.bom;
 
-import com.github.bsideup.jabel.Desugar;
-
-@Desugar
 public record ChanceState(float chance, boolean chanced) {
 	public static ChanceState DEFAULT = new ChanceState(1, false);
 

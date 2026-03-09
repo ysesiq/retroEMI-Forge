@@ -3,7 +3,7 @@ package dev.emi.emi;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import net.minecraft.util.IIcon;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fluids.Fluid;
 
 import com.google.common.collect.Lists;
@@ -78,13 +78,13 @@ public class EmiRenderHelper {
 		context.drawTexture(texture, x + coriw, y + corih, cor,        cor,         u + corcen, v + corcen, cor, cor, 256, 256);
 	}
 
-	public static void drawTintedSprite(MatrixStack matrices, IIcon sprite, int color, int x, int y, int xOff, int yOff, int width, int height) {
+	public static void drawTintedSprite(MatrixStack matrices, ResourceLocation sprite, int color, int x, int y, int xOff, int yOff, int width, int height) {
 		if (sprite == null) {
 			return;
 		}
 		EmiPort.setPositionColorTexShader();
 		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-		Minecraft.getMinecraft().renderEngine.getTexture(EmiPort.id(sprite.getIconName()));
+		Minecraft.getMinecraft().renderEngine.getTexture(sprite);
 		RenderSystem.enableBlend();
 
 		float r = ((color >> 16) & 255) / 256f;
@@ -93,8 +93,8 @@ public class EmiRenderHelper {
 
 		RenderSystem.setShaderColor(r, g, b, 1);
 
-		Tessellator tess = Tessellator.instance;
-		tess.startDrawingQuads();
+		Tessellator tess = Tessellator.getInstance();
+		tess.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
 		float xMin = (float) x;
 		float yMin = (float) y;
 		float xMax = xMin + width;
@@ -340,7 +340,7 @@ public class EmiRenderHelper {
 			context.matrices().translate(x + 4, y + 4, 0);
 
 			recipe.addWidgets(holder);
-			float delta = CLIENT.timer.renderPartialTicks;
+			float delta = CLIENT.getFrameTimer().getIndex();
 			for (Widget widget : widgets) {
 				widget.render(context.raw(), -1000, -1000, delta);
 			}

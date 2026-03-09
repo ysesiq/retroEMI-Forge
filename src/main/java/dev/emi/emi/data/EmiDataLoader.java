@@ -39,7 +39,7 @@ public class EmiDataLoader<T> extends SinglePreparationResourceReloader<T>
 	public T prepare(IResourceManager manager, Profiler profiler) {
 		T t = baseSupplier.get();
 		for (ResourceLocation id : EmiPort.findResources(manager, path, i -> i.endsWith(".json"))) {
-			if (!id.getResourceDomain().equals("emi")) {
+			if (!id.getNamespace().equals("emi")) {
 				continue;
 			}
 			try {

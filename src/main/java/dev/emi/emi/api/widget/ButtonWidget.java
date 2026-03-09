@@ -6,6 +6,7 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.SoundEvent;
 import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
@@ -54,7 +55,7 @@ public class ButtonWidget extends Widget {
 	@Override
 	public boolean mouseClicked(int mouseX, int mouseY, int button) {
 		action.click(mouseX, mouseY, button);
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0F));
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvent.REGISTRY.getObject(EmiPort.id("gui.button.press")), 1.0F));
 		return true;
 	}
 

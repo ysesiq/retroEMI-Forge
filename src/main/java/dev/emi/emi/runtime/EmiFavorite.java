@@ -15,7 +15,7 @@ import dev.emi.emi.registry.EmiRecipeFiller;
 import dev.emi.emi.screen.MicroTextRenderer;
 import dev.emi.emi.screen.StackBatcher.Batchable;
 import dev.emi.emi.screen.tooltip.RecipeTooltipComponent;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import org.jetbrains.annotations.Nullable;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -191,10 +191,10 @@ public class EmiFavorite implements EmiIngredient, Batchable {
 			list.addAll(super.getTooltip());
 
 			long diff = total - amount;
-			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.remaining", EmiRenderHelper.getAmountText(stack, amount)).formatted(EnumChatFormatting.GRAY)));
-			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.obtained", EmiRenderHelper.getAmountText(stack, diff), EmiRenderHelper.getAmountText(stack, total)).formatted(EnumChatFormatting.GRAY)));
+			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.remaining", EmiRenderHelper.getAmountText(stack, amount)).formatted(TextFormatting.GRAY)));
+			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.obtained", EmiRenderHelper.getAmountText(stack, diff), EmiRenderHelper.getAmountText(stack, total)).formatted(TextFormatting.GRAY)));
 			if (batches != amount) {
-				list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.batches_remaining", batches).formatted(EnumChatFormatting.GRAY)));
+				list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.batches_remaining", batches).formatted(TextFormatting.GRAY)));
 			}
 
 			if (state == -1) {

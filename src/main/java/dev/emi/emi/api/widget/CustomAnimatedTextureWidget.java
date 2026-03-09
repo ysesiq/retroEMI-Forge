@@ -29,7 +29,7 @@ public class CustomAnimatedTextureWidget extends TextureWidget {
 	public void render(DrawContext draw, int mouseX, int mouseY, float delta) {
 		EmiDrawContext context = EmiDrawContext.wrap(draw);
 
-		int totalTime = (int) Minecraft.getMinecraft().theWorld.getTotalWorldTime() % time;
+		int totalTime = (int) Minecraft.getMinecraft().world.getTotalWorldTime() % time;
 		if (totalTime % time == 0 & totalTime != oldCount || time == 1) {
 			internalCount++;
 			if (internalCount >= frameCount) {

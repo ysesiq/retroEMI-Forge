@@ -5,10 +5,6 @@ import com.rewindmc.retroemi.EmiModAnnotationScanner;
 import com.rewindmc.retroemi.InputPair;
 import com.rewindmc.retroemi.Prototype;
 import com.rewindmc.retroemi.RetroEMI;
-import cpw.mods.fml.common.DummyModContainer;
-import cpw.mods.fml.common.InjectedModContainer;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.EmiEntrypoint;
@@ -26,6 +22,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -38,11 +35,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.InjectedModContainer;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import org.apache.commons.lang3.text.WordUtils;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -184,14 +184,14 @@ public class EmiAgnosForge extends EmiAgnos {
 				for (Object obj : ingredience) {
 					Item ing = (Item) obj;
 					int result = tebs.func_145936_c(potion, new ItemStack(ing));
-					List<PotionEffect> inputEffects = Items.potionitem.getEffects(potion);
-					List<PotionEffect> resultEffects = Items.potionitem.getEffects(result);
+					List<PotionEffect> inputEffects = Items.POTIONITEM.getEffects(potion);
+					List<PotionEffect> resultEffects = Items.POTIONITEM.getEffects(result);
 					if (((potion <= 0 || inputEffects != resultEffects) &&
 							(inputEffects == null || !inputEffects.equals(resultEffects) && resultEffects != null)) ||
 							(!ItemPotion.isSplash(potion) && ItemPotion.isSplash(result))) {
 						if (potion != result && !seenPotions.contains(result)) {
 							potions.add(result);
-							recipes.put(new InputPair(new Prototype(ing), new Prototype(Items.potionitem, potion)), new Prototype(Items.potionitem, result));
+							recipes.put(new InputPair(new Prototype(ing), new Prototype(Items.POTIONITEM, potion)), new Prototype(Items.POTIONITEM, result));
 						}
 					}
 				}
@@ -208,7 +208,7 @@ public class EmiAgnosForge extends EmiAgnos {
 		// Remove all those uncraftable potions from the index
 
 		registry.removeEmiStacks(
-				es -> es.getItemStack() != null && es.getItemStack().getItem() == Items.potionitem && !seenPotions.contains(es.getItemStack().getItemDamage()));
+				es -> es.getItemStack() != null && es.getItemStack().getItem() == Items.POTIONITEM && !seenPotions.contains(es.getItemStack().getItemDamage()));
 
 		// We just did an exhaustive search and determined every legitimately obtainable potion
 		// So let's just cram those into the index where they're supposed to go.
@@ -222,7 +222,7 @@ public class EmiAgnosForge extends EmiAgnos {
 			List<PotionEffect> effB = ((List<PotionEffect>) ((ItemPotion) b.getItem()).getEffects(b.toStack()));
 			return listCompare(effA, effB, Comparator.comparingInt(PotionEffect::getPotionID).thenComparingInt(PotionEffect::getAmplifier).thenComparingInt(PotionEffect::getDuration));
 		}).map(EmiStack::of).collect(Collectors.toList());
-		EmiStack prev = EmiStack.of(new Prototype(Items.potionitem, 0));
+		EmiStack prev = EmiStack.of(new Prototype(Items.POTIONITEM, 0));
 		for (EmiStack potion : sorted) {
 			registry.addEmiStackAfter(potion, prev);
 		}
@@ -268,9 +268,9 @@ public class EmiAgnosForge extends EmiAgnos {
 
 	@Override
 	protected List<TooltipComponent> getItemTooltipAgnos(ItemStack stack) {
-		List<String> tip = stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+		List<String> tip = stack.getTooltip(Minecraft.getMinecraft().player, ITooltipFlag.TooltipFlags.ADVANCED);
 		for (int i = 0; i < tip.size(); i++) {
-			tip.set(i, "§" + (i == 0 ? stack.getRarity().rarityColor.getFormattingCode() : "7") + tip.get(i));
+			tip.set(i, "§" + (i == 0 ? stack.getRarity().getColor() : "7") + tip.get(i));
 		}
 		return tip.stream()
 				.map(Text::literal).map(TooltipComponent::of)
@@ -288,7 +288,7 @@ public class EmiAgnosForge extends EmiAgnos {
 		tooltip.add(getFluidName(fluid, componentChanges));
 		Minecraft client = Minecraft.getMinecraft();
 		if (client.gameSettings.advancedItemTooltips) {
-			tooltip.add(EmiPort.literal(fluid.getName()).formatted(EnumChatFormatting.DARK_GRAY));
+			tooltip.add(EmiPort.literal(fluid.getName()).formatted(TextFormatting.DARK_GRAY));
 		}
 		return tooltip;
 	}
@@ -303,14 +303,13 @@ public class EmiAgnosForge extends EmiAgnos {
 	protected void renderFluidAgnos(FluidEmiStack stack, MatrixStack matrices, int x, int y, float delta, int xOff, int yOff, int width, int height) {
 		FluidStack fs = new FluidStack(stack.getKeyOfType(Fluid.class), 1000, stack.getNbt());
 		Fluid ext = fs.getFluid();
-		ResourceLocation texture = EmiPort.id(ext.getStillIcon().getIconName());
+		ResourceLocation texture = ext.getStill();
 		if (texture == null) {
 			return;
 		}
 		int color = ext.getColor(fs);
-		RenderSystem.setShaderTexture(0, TextureMap.locationBlocksTexture);
-		IIcon sprite = ext.getIcon();
-		EmiRenderHelper.drawTintedSprite(matrices, sprite, color, x, y, xOff, yOff, width, height);
+		RenderSystem.setShaderTexture(0, TextureMap.LOCATION_BLOCKS_TEXTURE);
+		EmiRenderHelper.drawTintedSprite(matrices, texture, color, x, y, xOff, yOff, width, height);
 	}
 
 	@Override
@@ -331,7 +330,7 @@ public class EmiAgnosForge extends EmiAgnos {
 		Map<ItemKey, Integer> fuelMap = new HashMap<>();
 		for (Item item : RetroEMI.getAllItems()) {
 			List<ItemStack> stacks = new ArrayList<>();
-			item.getSubItems(item, CreativeTabs.tabMisc, stacks);
+			item.getSubItems(item, CreativeTabs.MISC, stacks);
 			for (ItemStack stack : stacks) {
 				int time = TileEntityFurnace.getItemBurnTime(stack);
 				if (time > 0) {
@@ -349,8 +348,8 @@ public class EmiAgnosForge extends EmiAgnos {
 
 	@Override
 	protected boolean isEnchantableAgnos(ItemStack stack, Enchantment enchantment) {
-		ItemStack enchantedBook = new ItemStack(Items.enchanted_book);
-		EnchantmentHelper.setEnchantments(Collections.singletonMap(enchantment.effectId, enchantment.getMaxLevel()), enchantedBook);
+		ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
+		EnchantmentHelper.setEnchantments(Collections.singletonMap(enchantment, enchantment.getMaxLevel()), enchantedBook);
 		return stack.getItem().isBookEnchantable(stack, enchantedBook);
 	}
 }
