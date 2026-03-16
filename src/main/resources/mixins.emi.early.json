@@ -12,7 +12,6 @@
     "minecraft.network.NetHandlerPlayServerMixin"
   ],
   "client": [
-    "minecraft.client.FontRendererMixin",
     "minecraft.client.GuiContainerCreativeMixin",
     "minecraft.client.GuiContainerMixin",
     "minecraft.client.InventoryEffectRendererMixin",

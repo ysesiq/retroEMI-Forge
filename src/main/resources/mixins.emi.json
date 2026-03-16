@@ -24,7 +24,6 @@
   "client": [
     "accessor.GuiContainerAccessor",
     "accessor.GuiTextFieldAccessor",
-    "early.minecraft.client.FontRendererMixin",
     "early.minecraft.client.GuiContainerCreativeMixin",
     "early.minecraft.client.GuiContainerMixin",
     "early.minecraft.client.InventoryEffectRendererMixin",
