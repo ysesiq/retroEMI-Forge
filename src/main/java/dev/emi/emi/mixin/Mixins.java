@@ -15,18 +15,15 @@ public enum Mixins {
         .setApplyIf(() -> true)
         .addTargetedMod(TargetedMod.VANILLA)
         .addMixinClasses(addPrefix("minecraft.",
-            "client.FontRendererMixin",
             "client.GuiContainerCreativeMixin",
             "client.GuiContainerMixin",
-            "client.GuiScreenMixin",
             "client.InventoryEffectRendererMixin",
-            "client.RenderBlockMixin",
             "client.ResourceLocationMixin",
             "client.SlotCraftingMixin",
             "item.ItemMixin",
             "item.ItemStackMixin",
-            "packet.NetClientHandlerMixin",
-            "packet.NetServerHandlerMixin"
+            "network.NetHandlerPlayClientMixin",
+            "network.NetHandlerPlayServerMixin"
         ))
     ),
     Forge(new Builder("Forge")

@@ -58,6 +58,8 @@ public class EmiClientForge {
 
 	@SubscribeEvent
 	public void renderScreenForeground(GuiScreenEvent.DrawScreenEvent.Pre event) {
+//        RetroEMI.handleMouseInput();
+//        RetroEMI.handleKeyboardInput();
 		EmiDrawContext context = EmiDrawContext.instance();
 		GuiScreen screen = event.gui;
 		if (!(screen instanceof GuiContainer)) {
@@ -94,6 +96,7 @@ public class EmiClientForge {
 	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase == TickEvent.Phase.START) {
 			RetroEMI.tick();
+
 		}
 	}
 

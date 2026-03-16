@@ -27,7 +27,6 @@
     "early.minecraft.client.FontRendererMixin",
     "early.minecraft.client.GuiContainerCreativeMixin",
     "early.minecraft.client.GuiContainerMixin",
-    "early.minecraft.client.GuiScreenMixin",
     "early.minecraft.client.InventoryEffectRendererMixin",
     "early.minecraft.client.ResourceLocationMixin",
     "early.minecraft.client.SlotCraftingMixin",

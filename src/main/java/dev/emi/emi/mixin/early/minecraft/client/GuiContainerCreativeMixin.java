@@ -1,6 +1,6 @@
 package dev.emi.emi.mixin.early.minecraft.client;
 
-import dev.emi.emi.mixinsupport.inject_interface.EmiSearchInput;
+import com.rewindmc.retroemi.RetroEMI;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,14 +18,14 @@ public class GuiContainerCreativeMixin {
         cancellable = true
     )
     public void handleMouseInput(CallbackInfo ci) {
-        if (((EmiSearchInput) this).getEMIMouseInput()) {
+        if (RetroEMI.handleMouseInput()) {
             ci.cancel();
         }
     }
 
     @Inject(method = "keyTyped", at = @At(value = "HEAD"), cancellable = true)
     public void blockEMISearchToCreativeSearch(CallbackInfo ci) {
-        if (((EmiSearchInput) this).getEMISearchInput()) {
+        if (RetroEMI.handleKeyboardInput()) {
             ci.cancel();
         }
     }

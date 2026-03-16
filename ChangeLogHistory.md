@@ -1,3 +1,10 @@
+# 1.1.22-beta4
+
+* Fix: Mixin compat with GTNH
+
+---
+
+
 # 1.1.22-beta3
 
 * Feature: Reimplemented EMI Data
