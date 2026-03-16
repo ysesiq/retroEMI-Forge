@@ -1,11 +1,15 @@
 package dev.emi.emi.api.stack;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiTagKey;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.registry.tag.TagKey;
@@ -68,9 +72,34 @@ public interface EmiIngredient extends EmiRenderable {
 		return of(key, 1);
 	}
 
-    public static <T> EmiIngredient of(TagKey<T> key, long amount) {
-        return EmiIngredient.of(EmiTags.getRawValues(EmiTagKey.of(key)), amount);
-    }
+	public static <T> EmiIngredient of(TagKey<T> key, long amount) {
+		return EmiIngredient.of(EmiTags.getRawValues(EmiTagKey.of(key)), amount);
+	}
+
+	public static EmiIngredient of(Ingredient ingredient) {
+		if (ingredient == null || ingredient == Ingredient.EMPTY) {
+			return EmiStack.EMPTY;
+		}
+		ItemStack[] stacks = ingredient.getMatchingStacks();
+		int amount = 1;
+		if (stacks.length != 0) {
+			amount = stacks[0].getCount();
+			for (int i = 1; i < stacks.length; i++) {
+				if (stacks[i].getCount() != amount) {
+					amount = 1;
+					break;
+				}
+			}
+		}
+		return of(ingredient, amount);
+	}
+
+	public static EmiIngredient of(Ingredient ingredient, long amount) {
+		if (ingredient == null || ingredient == Ingredient.EMPTY) {
+			return EmiStack.EMPTY;
+		}
+		return EmiTags.getIngredient(Item.class, Arrays.stream(ingredient.getMatchingStacks()).map(EmiStack::of).toList(), amount);
+	}
 
 	public static EmiIngredient of(List<? extends EmiIngredient> list) {
 		return of(list, 1);
@@ -98,12 +127,12 @@ public interface EmiIngredient extends EmiRenderable {
 			for (EmiIngredient i : list) {
 				for (EmiStack s : i.getEmiStacks()) {
 					if (!s.isEmpty()) {
-//                        if (tagType == null) {
-//                            tagType = EmiTags.ADAPTERS_BY_CLASS.getKey(s.getKey().getClass());
-//                        }
-                        if (tagType == null || !tagType.isAssignableFrom(s.getKey().getClass())) {
-                            return new ListEmiIngredient(list, amount);
-                        }
+						if (tagType == null) {
+							tagType = EmiTags.ADAPTERS_BY_CLASS.getKey(s.getKey().getClass());
+						}
+						if (tagType == null || !tagType.isAssignableFrom(s.getKey().getClass())) {
+							return new ListEmiIngredient(list, amount);
+						}
 					}
 				}
 			}

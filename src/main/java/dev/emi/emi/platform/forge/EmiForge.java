@@ -5,8 +5,6 @@ import java.io.DataOutputStream;
 
 import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
-import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
-import dev.emi.emi.nemi.NemiPlugin;
 import dev.emi.emi.network.CreateItemC2SPacket;
 import dev.emi.emi.network.EmiChessPacket;
 import dev.emi.emi.network.EmiNetwork;

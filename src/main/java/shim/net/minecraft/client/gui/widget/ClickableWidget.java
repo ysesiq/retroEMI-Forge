@@ -1,10 +1,6 @@
-/*
- * Decompiled with CFR 0.2.0 (FabricMC d28b102d).
- */
 package shim.net.minecraft.client.gui.widget;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -13,6 +9,10 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.Drawable;
 import shim.net.minecraft.client.gui.Element;
@@ -22,12 +22,9 @@ import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 import java.util.function.Consumer;
-
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 /**
 * A clickable widget is a GUI element that has many methods to handle different mouse actions. In
@@ -126,7 +123,7 @@ public abstract class ClickableWidget extends Gui implements Drawable, Element {
 		} else if (this.isSelected()) {
 			i += hoveredVOffset;
 		}
-		GL11.glEnable(GL_DEPTH_TEST);
+        RenderSystem.enableDepthTest();
 		EmiDrawContext.instance().drawTexture(texture, x, y, 0, u, i, width, height, textureWidth, textureHeight);
 	}
 
@@ -185,7 +182,7 @@ public abstract class ClickableWidget extends Gui implements Drawable, Element {
 	}
 
 	public void playDownSound() {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0F));
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvent.REGISTRY.getObject(EmiPort.id("gui.button.press")), 1.0F));
 	}
 
 	public int getWidth() {

@@ -34,7 +34,7 @@ public class RecipeScreenshotButtonWidget extends RecipeButtonWidget {
 		} else {
 			// Note that saveScreenshot treats `/`s as indicating subdirectories.
 			// We don't want to keep `/` in paths because we want all recipe images in consistent directory locations.
-			path = id.getResourceDomain() + "/" + id.getResourcePath().replace("/", "_");
+			path = id.getNamespace() + "/" + id.getPath().replace("/", "_");
 		}
 
 		int width = recipe.getDisplayWidth() + 8;

@@ -1,7 +1,8 @@
 package shim.net.minecraft.client.util;
 
 import com.google.common.collect.Maps;
-import net.minecraft.util.StringTranslate;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.Language;
 import shim.net.minecraft.text.Text;
 import shim.org.lwjgl.glfw.GLFW;
 import org.lwjgl.input.Keyboard;
@@ -112,7 +113,7 @@ public class InputUtil {
 		}),
 		MOUSE(
 			"key.mouse",
-			(buttonCode, translationKey) -> StringTranslate.getInstance().containsTranslateKey(translationKey)
+			(buttonCode, translationKey) -> I18n.hasKey(translationKey)
 					? Text.translatable(translationKey)
 					: Text.translatable("key.mouseButton", buttonCode + 1)
 		);

@@ -1,10 +1,9 @@
 package com.rewindmc.retroemi;
 
-import com.github.bsideup.jabel.Desugar;
+import dev.emi.emi.EmiPort;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-@Desugar
 public record Prototype(Item item, int meta) {
 
 	public static final Prototype EMPTY = new Prototype(null);
@@ -28,7 +27,7 @@ public record Prototype(Item item, int meta) {
 
 	public String toString() {
 		if (item == null) return "Prototype[EMPTY]";
-		return "Prototype[" + item.getItemStackDisplayName(new ItemStack(item)) + "(" + Item.itemRegistry.getIDForObject(item) + "):" + meta + "]";
+		return "Prototype[" + item.getItemStackDisplayName(new ItemStack(item)) + "(" + EmiPort.getItemRegistry().getIDForObject(item) + "):" + meta + "]";
 	}
 
 

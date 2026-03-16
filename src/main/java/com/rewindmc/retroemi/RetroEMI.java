@@ -1,44 +1,41 @@
 package com.rewindmc.retroemi;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.potion.PotionUtils;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
-import cpw.mods.fml.common.registry.GameData;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.EmiScreenManager;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.StringTranslate;
 import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
@@ -53,19 +50,11 @@ public class RetroEMI {
 
 	private RetroEMI() {
 		if (!FMLCommonHandler.instance().getSide().isServer()) {
-			itemRenderer = RenderItem.getInstance();
+			itemRenderer = Minecraft.getMinecraft().getRenderItem();
 		} else {
 			itemRenderer = null;
 		}
 	}
-
-    public static boolean isSideLit(ItemStack item) {
-        if (item.getItem() instanceof ItemBlock) {
-            Block b = ((ItemBlock) item.getItem()).field_150939_a;
-            return RenderBlocks.renderItemIn3d(b.getRenderType());
-        }
-        return false;
-    }
 
 	public static void executeOnMainThread(Runnable r) {
 		synchronized (tickQueue) {
@@ -85,8 +74,8 @@ public class RetroEMI {
 	}
 
 	public static Collection<PotionEffect> getEffects(EmiStack stack) {
-		if (stack.getItemStack().getItem() instanceof ItemPotion p) {
-			return p.getEffects(stack.getItemStack());
+		if (stack.getItemStack().getItem() instanceof ItemPotion) {
+			return PotionUtils.getEffectsFromStack(stack.getItemStack());
 		}
 		return Collections.emptyList();
 	}
@@ -136,7 +125,7 @@ public class RetroEMI {
 
 	public static void offerOrDrop(EntityPlayer player, ItemStack stack) {
 		if (!player.inventory.addItemStackToInventory(stack)) {
-			player.dropPlayerItemWithRandomChoice(stack, false);
+			player.dropItem(stack, false);
 		}
 	}
 
@@ -168,8 +157,8 @@ public class RetroEMI {
 		int o = vector2ic.y();
 		matrix.push();
 		int p = 400;
-		Tessellator tess = Tessellator.instance;
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		Tessellator tess = Tessellator.getInstance();
+        GlStateManager.disableTexture2D();
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -198,8 +187,8 @@ public class RetroEMI {
 		try {
 			Minecraft client = Minecraft.getMinecraft();
 			GuiScreen screen = client.currentScreen;
-			if (screen instanceof GuiContainer hs) {
-				ScaledResolution sr = new ScaledResolution(client, client.displayWidth, client.displayHeight);
+			if (screen instanceof GuiContainer) {
+				ScaledResolution sr = new ScaledResolution(client);
 				double xScale = (sr.getScaledWidth_double() / client.displayWidth);
 				double yScale = (sr.getScaledHeight_double() / client.displayHeight);
 				double mx = Mouse.getEventX() * xScale;
@@ -289,11 +278,11 @@ public class RetroEMI {
 //	}
 
 	public static String translate(String s) {
-		return StringTranslate.getInstance().translateKey(s);
+		return I18n.format(s);
 	}
 
 	public static String translate(String s, Object... arg) {
-		return StringTranslate.getInstance().translateKeyFormat(s, arg);
+		return I18n.format(s, arg);
 	}
 
     public static String sanitizeNBT(String nbt) {
@@ -313,7 +302,7 @@ public class RetroEMI {
 
     public static List<Item> getAllItems() {
         List<Item> items = new ArrayList<>();
-        ((Iterable<Item>) GameData.getItemRegistry()).forEach(items::add);
+        EmiPort.getItemRegistry().forEach(items::add);
         return items;
     }
 
@@ -325,24 +314,15 @@ public class RetroEMI {
         return client.displayWidth / EmiPort.getGuiScale(client);
     }
 
-    private static @Nullable String getIdInner(ItemStack stack) {
+    public static @Nullable String getId(ItemStack stack) {
         if (ItemStacks.isEmpty(stack)) {
             return null;
         }
         Item item = stack.getItem();
         if (item instanceof ItemBlock ib) {
-            return EmiPort.getBlockRegistry().getNameForObject(ib.field_150939_a);
+            return EmiPort.getBlockRegistry().getNameForObject(ib.getBlock()).getNamespace();
         } else {
-            return EmiPort.getItemRegistry().getNameForObject(item);
+            return EmiPort.getItemRegistry().getNameForObject(item).getNamespace();
         }
-    }
-
-    public static @Nullable String getId(ItemStack stack) {
-        String s = getIdInner(stack);
-        if (s != null && s.contains(":")) {
-            String[] parts = s.split(":");
-            return parts[1];
-        }
-        return null;
     }
 }

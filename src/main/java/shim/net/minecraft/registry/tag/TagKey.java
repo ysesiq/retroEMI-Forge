@@ -1,22 +1,22 @@
 package shim.net.minecraft.registry.tag;
 
-import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.rewindmc.retroemi.RetroEMI;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.mixin.accessor.ItemBlockAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.RegistryNamespaced;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.lang.reflect.Field;
@@ -27,7 +27,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Desugar
 public record TagKey<T>(ResourceLocation tag, Type type) {
     private static final Interner<TagKey<?>> INTERNER = Interners.newWeakInterner();
 
@@ -40,7 +39,7 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
     }
 
     public boolean isOf(RegistryNamespaced registry) {
-        return registry.containsKey(this.tag.getResourcePath());
+        return registry.containsKey(this.tag.getPath());
     }
 
     public <E> Optional<TagKey<E>> tryCast(RegistryNamespaced registryRef) {
@@ -80,8 +79,8 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
         List<ItemStack> result = new ArrayList<>();
         for (ItemStack stack : stacks) {
             if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                List<ItemStack> itemStacks = new ArrayList<>();
-                stack.getItem().getSubItems(stack.getItem(), CreativeTabs.tabMisc, itemStacks);
+                NonNullList<ItemStack> itemStacks = NonNullList.create();
+                stack.getItem().getSubItems(CreativeTabs.MISC, itemStacks);
                 result.addAll(itemStacks);
             } else {
                 result.add(stack);
@@ -113,10 +112,10 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
     }
 
     private static String convertTag(ResourceLocation tag) {
-        if (tag.getResourceDomain().equals("forge") || tag.getResourceDomain().equals("c")) {
-            return formatTag(tag.getResourcePath());
+        if (tag.getNamespace().equals("forge") || tag.getNamespace().equals("c")) {
+            return formatTag(tag.getPath());
         } else {
-            return formatTag(tag.getResourceDomain() + "/" + tag.getResourcePath());
+            return formatTag(tag.getNamespace() + "/" + tag.getPath());
         }
     }
 

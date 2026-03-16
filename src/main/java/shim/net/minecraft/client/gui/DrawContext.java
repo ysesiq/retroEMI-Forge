@@ -7,7 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import com.rewindmc.retroemi.RetroEMI;
 import net.minecraft.util.ResourceLocation;
@@ -27,11 +32,13 @@ import java.util.stream.Collectors;
 public class DrawContext extends Gui {
 	private final Minecraft client;
 	private final MatrixStack matrices;
-	public static final DrawContext INSTANCE = new DrawContext(Minecraft.getMinecraft(), MatrixStack.INSTANCE);
+    private final TextureMap guiAtlasManager;
+    public static final DrawContext INSTANCE = new DrawContext(Minecraft.getMinecraft(), MatrixStack.INSTANCE);
 
 	public DrawContext(Minecraft client, MatrixStack matrices) {
 		this.client = client;
 		this.matrices = matrices;
+        this.guiAtlasManager = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE));
 	}
 
 	public MatrixStack getMatrices() {
@@ -39,7 +46,7 @@ public class DrawContext extends Gui {
 	}
 
 	public void enableScissor(int x1, int y1, int x2, int y2) {
-		ScaledResolution scaledResolution = new ScaledResolution(client, client.displayWidth, client.displayHeight);
+		ScaledResolution scaledResolution = new ScaledResolution(client);
 		int scale = scaledResolution.getScaleFactor();
 		int x = Math.min(x1, x2) * scale;
 		int y = client.displayHeight - Math.max(y1, y2) * scale;
@@ -79,17 +86,16 @@ public class DrawContext extends Gui {
 		float g = (float)(color >> 16 & 255) / 255.0F;
 		float b = (float)(color >> 8 & 255) / 255.0F;
 		float a = (float)(color & 255) / 255.0F;
-		Tessellator tessellator = Tessellator.instance;
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 		RenderSystem.enableBlend();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableTexture2D();
 		RenderSystem.defaultBlendFunc();
-        this.setShaderColor(g, b, a, r);
-        tessellator.startDrawingQuads();
-		tessellator.addVertex(x1, y2, z);
-		tessellator.addVertex(x2, y2, z);
-		tessellator.addVertex(x2, y1, z);
-		tessellator.addVertex(x1, y1, z);
-		tessellator.draw();
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        bufferBuilder.pos(x1, y2, z).color(r, g, b, a).endVertex();
+        bufferBuilder.pos(x2, y2, z).color(r, g, b, a).endVertex();
+        bufferBuilder.pos(x2, y1, z).color(r, g, b, a).endVertex();
+        bufferBuilder.pos(x1, y1, z).color(r, g, b, a).endVertex();
+        EmiPort.draw(bufferBuilder);
         EmiPort.setPositionTexShader();
 		RenderSystem.disableBlend();
 	}
@@ -107,23 +113,21 @@ public class DrawContext extends Gui {
 		float ge = (float)(colorEnd >> 16 & 255) / 255.0F;
 		float be = (float)(colorEnd >> 8 & 255) / 255.0F;
 		float ae = (float)(colorEnd & 255) / 255.0F;
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GlStateManager.disableTexture2D();
 		RenderSystem.enableBlend();
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GlStateManager.disableAlpha();
 		RenderSystem.defaultBlendFunc();
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.setColorRGBA_F(gs, bs, as, rs);
-		tessellator.addVertex(endX, startY, z);
-		tessellator.addVertex(startX, startY, z);
-		tessellator.setColorRGBA_F(ge, be, ae, re);
-		tessellator.addVertex(startX, endY, z);
-		tessellator.addVertex(endX, endY, z);
-		tessellator.draw();
-		GL11.glShadeModel(GL11.GL_FLAT);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        bufferBuilder.pos(endX, startY, z).color(gs, bs, as, rs).endVertex();
+		bufferBuilder.pos(startX, startY, z).color(gs, bs, as, rs).endVertex();
+		bufferBuilder.pos(startX, endY, z).color(ge, be, ae, re).endVertex();
+		bufferBuilder.pos(endX, endY, z).color(ge, be, ae, re).endVertex();
+		EmiPort.draw(bufferBuilder);
+        GlStateManager.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableAlpha();
         EmiPort.setPositionTexShader();
 	}
 
@@ -171,7 +175,7 @@ public class DrawContext extends Gui {
 	}
 
 	public void drawTextWrapped(FontRenderer textRenderer, String text, int x, int y, int width, int color) {
-		this.drawText(textRenderer, textRenderer.wrapFormattedStringToWidth(text, width), x, y, color, false);
+		this.drawText(textRenderer, textRenderer.trimStringToWidth(text, width), x, y, color, false);
 		Objects.requireNonNull(textRenderer);
 	}
 
@@ -188,6 +192,34 @@ public class DrawContext extends Gui {
 
 		return this.drawText(textRenderer, text, x, y, color, true);
 	}
+
+    public void drawGuiTexture(ResourceLocation texture, int x, int y, int width, int height) {
+        this.drawGuiTexture(texture, x, y, 0, width, height);
+    }
+
+    public void drawGuiTexture(ResourceLocation texture, int x, int y, int z, int width, int height) {
+        this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), x, y, z, width, height);
+    }
+
+    public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int width, int height) {
+        this.drawGuiTexture(texture, i, j, k, l, x, y, 0, width, height);
+    }
+
+    public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
+        this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), i, j, k, l, x, y, z, width, height);
+    }
+
+    private void drawSprite(TextureAtlasSprite sprite, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
+        if (width != 0 && height != 0) {
+            this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getInterpolatedU((float)k / (float)i), sprite.getInterpolatedU((float)(k + width) / (float)i), sprite.getInterpolatedV((float)l / (float)j), sprite.getInterpolatedV((float)(l + height) / (float)j));
+        }
+    }
+
+    private void drawSprite(TextureAtlasSprite sprite, int x, int y, int z, int width, int height) {
+        if (width != 0 && height != 0) {
+            this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+        }
+    }
 
 	public void drawTexture(ResourceLocation texture, int x, int y, int u, int v, int width, int height) {
 		this.drawTexture(texture, x, y, 0, (float)u, (float)v, width, height, 256, 256);
@@ -212,45 +244,43 @@ public class DrawContext extends Gui {
 	void drawTexturedQuad(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2) {
 		RenderSystem.setShaderTexture(0, texture);
         EmiPort.setPositionTexShader();
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x1, y2, z, u1, v2);
-		tessellator.addVertexWithUV(x2, y2, z, u2, v2);
-		tessellator.addVertexWithUV(x2, y1, z, u2, v1);
-		tessellator.addVertexWithUV(x1, y1, z, u1, v1);
-		tessellator.draw();
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex();
+        bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex();
+        bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex();
+        bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex();
+		EmiPort.draw(bufferBuilder);
 	}
 
 	public void drawTexturedQuad(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2, float red, float green, float blue, float alpha) {
 		RenderSystem.setShaderTexture(0, texture);
         EmiPort.setPositionTexShader();
 		RenderSystem.enableBlend();
-		this.setShaderColor(red, green, blue, alpha);
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x1, y2, z, u1, v2);
-		tessellator.addVertexWithUV(x2, y2, z, u2, v2);
-		tessellator.addVertexWithUV(x2, y1, z, u2, v1);
-		tessellator.addVertexWithUV(x1, y1, z, u1, v1);
-		tessellator.draw();
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+        bufferBuilder.pos(x1, y2, z).tex(u1, v2).color(red, green, blue, alpha).endVertex();
+        bufferBuilder.pos(x2, y2, z).tex(u2, v2).color(red, green, blue, alpha).endVertex();
+        bufferBuilder.pos(x2, y1, z).tex(u2, v1).color(red, green, blue, alpha).endVertex();
+        bufferBuilder.pos(x1, y1, z).tex(u1, v1).color(red, green, blue, alpha).endVertex();
+        EmiPort.draw(bufferBuilder);
 		RenderSystem.disableBlend();
-		this.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	public void drawItem(ItemStack stack, int x, int y) {
 		if (stack == null) return;
 		RetroEMI.instance.itemRenderer.zLevel += 100;
-		RetroEMI.instance.itemRenderer.renderItemAndEffectIntoGUI(client.fontRenderer, client.getTextureManager(), stack, x, y);
+		RetroEMI.instance.itemRenderer.renderItemAndEffectIntoGUI(stack, x, y);
 		RetroEMI.instance.itemRenderer.zLevel -= 100;
 		RenderSystem.defaultBlendFunc();
 	}
 
 	public void drawItemInSlot(FontRenderer fontRenderer, ItemStack stack, int x, int y) {
 		RetroEMI.instance.itemRenderer.zLevel += 200;
-		int count = stack.stackSize;
-		stack.stackSize = 1;
-		RetroEMI.instance.itemRenderer.renderItemOverlayIntoGUI(fontRenderer, client.getTextureManager(), stack, x, y);
-		stack.stackSize = count;
+		int count = stack.getCount();
+		stack.setCount(1);
+		RetroEMI.instance.itemRenderer.renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
+		stack.setCount(count);
 		RetroEMI.instance.itemRenderer.zLevel -= 200;
 	}
 

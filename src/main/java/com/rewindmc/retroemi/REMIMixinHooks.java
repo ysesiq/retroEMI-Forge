@@ -49,7 +49,7 @@ public class REMIMixinHooks {
 			if (query != null && !query.test(EmiStack.of(slot.getStack()))) {
 				context.push();
 				context.matrices().translate(0, 0, 300);
-				context.fill(slot.xDisplayPosition - 1, slot.yDisplayPosition - 1, 18, 18, 0x77000000);
+				context.fill(slot.xPos - 1, slot.yPos - 1, 18, 18, 0x77000000);
 				context.pop();
 			}
 		}
@@ -57,13 +57,13 @@ public class REMIMixinHooks {
 
 	//SlotCrafting
 	public static void onCrafting(EntityPlayer thePlayer, IInventory craftMatrix) {
-		World world = thePlayer.worldObj;
+		World world = thePlayer.world;
 		if (world.isRemote) {
 			try {
 				InventoryCrafting inv = (InventoryCrafting) craftMatrix;
-				List<IRecipe> list = ((CraftingManagerAccessor) CraftingManager.getInstance()).getRecipes();
+				List<IRecipe> list = ((CraftingManagerAccessor) CraftingManager.REGISTRY).getRecipes();
 				for (IRecipe r : list) {
-					if (r.matches(inv, client.theWorld)) {
+					if (r.matches(inv, client.world)) {
 						ResourceLocation id = EmiPort.getId(r);
 						EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
 						if (recipe != null) {
@@ -101,7 +101,7 @@ public class REMIMixinHooks {
 
     public static void drawEffects(InventoryEffectRenderer screen) {
         Minecraft client = Minecraft.getMinecraft();
-        ScaledResolution scaledresolution = new ScaledResolution(client, client.displayWidth, client.displayHeight);
+        ScaledResolution scaledresolution = new ScaledResolution(client);
         int width = scaledresolution.getScaledWidth();
         int height = scaledresolution.getScaledHeight();
         int mouseX = Mouse.getX() * width / client.displayWidth;
@@ -109,7 +109,7 @@ public class REMIMixinHooks {
         int debuffY = ((GuiContainerAccessor) screen).getGuiTop();
         int debuffX = changeEffectSpace(screen, ((GuiContainerAccessor) screen).getGuiLeft() - EFFECT_WIDTH);
         boolean wide = !EmiConfig.effectLocation.compressed;
-        Collection<PotionEffect> activePotionEffects = client.thePlayer.getActivePotionEffects();
+        Collection<PotionEffect> activePotionEffects = client.player.getActivePotionEffects();
         int num_effects = activePotionEffects.size();
 
         if (num_effects > 0 && EmiConfig.effectLocation != EffectLocation.HIDDEN) {
@@ -146,7 +146,7 @@ public class REMIMixinHooks {
     public static void drawCenteredEffects(InventoryEffectRenderer screen, int mouseX, int mouseY) {
         EmiDrawContext context = EmiDrawContext.instance();
         context.resetColor();
-        Collection<PotionEffect> effects = client.thePlayer.getActivePotionEffects();
+        Collection<PotionEffect> effects = client.player.getActivePotionEffects();
         int size = effects.size();
         if (size == 0) {
             return;
@@ -199,7 +199,7 @@ public class REMIMixinHooks {
         if (effect != null) {
             String amplifier = getPotionAmplifier(effect);
             TooltipComponent name = TooltipComponent.of(Text.translatable(effect.getEffectName()).append(Text.literal(amplifier)));
-            TooltipComponent duration = TooltipComponent.of(Text.literal(Potion.getDurationString(effect)));
+            TooltipComponent duration = TooltipComponent.of(Text.literal(Potion.getPotionDurationString(effect, 1.0F)));
             EmiRenderHelper.drawTooltip(screen, EmiDrawContext.instance(), shim.java.List.of(name, duration), mouseX, Math.max(mouseY, 16));
         }
     }
@@ -227,13 +227,13 @@ public class REMIMixinHooks {
         if (wide) {
             String potionName = RetroEMI.translate(potionEffect.getEffectName()) + getPotionAmplifier(potionEffect);
             client.fontRenderer.drawStringWithShadow(potionName, x + 10 + 18, y + 6, 16777215);
-            String durationString = Potion.getDurationString(potionEffect);
+            String durationString = Potion.getPotionDurationString(potionEffect, 1.0F);
             client.fontRenderer.drawStringWithShadow(durationString, x + 10 + 18, y + 16, 8355711);
         }
     }
 
     private static void drawPotionIcon(InventoryEffectRenderer screen, int x, int y, PotionEffect potionEffect) {
-        Potion potionType = Potion.potionTypes[potionEffect.getPotionID()];
+        Potion potionType = Potion.getPotionById(Potion.getIdFromPotion(potionEffect.getPotion()));
         if (potionType.hasStatusIcon()) {
             int statusIconIndex = potionType.getStatusIconIndex();
             screen.drawTexturedModalRect(x + 6, y + 7, statusIconIndex % 8 * 18, 198 + statusIconIndex / 8 * 18, 18, 18);

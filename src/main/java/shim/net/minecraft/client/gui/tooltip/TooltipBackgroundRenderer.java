@@ -1,8 +1,8 @@
 package shim.net.minecraft.client.gui.tooltip;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TooltipBackgroundRenderer {
     public static final int field_41688 = 12;
@@ -20,12 +20,12 @@ public class TooltipBackgroundRenderer {
         int j = y - 3;
         int k = width + 3 + 3;
         int l = height + 3 + 3;
-        TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j - 1, k, z, -267386864);
-        TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j + l, k, z, -267386864);
-        TooltipBackgroundRenderer.renderRectangle(renderer, buffer, i, j, k, l, z, -267386864);
-        TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i - 1, j, l, z, -267386864);
-        TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i + k, j, l, z, -267386864);
-        TooltipBackgroundRenderer.renderBorder(renderer, buffer, i, j + 1, k, l, z, 0x505000FF, 1344798847);
+        TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j - 1, k, z, BACKGROUND_COLOR);
+        TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j + l, k, z, BACKGROUND_COLOR);
+        TooltipBackgroundRenderer.renderRectangle(renderer, buffer, i, j, k, l, z, BACKGROUND_COLOR);
+        TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i - 1, j, l, z, BACKGROUND_COLOR);
+        TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i + k, j, l, z, BACKGROUND_COLOR);
+        TooltipBackgroundRenderer.renderBorder(renderer, buffer, i, j + 1, k, l, z, START_Y_BORDER_COLOR, END_Y_BORDER_COLOR);
     }
 
     private static void renderBorder(RectangleRenderer renderer, Tessellator buffer, int x, int y, int width, int height, int z, int startYColor, int endYColor) {

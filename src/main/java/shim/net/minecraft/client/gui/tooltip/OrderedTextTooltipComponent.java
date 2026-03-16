@@ -1,8 +1,8 @@
 package shim.net.minecraft.client.gui.tooltip;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import shim.net.minecraft.text.OrderedText;
 
 @SideOnly(Side.CLIENT)

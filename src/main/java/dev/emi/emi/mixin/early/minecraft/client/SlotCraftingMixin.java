@@ -15,10 +15,10 @@ import com.rewindmc.retroemi.REMIMixinHooks;
 @Mixin(SlotCrafting.class)
 public class SlotCraftingMixin {
     @Final @Shadow private IInventory craftMatrix;
-    @Shadow private EntityPlayer thePlayer;
+    @Final @Shadow private EntityPlayer player;
 
     @Inject(method = "onCrafting(Lnet/minecraft/item/ItemStack;)V", at = @At("HEAD"))
     private void onCraftRenderEMI(ItemStack par1ItemStack, CallbackInfo ci) {
-        REMIMixinHooks.onCrafting(this.thePlayer, this.craftMatrix);
+        REMIMixinHooks.onCrafting(this.player, this.craftMatrix);
     }
 }

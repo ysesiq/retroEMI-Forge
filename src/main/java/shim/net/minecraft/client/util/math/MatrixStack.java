@@ -1,8 +1,6 @@
 package shim.net.minecraft.client.util.math;
 
-import org.lwjgl.opengl.GL11;
-
-import static org.lwjgl.opengl.GL11.*;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class MatrixStack {
 
@@ -11,19 +9,19 @@ public class MatrixStack {
 	public MatrixStack() {}
 
 	public void pushMatrix() {
-		glPushMatrix();
+        GlStateManager.pushMatrix();
 	}
 
 	public void popMatrix() {
-		glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void translate(double x, double y, double z) {
-		glTranslated(x, y, z);
+        GlStateManager.translate(x, y, z);
 	}
 
 	public void scale(double x, double y, double z) {
-		glScaled(x, y, z);
+        GlStateManager.scale(x, y, z);
 	}
 
 	public void multiply(Runnable r) {
@@ -31,14 +29,14 @@ public class MatrixStack {
 	}
 
     public void push() {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
     }
 
     public void pop() {
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     public void identity() {
-        GL11.glLoadIdentity();
+        GlStateManager.loadIdentity();
     }
 }

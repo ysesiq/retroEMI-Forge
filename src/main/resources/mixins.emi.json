@@ -19,7 +19,6 @@
     "early.minecraft.item.ItemMixin",
     "early.minecraft.item.ItemStackMixin",
     "early.minecraft.network.NetHandlerPlayServerMixin",
-    "late.nei.LayoutStyleMinecraftMixin"
   ],
   "client": [
     "accessor.GuiContainerAccessor",

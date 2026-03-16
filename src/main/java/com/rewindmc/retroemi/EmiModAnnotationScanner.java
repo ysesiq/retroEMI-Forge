@@ -1,8 +1,8 @@
 package com.rewindmc.retroemi;
 
 import com.google.common.collect.Lists;
-import cpw.mods.fml.common.ModContainer;
 import dev.emi.emi.runtime.EmiLog;
+import net.minecraftforge.fml.common.ModContainer;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;

@@ -11,7 +11,6 @@ import dev.emi.emi.bom.MaterialTree;
 import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.text.Text;
 import shim.net.minecraft.util.Formatting;

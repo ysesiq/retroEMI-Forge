@@ -4,7 +4,6 @@ import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;

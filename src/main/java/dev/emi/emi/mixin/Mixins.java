@@ -36,14 +36,6 @@ public enum Mixins {
         .addMixinClasses(addPrefix("forge.",
             "FluidMixin"
         ))
-    ),
-    NEI(new Builder("NEI")
-        .setPhase(Phase.LATE)
-        .setApplyIf(() -> true)
-        .addTargetedMod(TargetedMod.NEI)
-        .addMixinClasses(addPrefix("nei.",
-            "LayoutManagerMixin"
-        ))
     );
 
     public final String name;

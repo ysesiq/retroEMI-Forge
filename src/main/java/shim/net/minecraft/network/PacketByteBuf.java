@@ -50,9 +50,8 @@ public interface PacketByteBuf {
 			@Override
 			public void writeItemStack(ItemStack stack) {
                 ByteBuf bytebuf = Unpooled.buffer();
-                try { (new PacketBuffer(bytebuf)).writeItemStackToBuffer(stack);
-				} catch (IOException e) { throw new UncheckedIOException(e); }
-			}
+                (new PacketBuffer(bytebuf)).writeItemStack(stack);
+            }
 
 			@Override
 			public void writeInt(int i) {
@@ -110,7 +109,7 @@ public interface PacketByteBuf {
 			@Override
 			public ItemStack readItemStack() {
                 ByteBuf bytebuf = Unpooled.buffer();
-                try { return (new PacketBuffer(bytebuf)).readItemStackFromBuffer();
+                try { return (new PacketBuffer(bytebuf)).readItemStack();
 				} catch (IOException e) { throw new UncheckedIOException(e); }
 			}
 

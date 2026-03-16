@@ -31,7 +31,7 @@ version = propertyString('mod_version')
 group = propertyString('root_package')
 
 base {
-    archivesName = propertyString('mod_id')
+    archivesName = propertyString('emi')
 }
 
 
@@ -89,9 +89,9 @@ unimined.minecraft {
     }
 
     defaultRemapJar = false
-    
+
     String jarTaskName = propertyBool('enable_shadow') ? "shadowJar" : "jar"
-    
+
     remap(tasks.named(jarTaskName).get()) {
         mixinRemap {
             enableBaseMixin()

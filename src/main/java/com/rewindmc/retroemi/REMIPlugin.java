@@ -47,11 +47,11 @@ public class REMIPlugin implements EmiMultiPlugin, Runnable {
                 new EmiTexture(EmiPort.id("emi", "textures/simple_icons/" + id + ".png"), 0, 0, 16, 16, 16, 16, 16, 16));
     }
 
-    public static <T extends IRecipe> Iterable<T> recipesOfType(Class<T> clazz) {
-        return CraftingManager.getInstance().getRecipeList().stream()
-                .filter(clazz::isInstance)
-                .map(clazz::cast)::iterator;
-    }
+//    public static <T extends IRecipe> Iterable<T> recipesOfType(Class<T> clazz) {
+//        return CraftingManager.getInstance().getRecipeList().stream()
+//                .filter(clazz::isInstance)
+//                .map(clazz::cast)::iterator;
+//    }
 
 }
 

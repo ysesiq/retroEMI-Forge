@@ -6,6 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.enchantment.Enchantment;
@@ -34,9 +36,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glEnable;
 
 /**
  * Multiversion quarantine, to avoid excessive git pain
@@ -113,21 +112,21 @@ public final class EmiPort {
 //	public static List<BakedQuad> getQuads(BakedModel model) {
 //		return model.getQuads(null, null, RANDOM);
 //	}
-//
-//	public static void draw(Tessellator bufferBuilder) {
-//		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
-//	}
+
+	public static void draw(BufferBuilder bufferBuilder) {
+        bufferBuilder.finishDrawing();
+	}
 
 	public static int getGuiScale(Minecraft client) {
 		return new ScaledResolution(client).getScaleFactor();
 	}
 
 	public static void setPositionTexShader() {
-		glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
 	}
 
 	public static void setPositionColorTexShader() {
-		glEnable(GL_TEXTURE_2D);
+        GlStateManager.enableTexture2D();
 	}
 
 	public static RegistryNamespaced<ResourceLocation, Item> getItemRegistry() {
@@ -167,7 +166,7 @@ public final class EmiPort {
 	}
 
 	public static Stream<Item> getDisabledItems() {
-		return getItemRegistry().getKeys().stream().filter(i -> ((Item) Item.REGISTRY.getObject(i)).getCreativeTab() == null);
+		return getItemRegistry().getKeys().stream().map(EmiPort.getItemRegistry()::getObject).filter(i -> i.getCreativeTab() == null);
 	}
 
 	public static ResourceLocation getId(IRecipe recipe) {

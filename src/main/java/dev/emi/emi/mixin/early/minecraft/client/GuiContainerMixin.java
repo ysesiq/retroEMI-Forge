@@ -29,7 +29,7 @@ public class GuiContainerMixin extends GuiScreen implements EmiGuiContainer {
         EmiScreenManager.addWidgets(this);
     }
 
-    @Inject(method = "func_146977_a", at = @At(value = "RETURN"))
+    @Inject(method = "drawSlot", at = @At(value = "RETURN"))
     private void drawSlot(Slot slot, CallbackInfo ci) {
         REMIMixinHooks.drawSlot(slot);
     }

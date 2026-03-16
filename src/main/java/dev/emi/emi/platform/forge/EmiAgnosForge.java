@@ -21,6 +21,7 @@ import it.unimi.dsi.fastutil.ints.IntLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,6 +36,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
@@ -168,7 +170,7 @@ public class EmiAgnosForge extends EmiAgnos {
 	protected void addBrewingRecipesAgnos(EmiRegistry registry) {
 		var tebs = new TileEntityBrewingStand();
 		var ingredience = RetroEMI.getAllItems().stream()
-			.filter(i -> i != null && i.isPotionIngredient(new ItemStack(i)))
+			.filter(i -> i != null && i.hasEffect(new ItemStack(i)))
 			.collect(Collectors.toList());
 
 		Map<InputPair, Prototype> recipes = new HashMap<>();
@@ -309,7 +311,8 @@ public class EmiAgnosForge extends EmiAgnos {
 		}
 		int color = ext.getColor(fs);
 		RenderSystem.setShaderTexture(0, TextureMap.LOCATION_BLOCKS_TEXTURE);
-		EmiRenderHelper.drawTintedSprite(matrices, texture, color, x, y, xOff, yOff, width, height);
+		TextureAtlasSprite sprite = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE)).getAtlasSprite(texture.toString());
+		EmiRenderHelper.drawTintedSprite(matrices, sprite, color, x, y, xOff, yOff, width, height);
 	}
 
 	@Override
@@ -329,8 +332,8 @@ public class EmiAgnosForge extends EmiAgnos {
 	protected Map<ItemKey, Integer> getFuelMapAgnos() {
 		Map<ItemKey, Integer> fuelMap = new HashMap<>();
 		for (Item item : RetroEMI.getAllItems()) {
-			List<ItemStack> stacks = new ArrayList<>();
-			item.getSubItems(item, CreativeTabs.MISC, stacks);
+            NonNullList<ItemStack> stacks = NonNullList.create();
+			item.getSubItems(CreativeTabs.MISC, stacks);
 			for (ItemStack stack : stacks) {
 				int time = TileEntityFurnace.getItemBurnTime(stack);
 				if (time > 0) {

@@ -41,7 +41,6 @@ import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.mixin.accessor.GuiTextFieldAccessor;
 import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
-import dev.emi.emi.nemi.NemiPlugin;
 import dev.emi.emi.network.CreateItemC2SPacket;
 import dev.emi.emi.network.EmiNetwork;
 import dev.emi.emi.platform.EmiClient;
@@ -528,7 +527,7 @@ public class EmiScreenManager {
 		if (emi.visible) {
 			x = Math.max(4, 4 + 22);
 		}
-		if (tree.visible || NemiPlugin.isNEILoaded) {
+		if (tree.visible) {
 			x = Math.max(4, 4 + 22 + 22);
 		}
 		return x;

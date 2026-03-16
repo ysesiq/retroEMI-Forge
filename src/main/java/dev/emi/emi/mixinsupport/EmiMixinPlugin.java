@@ -1,22 +1,21 @@
 package dev.emi.emi.mixinsupport;
 
-import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.Maps;
 import dev.emi.emi.mixinsupport.annotation.AdditionalField;
 import dev.emi.emi.mixinsupport.annotation.Extends;
 import dev.emi.emi.mixinsupport.annotation.InvokeTarget;
 import dev.emi.emi.mixinsupport.annotation.StripConstructors;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.lib.tree.AbstractInsnNode;
-import org.spongepowered.asm.lib.tree.AnnotationNode;
-import org.spongepowered.asm.lib.tree.ClassNode;
-import org.spongepowered.asm.lib.tree.FieldInsnNode;
-import org.spongepowered.asm.lib.tree.FieldNode;
-import org.spongepowered.asm.lib.tree.InsnNode;
-import org.spongepowered.asm.lib.tree.LabelNode;
-import org.spongepowered.asm.lib.tree.MethodInsnNode;
-import org.spongepowered.asm.lib.tree.MethodNode;
-import org.spongepowered.asm.lib.tree.TypeInsnNode;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import org.spongepowered.asm.util.Annotations;
@@ -172,7 +171,6 @@ public class EmiMixinPlugin implements IMixinConfigPlugin {
 		}
 	}
 
-    @Desugar
 	private static record InvokeTargetInfo(String owner, String name, int type, String desc) {
 	}
 }

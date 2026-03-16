@@ -3,10 +3,8 @@ package dev.emi.emi;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraftforge.fluids.Fluid;
-
 import com.google.common.collect.Lists;
+import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import com.rewindmc.retroemi.RetroEMI;
@@ -28,6 +26,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fluids.Fluid;
 import shim.net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import shim.net.minecraft.client.gui.tooltip.TextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -78,23 +80,21 @@ public class EmiRenderHelper {
 		context.drawTexture(texture, x + coriw, y + corih, cor,        cor,         u + corcen, v + corcen, cor, cor, 256, 256);
 	}
 
-	public static void drawTintedSprite(MatrixStack matrices, ResourceLocation sprite, int color, int x, int y, int xOff, int yOff, int width, int height) {
+	public static void drawTintedSprite(MatrixStack matrices, TextureAtlasSprite sprite, int color, int x, int y, int xOff, int yOff, int width, int height) {
 		if (sprite == null) {
 			return;
 		}
 		EmiPort.setPositionColorTexShader();
 		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-		Minecraft.getMinecraft().renderEngine.getTexture(sprite);
+		RenderSystem.setShaderTexture(0, EmiPort.id(sprite.getIconName()));
 		RenderSystem.enableBlend();
 
 		float r = ((color >> 16) & 255) / 256f;
 		float g = ((color >> 8) & 255) / 256f;
 		float b = (color & 255) / 256f;
 
-		RenderSystem.setShaderColor(r, g, b, 1);
-
-		Tessellator tess = Tessellator.getInstance();
-		tess.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float xMin = (float) x;
 		float yMin = (float) y;
 		float xMax = xMin + width;
@@ -105,12 +105,11 @@ public class EmiRenderHelper {
 		float vMin = sprite.getMinV() + vSpan / 16 * yOff;
 		float uMax = sprite.getMaxU() - uSpan / 16 * (16 - (width + xOff));
 		float vMax = sprite.getMaxV() - vSpan / 16 * (16 - (height + yOff));
-		tess.addVertexWithUV(xMin, yMax, 1, uMin, vMax);
-		tess.addVertexWithUV(xMax, yMax, 1, uMax, vMax);
-		tess.addVertexWithUV(xMax, yMin, 1, uMax, vMin);
-		tess.addVertexWithUV(xMin, yMin, 1, uMin, vMin);
-		tess.draw();
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+		bufferBuilder.pos(xMin, yMax, 1).color(r, g, b, 1).tex(uMin, vMax).endVertex();
+		bufferBuilder.pos(xMax, yMax, 1).color(r, g, b, 1).tex(uMax, vMax).endVertex();
+		bufferBuilder.pos(xMax, yMin, 1).color(r, g, b, 1).tex(uMax, vMin).endVertex();
+		bufferBuilder.pos(xMin, yMin, 1).color(r, g, b, 1).tex(uMin, vMin).endVertex();
+		EmiPort.draw(bufferBuilder);
 	}
 
 	public static void drawScroll(EmiDrawContext context, int x, int y, int width, int height, int progress, int total, int color) {
@@ -361,9 +360,9 @@ public class EmiRenderHelper {
 			context.pop();
 
 			// Force translucency to match that of the recipe background
-            context.disableBlend();
+			context.disableBlend();
 			RenderSystem.colorMask(false, false, false, true);
-            context.disableDepthTest();
+			context.disableDepthTest();
 			renderRecipeBackground(recipe, context, x, y);
 			context.enableDepthTest();
 			RenderSystem.colorMask(true, true, true, true);

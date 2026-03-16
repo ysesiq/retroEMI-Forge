@@ -24,13 +24,13 @@ import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadLog;
 import dev.emi.emi.screen.EmiScreenManager;
+import net.minecraft.client.resources.I18n;
 import shim.net.minecraft.client.search.SuffixArray;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringTranslate;
 import shim.net.minecraft.text.Text;
 
 public class EmiSearch {
@@ -82,11 +82,11 @@ public class EmiSearch {
 				}
 				ResourceLocation id = stack.getId();
 				if (id != null) {
-					mods.add(searchStack, EmiUtil.getModName(id.getResourceDomain()).toLowerCase());
-					mods.add(searchStack, id.getResourceDomain().toLowerCase());
-					names.add(searchStack, id.getResourcePath().toLowerCase());
+					mods.add(searchStack, EmiUtil.getModName(id.getNamespace()).toLowerCase());
+					mods.add(searchStack, id.getNamespace().toLowerCase());
+					names.add(searchStack, id.getPath().toLowerCase());
 				}
-				if (stack instanceof ItemEmiStack && stack.getItemStack().getItem() == Items.enchanted_book) {
+				if (stack instanceof ItemEmiStack && stack.getItemStack().getItem() == Items.ENCHANTED_BOOK) {
                     NBTTagList enchantments = stack.getNbt() != null ?
                         stack.getNbt().getTagList("StoredEnchantments", 10) : null;
 
@@ -94,7 +94,7 @@ public class EmiSearch {
                         for (int i = 0; i < enchantments.tagCount(); i++) {
                             NBTTagCompound enchantmentTag = enchantments.getCompoundTagAt(i);
                             int enchantmentId = enchantmentTag.getShort("id");
-                            Enchantment enchantment = Enchantment.enchantmentsList[enchantmentId];
+                            Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentId);
 
                             if (enchantment != null) {
                                 String enchantmentName = enchantment.getName();
@@ -118,7 +118,7 @@ public class EmiSearch {
 		for (Supplier<EmiAlias> supplier : EmiData.aliases) {
 			EmiAlias alias = supplier.get();
 			for (String key : alias.keys()) {
-				if (!StringTranslate.getInstance().containsTranslateKey(key)) {
+				if (!I18n.hasKey(key)) {
 					EmiReloadLog.warn("Untranslated alias " + key);
 				}
 				String text = RetroEMI.translate(key).toLowerCase();

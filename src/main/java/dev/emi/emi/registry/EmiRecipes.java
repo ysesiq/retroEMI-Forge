@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.minecraft.client.resources.I18n;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Iterables;
@@ -39,7 +40,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
-import shim.net.minecraft.client.resource.language.I18n;
 
 public class EmiRecipes {
 	public static volatile Worker activeWorker = null;
@@ -198,7 +198,7 @@ public class EmiRecipes {
 
 			for (EmiRecipeCategory category : byCategory.keySet()) {
 				String key = EmiUtil.translateId("emi.category.", category.getId());
-				if (category.getName().equals(EmiPort.translatable(key)) && !I18n.hasTranslation(key)) {
+				if (category.getName().equals(EmiPort.translatable(key)) && !I18n.hasKey(key)) {
 					EmiReloadLog.warn("Untranslated recipe category " + category.getId());
 				}
 				List<EmiRecipe> cRecipes = byCategory.get(category);

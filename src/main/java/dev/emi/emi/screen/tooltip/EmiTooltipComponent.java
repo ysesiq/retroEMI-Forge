@@ -4,8 +4,7 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
-import com.rewindmc.retroemi.RetroEMI;
+import net.minecraft.client.renderer.RenderItem;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
 
@@ -23,7 +22,7 @@ public interface EmiTooltipComponent extends TooltipComponent {
 		context.push();
 		context.matrices().translate(x, y, 0);
 		Minecraft client = Minecraft.getMinecraft();
-		drawTooltip(context, new TooltipRenderData(fontRenderer, RetroEMI.instance.itemRenderer, x, y));
+		drawTooltip(context, new TooltipRenderData(fontRenderer, client.getRenderItem(), x, y));
 		context.pop();
 	}
 

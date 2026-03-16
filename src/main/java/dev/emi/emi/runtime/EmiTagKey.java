@@ -4,8 +4,8 @@ import com.google.common.collect.Maps;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiUtil;
 import dev.emi.emi.registry.EmiTags;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.registry.RegistryNamespaced;
-import shim.net.minecraft.client.resource.language.I18n;
 import shim.net.minecraft.registry.tag.TagKey;
 import shim.net.minecraft.text.Text;
 import net.minecraft.util.ResourceLocation;
@@ -104,12 +104,12 @@ public class EmiTagKey<T> {
 
     private static @Nullable String translatePrefix(String prefix, ResourceLocation id) {
         String s = EmiUtil.translateId(prefix, id);
-        if (I18n.hasTranslation(s)) {
+        if (I18n.hasKey(s)) {
             return s;
         }
         if (id.getNamespace().equals("forge")) {
             s = EmiUtil.translateId(prefix, EmiPort.id("c", id.getPath()));
-            if (I18n.hasTranslation(s)) {
+            if (I18n.hasKey(s)) {
                 return s;
             }
         }

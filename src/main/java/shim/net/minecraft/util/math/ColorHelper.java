@@ -5,7 +5,7 @@ public class ColorHelper {
     }
 
     public static int channelFromFloat(float value) {
-        return net.minecraft.util.MathHelper.floor_float(value * 255.0F);
+        return net.minecraft.util.math.MathHelper.floor(value * 255.0F);
     }
 
     public static class Argb {

@@ -23,6 +23,6 @@ public class ModQuery extends Query {
 
 	@Override
 	public boolean matchesUnbaked(EmiStack stack) {
-		return EmiUtil.getModName(stack.getId().getResourceDomain()).toLowerCase().contains(name);
+		return EmiUtil.getModName(stack.getId().getNamespace()).toLowerCase().contains(name);
 	}
 }

@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.platform.forge.EmiClientForge;
 import net.minecraft.client.Minecraft;
@@ -37,11 +36,11 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
     public void onResourceManagerReload(IResourceManager resourceManager) {
         Minecraft client = Minecraft.getMinecraft();
         for (ResourceLocation id : EmiPort.findResources(resourceManager, "lang", s -> s.endsWith(".json"))) {
-            if (!id.getResourceDomain().equals("emi")) {
+            if (!id.getNamespace().equals("emi")) {
                 continue;
             }
             try {
-                String code = id.getResourcePath().replace("lang/", "").replace(".json", "");
+                String code = id.getPath().replace("lang/", "").replace(".json", "");
                 if (code.equals(client.gameSettings.language.toLowerCase(Locale.ROOT))) {
                     this.loadLocaleData(resourceManager.getAllResources(id), client.gameSettings.language);
                 }
@@ -88,11 +87,11 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
 
             String assetPrefix = "assets/" + namespace + "/";
 
-            for (IResourcePack pack : (List<IResourcePack>) frm.resourcePacks) {
+            for (IResourcePack pack : frm.resourcePacks) {
                 if (!(pack instanceof FileResourcePack frp)) {
                     continue;
                 }
-                try (ZipFile zip = new ZipFile(frp.resourcePackFile)) {
+                try (ZipFile zip = new ZipFile(frp.getResourcePackFile())) {
                     Enumeration<? extends ZipEntry> entries = zip.entries();
                     String folderPrefix = folder.isEmpty() ? "" : folder + "/";
                     while (entries.hasMoreElements()) {

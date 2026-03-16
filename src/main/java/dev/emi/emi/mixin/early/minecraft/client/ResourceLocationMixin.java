@@ -9,18 +9,18 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ResourceLocation.class)
 public class ResourceLocationMixin implements EmiResourceLocation {
-    @Mutable @Final @Shadow private final String resourceDomain;
-    @Mutable @Final @Shadow private final String resourcePath;
+    @Mutable @Final @Shadow protected final String namespace;
+    @Mutable @Final @Shadow protected final String path;
 
-    public ResourceLocationMixin(String resourceDomain, String resourcePath) {
-        this.resourceDomain = resourceDomain;
-        this.resourcePath = resourcePath;
+    public ResourceLocationMixin(String namespace, String path) {
+        this.namespace = namespace;
+        this.path = path;
     }
 
     @Override
     public int compareTo(ResourceLocation that) {
-        int i = this.resourcePath.compareTo(that.getResourcePath());
+        int i = this.path.compareTo(that.getPath());
         if (i != 0) return i;
-        return this.resourceDomain.compareTo(that.getResourceDomain());
+        return this.namespace.compareTo(that.getNamespace());
     }
 }

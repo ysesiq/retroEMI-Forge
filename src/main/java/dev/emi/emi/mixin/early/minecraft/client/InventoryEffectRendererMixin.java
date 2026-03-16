@@ -25,7 +25,7 @@ public abstract class InventoryEffectRendererMixin extends GuiContainer {
         super(handlerScreen);
     }
 
-    @WrapOperation(method = "initGui",
+    @WrapOperation(method = "updateActivePotionEffects",
         at = @At(value = "FIELD",
             target = "Lnet/minecraft/client/renderer/InventoryEffectRenderer;guiLeft:I",
             opcode = Opcodes.PUTFIELD
@@ -51,7 +51,7 @@ public abstract class InventoryEffectRendererMixin extends GuiContainer {
         }
     }
 
-    @WrapOperation(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/InventoryEffectRenderer;func_147044_g()V"))
+    @WrapOperation(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/InventoryEffectRenderer;drawActivePotionEffects()V"))
     private void drawEffects(InventoryEffectRenderer instance, Operation<Void> original) {
         REMIMixinHooks.drawEffects(instance);
     }

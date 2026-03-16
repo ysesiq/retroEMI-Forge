@@ -14,7 +14,7 @@ public class DyeableItem {
 		int j = 0;
 		Item item = stack.getItem();
 		ItemStack itemStack = stack.copy();
-		itemStack.stackSize = 1;
+		itemStack.setCount(1);
 		if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("display") && itemStack.getTagCompound().getCompoundTag("display").hasKey("color")) {
 			int k = itemStack.getTagCompound().getCompoundTag("display").getInteger("color");
 			float f = (float)(k >> 16 & 0xFF) / 255.0F;
@@ -27,7 +27,7 @@ public class DyeableItem {
 			++j;
 		}
 
-		for(DyeItem dyeItem : colors) {
+		for (DyeItem dyeItem : colors) {
 			float[] fs = dyeItem.color().getColorComponents();
 			int l = (int)(fs[0] * 255.0F);
 			int m = (int)(fs[1] * 255.0F);

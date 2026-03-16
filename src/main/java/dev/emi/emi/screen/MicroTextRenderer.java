@@ -1,6 +1,5 @@
 package dev.emi.emi.screen;
 
-import com.github.bsideup.jabel.Desugar;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.config.EmiConfig;
@@ -171,11 +170,9 @@ public class MicroTextRenderer {
 		return total;
 	}
 
-    @Desugar
 	private static record MicroChar(char c, int width, int u, int v) {
 	}
 
-    @Desugar
 	private static record UnitScale(String unit, int shift) {
 	}
 }

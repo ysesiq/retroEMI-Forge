@@ -22,7 +22,6 @@ import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
-import shim.net.minecraft.client.item.TooltipContext;
 import shim.net.minecraft.registry.tag.ItemKey;
 import shim.net.minecraft.text.Text;
 
@@ -105,7 +104,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 
 	@Override
 	public ResourceLocation getId() {
-		return EmiPort.id(EmiPort.getItemRegistry().getNameForObject(item));
+		return EmiPort.getItemRegistry().getNameForObject(item);
 	}
 
 	@Override
@@ -147,7 +146,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 
 	@Override
 	public boolean isSideLit() {
-		return RetroEMI.isSideLit(getItemStack());
+        return client.getRenderItem().getItemModelWithOverrides(getItemStack(), null, null).isGui3d();
 	}
 
 	@Override

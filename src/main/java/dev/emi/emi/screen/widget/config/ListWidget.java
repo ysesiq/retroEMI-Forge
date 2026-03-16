@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
@@ -156,21 +158,26 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		int i = this.getScrollbarPositionX();
 		int j = i + 6;
 		Tessellator tessellator = Tessellator.getInstance();
-        EmiDrawContext context = EmiDrawContext.wrap(draw);
+		BufferBuilder buffer = tessellator.getBuffer();
+		EmiDrawContext context = EmiDrawContext.wrap(draw);
 		this.hoveredEntry = this.isMouseOver(mouseX, mouseY) ? this.getEntryAtPosition(mouseX, mouseY) : null;
 
 		{	// Render background
-			Minecraft.getMinecraft().getTextureManager().getTexture(MENU_LIST_BACKGROUND_TEXTURE);
-            context.setColor(32 / 255f, 32 / 255f, 32 / 255f, 1);
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(this.left, this.bottom, 0.0, (float) this.left / 32.0F,
-					(float) (this.bottom + (int) this.getScrollAmount()) / 32.0F);
-			tessellator.addVertexWithUV(this.right, this.bottom, 0.0, (float) this.right / 32.0F,
-					(float) (this.bottom + (int) this.getScrollAmount()) / 32.0F);
-			tessellator.addVertexWithUV(this.right, this.top, 0.0, (float) this.right / 32.0F,
-					(float) (this.top + (int) this.getScrollAmount()) / 32.0F);
-			tessellator.addVertexWithUV(this.left, this.top, 0.0, (float) this.left / 32.0F,
-					(float) (this.top + (int) this.getScrollAmount()) / 32.0F);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(MENU_LIST_BACKGROUND_TEXTURE);
+			context.setColor(32 / 255f, 32 / 255f, 32 / 255f, 1);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(this.left, this.bottom, 0.0)
+				.tex((float) this.left / 32.0F,
+					(float) (this.bottom + (int) this.getScrollAmount()) / 32.0F).endVertex();
+			buffer.pos(this.right, this.bottom, 0.0)
+				.tex((float) this.right / 32.0F,
+					(float) (this.bottom + (int) this.getScrollAmount()) / 32.0F).endVertex();
+			buffer.pos(this.right, this.top, 0.0)
+				.tex((float) this.right / 32.0F,
+					(float) (this.top + (int) this.getScrollAmount()) / 32.0F).endVertex();
+			buffer.pos(this.left, this.top, 0.0)
+				.tex((float) this.left / 32.0F,
+					(float) (this.top + (int) this.getScrollAmount()) / 32.0F).endVertex();
 			tessellator.draw();
 			context.resetColor();
 		}
@@ -182,43 +189,47 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		draw.disableScissor();
 
 		{	// Render horizontal shadows
-			Minecraft.getMinecraft().renderEngine.bindTexture(MENU_LIST_BACKGROUND_TEXTURE);
+			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/gui/options_background.png"));
 			context.setColor(64 / 255f, 64 / 255f, 64 / 255f, 1);
-            context.enableDepthTest();
+			RenderSystem.enableDepthTest();
 			GL11.glDepthFunc(GL11.GL_ALWAYS);
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(this.left, this.top, -100.0, 0.0F, (float) this.top / 32.0F);
-			tessellator.addVertexWithUV(this.left + this.width, this.top, -100.0, (float) this.width / 32.0F, (float) this.top / 32.0F);
-			tessellator.addVertexWithUV(this.left + this.width, 0.0, -100.0, (float) this.width / 32.0F, 0.0F);
-			tessellator.addVertexWithUV(this.left, 0.0, -100.0, 0.0F, 0.0F);
-			tessellator.addVertexWithUV(this.left, this.height, -100.0, 0.0F, (float) this.height / 32.0F);
-			tessellator.addVertexWithUV(this.left + this.width, this.height, -100.0, (float) this.width / 32.0F, (float) this.height / 32.0F);
-			tessellator.addVertexWithUV(this.left + this.width, this.bottom, -100.0, (float) this.width / 32.0F, (float) this.bottom / 32.0F);
-			tessellator.addVertexWithUV(this.left, this.bottom, -100.0, 0.0F, (float) this.bottom / 32.0F);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(this.left, this.top, -100.0)
+					.tex(0.0F, (float) this.top / 32.0F).endVertex();
+			buffer.pos(this.left + this.width, this.top, -100.0)
+					.tex((float) this.width / 32.0F, (float) this.top / 32.0F).endVertex();
+			buffer.pos(this.left + this.width, 0.0, -100.0)
+					.tex((float) this.width / 32.0F, 0.0F).endVertex();
+			buffer.pos(this.left, 0.0, -100.0)
+					.tex(0.0F, 0.0F).endVertex();
+			buffer.pos(this.left, this.height, -100.0)
+					.tex(0.0F, (float) this.height / 32.0F).endVertex();
+			buffer.pos(this.left + this.width, this.height, -100.0)
+					.tex((float) this.width / 32.0F, (float) this.height / 32.0F).endVertex();
+			buffer.pos(this.left + this.width, this.bottom, -100.0)
+					.tex((float) this.width / 32.0F, (float) this.bottom / 32.0F).endVertex();
+			buffer.pos(this.left, this.bottom, -100.0)
+					.tex(0.0F, (float) this.bottom / 32.0F).endVertex();
 			tessellator.draw();
-            GL11.glDepthFunc(GL11.GL_LEQUAL);
-            context.disableDepthTest();
-            GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ZERO, GL11.GL_ONE);
-            context.enableBlend();
+			GL11.glDepthFunc(GL11.GL_LEQUAL);
+			RenderSystem.disableDepthTest();
+			GL14.glBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ZERO, GL11.GL_ONE);
+			RenderSystem.enableBlend();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glShadeModel(GL11.GL_SMOOTH);
-			n = 4;
-			tessellator.startDrawingQuads();
-			tessellator.setColorRGBA_F(0, 0, 0, 0);
-			tessellator.addVertex(this.left, this.top + n, 0.0);
-			tessellator.addVertex(this.right, this.top + n, 0.0);
-			tessellator.setColorRGBA_F(0, 0, 0, 1);
-			tessellator.addVertex(this.right, this.top, 0.0);
-			tessellator.addVertex(this.left, this.top, 0.0);
+			GL11.glShadeModel(GL11.GL_SMOOTH);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+			buffer.pos(this.left, this.top + 4, 0.0).color(0.0F, 0.0F, 0.0F, 0.0F).endVertex();
+			buffer.pos(this.right, this.top + 4, 0.0).color(0.0F, 0.0F, 0.0F, 0.0F).endVertex();
+			buffer.pos(this.right, this.top, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+			buffer.pos(this.left, this.top, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
 
-			tessellator.addVertex(this.left, this.bottom, 0.0);
-			tessellator.addVertex(this.right, this.bottom, 0.0);
-			tessellator.setColorRGBA_F(0, 0, 0, 0);
-			tessellator.addVertex(this.right, this.bottom - n, 0.0);
-			tessellator.addVertex(this.left, this.bottom - n, 0.0);
+			buffer.pos(this.left, this.bottom, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+			buffer.pos(this.right, this.bottom, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+			buffer.pos(this.right, this.bottom - 4, 0.0).color(0.0F, 0.0F, 0.0F, 0.0F).endVertex();
+			buffer.pos(this.left, this.bottom - 4, 0.0).color(0.0F, 0.0F, 0.0F, 0.0F).endVertex();
 			tessellator.draw();
-            GL11.glShadeModel(GL11.GL_FLAT);
-            EmiPort.setPositionTexShader();
+			GL11.glShadeModel(GL11.GL_FLAT);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			context.resetColor();
 		}
 
@@ -230,29 +241,26 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 			if (n < this.top) {
 				n = this.top;
 			}
-			tessellator.startDrawingQuads();
-			tessellator.setColorRGBA_F(0, 0, 0, 1);
-			tessellator.addVertex(i, this.bottom, 0.0);
-			tessellator.addVertex(j, this.bottom, 0.0);
-			tessellator.addVertex(j, this.top, 0.0);
-			tessellator.addVertex(i, this.top, 0.0);
+			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+			buffer.pos(i, this.bottom, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+			buffer.pos(j, this.bottom, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+			buffer.pos(j, this.top, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
+			buffer.pos(i, this.top, 0.0).color(0.0F, 0.0F, 0.0F, 1.0F).endVertex();
 
-			tessellator.setColorRGBA_F(0.5f, 0.5f, 0.5f, 1);
-			tessellator.addVertex(i, n + m, 0.0);
-			tessellator.addVertex(j, n + m, 0.0);
-			tessellator.addVertex(j, n, 0.0);
-			tessellator.addVertex(i, n, 0.0);
+			buffer.pos(i, n + m, 0.0).color(0.5F, 0.5F, 0.5F, 1.0F).endVertex();
+			buffer.pos(j, n + m, 0.0).color(0.5F, 0.5F, 0.5F, 1.0F).endVertex();
+			buffer.pos(j, n, 0.0).color(0.5F, 0.5F, 0.5F, 1.0F).endVertex();
+			buffer.pos(i, n, 0.0).color(0.5F, 0.5F, 0.5F, 1.0F).endVertex();
 
-			tessellator.setColorRGBA_F(0.75f, 0.75f, 0.75f, 1);
-			tessellator.addVertex(i, n + m - 1, 0.0);
-			tessellator.addVertex(j - 1, n + m - 1, 0.0);
-			tessellator.addVertex(j - 1, n, 0.0);
-			tessellator.addVertex(i, n, 0.0);
+			buffer.pos(i, n + m - 1, 0.0).color(0.75F, 0.75F, 0.75F, 1.0F).endVertex();
+			buffer.pos(j - 1, n + m - 1, 0.0).color(0.75F, 0.75F, 0.75F, 1.0F).endVertex();
+			buffer.pos(j - 1, n, 0.0).color(0.75F, 0.75F, 0.75F, 1.0F).endVertex();
+			buffer.pos(i, n, 0.0).color(0.75F, 0.75F, 0.75F, 1.0F).endVertex();
 
 			tessellator.draw();
-            EmiPort.setPositionTexShader();
+			EmiPort.setPositionTexShader();
 		}
-        RenderSystem.disableBlend();
+		RenderSystem.disableBlend();
 	}
 
 	public void centerScrollOn(Entry entry) {
@@ -445,8 +453,8 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 
 	protected void renderList(DrawContext draw, int x, int y, int mouseX, int mouseY, float delta) {
 		int i = this.getEntryCount();
-		Tessellator tess = Tessellator.getInstance();
-        EmiDrawContext context = EmiDrawContext.wrap(draw);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferBuilder = tessellator.getBuffer();
 		for (int j = 0; j < i; ++j) {
 			int p;
 			int k = this.getRowTop(j);
@@ -465,23 +473,23 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 				int q = this.left + this.width / 2 + o / 2;
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				float f = this.isFocused() ? 1.0f : 0.5f;
-                context.setColor(f, f, f, 1.0f);
-				tess.startDrawingQuads();
-				tess.addVertex(p, m + n + 2, 0.0);
-				tess.addVertex(q, m + n + 2, 0.0);
-				tess.addVertex(q, m - 2, 0.0);
-				tess.addVertex(p, m - 2, 0.0);
-				tess.draw();
-				context.setColor(0.0f, 0.0f, 0.0f, 1.0f);
-				tess.startDrawingQuads();
-				tess.addVertex(p + 1, m + n + 1, 0.0);
-				tess.addVertex(q - 1, m + n + 1, 0.0);
-				tess.addVertex(q - 1, m - 1, 0.0);
-				tess.addVertex(p + 1, m - 1, 0.0);
-				tess.draw();
+				RenderSystem.setShaderColor(f, f, f, 1.0f);
+				bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+                bufferBuilder.pos(p, m + n + 2, 0).endVertex();
+                bufferBuilder.pos(q, m + n + 2, 0).endVertex();
+                bufferBuilder.pos(q, m - 2, 0).endVertex();
+                bufferBuilder.pos(p, m - 2, 0).endVertex();
+                EmiPort.draw(bufferBuilder);
+                RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0f);
+                bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+                bufferBuilder.pos(p + 1, m + n + 1, 0).endVertex();
+                bufferBuilder.pos(q - 1, m + n + 1, 0).endVertex();
+                bufferBuilder.pos(q - 1, m - 1, 0).endVertex();
+                bufferBuilder.pos(p + 1, m - 1, 0).endVertex();
+                EmiPort.draw(bufferBuilder);
 			}
 			p = this.getRowLeft();
-			((Entry) entry).render(draw, j, k, p, o - 3, n, mouseX, mouseY, Objects.equals(this.hoveredEntry, entry), delta);
+			((Entry)entry).render(draw, j, k, p, o - 3, n, mouseX, mouseY, Objects.equals(this.hoveredEntry, entry), delta);
 		}
 	}
 

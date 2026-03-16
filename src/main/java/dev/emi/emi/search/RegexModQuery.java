@@ -23,7 +23,7 @@ public class RegexModQuery extends Query {
 		if (pattern == null) {
 			return false;
 		}
-		String namespace = stack.getId().getResourceDomain();
+		String namespace = stack.getId().getNamespace();
 		String mod = EmiUtil.getModName(namespace);
 		Matcher m = pattern.matcher(mod);
 		return m.find();

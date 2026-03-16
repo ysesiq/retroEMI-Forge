@@ -6,7 +6,6 @@ import dev.emi.emi.api.EmiInitRegistry;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.bom.BoM;
-import dev.emi.emi.nemi.NemiPlugin;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.registry.EmiComparisonDefaults;
 import dev.emi.emi.registry.EmiDragDropHandlers;
@@ -144,7 +143,7 @@ public class EmiReloadManager {
 					if (client.world == null) {
 						EmiReloadLog.warn("World is null");
 						break;
-					} else if (CraftingManager.getInstance() == null) {
+					} else if (CraftingManager.REGISTRY == null) {
 						EmiReloadLog.warn("Recipe Manager is null");
 						break;
 					}
@@ -152,10 +151,6 @@ public class EmiReloadManager {
 					List<EmiPluginContainer> plugins = Lists.newArrayList();
 					plugins.addAll(EmiAgnos.getPlugins().stream()
 						.sorted((a, b) -> Integer.compare(entrypointPriority(a), entrypointPriority(b))).collect(java.util.stream.Collectors.toList()));
-
-					if (NemiPlugin.isNEILoaded) {
-						plugins.add(new EmiPluginContainer(new NemiPlugin(), "nemi"));
-					}
 					EmiInitRegistry initRegistry = new EmiInitRegistryImpl();
 					for (EmiPluginContainer container : plugins) {
 						step(EmiPort.literal("Initializing plugin from " + container.id()), 5_000);

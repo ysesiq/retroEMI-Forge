@@ -30,7 +30,7 @@ public class EmiBindWidget extends ConfigEntryWidget {
 		buttons.clear();
 		for (int i = 0; i < bind.boundKeys.size(); i++) {
 			final int j = i;
-			ButtonWidget widget = EmiPort.newButton(0, 0, 200, 20, bind.boundKeys.get(i).getKeyText(EnumChatFormatting.RESET), button -> {
+			ButtonWidget widget = EmiPort.newButton(0, 0, 200, 20, bind.boundKeys.get(i).getKeyText(TextFormatting.RESET), button -> {
 				screen.setActiveBind(bind, j);
 			});
 			buttons.add(widget);
