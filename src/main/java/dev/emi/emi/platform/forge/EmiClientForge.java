@@ -5,7 +5,6 @@ import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
-import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
 import dev.emi.emi.network.CommandS2CPacket;
 import dev.emi.emi.network.EmiChessPacket;
@@ -23,6 +22,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
@@ -39,9 +39,10 @@ public class EmiClientForge {
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(EmiResourceManager.instance);
 	}
 
-	public static void registerAdditionalModels() {
+    @SubscribeEvent
+	public void registerAdditionalModels(ModelRegistryEvent event) {
 		Minecraft client = Minecraft.getMinecraft();
-		EmiTags.registerTagModels(client.getResourceManager(), id -> {});
+		EmiTags.registerTagModels(client.getResourceManager(), id -> {}, "inventory");
 	}
 
 	public static void registerResourceReloaders() {
@@ -66,7 +67,7 @@ public class EmiClientForge {
 		EmiScreenBase base = EmiScreenBase.of(screen);
 		if (base != null) {
 			context.push();
-			context.matrices().translate(-((GuiContainerAccessor) screen).getGuiLeft(), -((GuiContainerAccessor) screen).getGuiTop(), 0.0);
+			context.matrices().translate(-((GuiContainer) screen).getGuiLeft(), -((GuiContainer) screen).getGuiTop(), 0.0);
 			EmiPort.setPositionTexShader();
 			EmiScreenManager.drawBackground(context, event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
 			context.pop();
@@ -89,6 +90,16 @@ public class EmiClientForge {
 			context.pop();
 		}
 	}
+
+    @SubscribeEvent
+    public void onMousePost(GuiScreenEvent.MouseInputEvent.Post event) {
+        RetroEMI.handleMouseInput();
+    }
+
+    @SubscribeEvent
+    public void onKeyboardPost(GuiScreenEvent.KeyboardInputEvent.Post event) {
+        RetroEMI.handleKeyboardInput();
+    }
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {

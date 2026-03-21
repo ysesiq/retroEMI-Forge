@@ -8,6 +8,8 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.FluidEmiStack;
 import dev.emi.emi.registry.EmiPluginContainer;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
@@ -147,11 +149,11 @@ public abstract class EmiAgnos {
 
 	protected abstract Map<ItemKey, Integer> getFuelMapAgnos();
 
-//	public static BakedModel getBakedTagModel(ResourceLocation id) {
-//		return delegate.getBakedTagModelAgnos(id);
-//	}
-//
-//	protected abstract BakedModel getBakedTagModelAgnos(ResourceLocation id);
+	public static IBakedModel getBakedTagModel(ResourceLocation id) {
+		return delegate.getBakedTagModelAgnos(id);
+	}
+
+	protected abstract IBakedModel getBakedTagModelAgnos(ResourceLocation id);
 
 	public static boolean isEnchantable(ItemStack stack, Enchantment enchantment) {
 		return delegate.isEnchantableAgnos(stack, enchantment);

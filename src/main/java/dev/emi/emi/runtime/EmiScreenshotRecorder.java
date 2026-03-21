@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
 
-
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -69,7 +69,7 @@ public class EmiScreenshotRecorder {
 		MatrixStack backupProj = RenderSystem.getProjectionMatrix();
 		RenderSystem.setProjectionMatrix(new MatrixStack());
 
-		GL11.glOrtho(0.0D, width, height, 0.0D, 1000.0D, 3000.0D);
+		GlStateManager.ortho(0.0D, width, height, 0.0D, 1000.0D, 3000.0D);
 		MatrixStack view = RenderSystem.getModelViewStack();
 		RenderSystem.getModelViewStack();
 		view.pushMatrix();
@@ -123,7 +123,7 @@ public class EmiScreenshotRecorder {
 		BufferedImage image = new BufferedImage(framebuffer.framebufferWidth, framebuffer.framebufferHeight, BufferedImage.TYPE_INT_ARGB);
 		ByteBuffer buffer = BufferUtils.createByteBuffer(framebuffer.framebufferWidth * framebuffer.framebufferHeight * 4);
 
-		GL11.glReadPixels(0, 0, framebuffer.framebufferWidth, framebuffer.framebufferHeight, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		GlStateManager.glReadPixels(0, 0, framebuffer.framebufferWidth, framebuffer.framebufferHeight, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer.asIntBuffer());
 
 		int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 		for (int y = 0; y < framebuffer.framebufferHeight; y++) {

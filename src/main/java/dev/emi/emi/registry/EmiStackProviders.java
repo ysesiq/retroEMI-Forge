@@ -16,15 +16,13 @@ import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.mixin.accessor.SlotCraftingAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
-import com.rewindmc.retroemi.ItemStacks;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class EmiStackProviders {
 	public static Map<Class<?>, List<EmiStackProvider<?>>> fromClass = Maps.newHashMap();
@@ -59,9 +57,9 @@ public class EmiStackProviders {
 					if (s instanceof SlotCrafting craf) {
 						// Emi be making assumptions
 						try {
-							InventoryCrafting inv = (InventoryCrafting) ((SlotCraftingAccessor) craf).getCraftMatrix();
+							InventoryCrafting inv = ((SlotCraftingAccessor) craf).getCraftMatrix();
 							Minecraft client = Minecraft.getMinecraft();
-							for (IRecipe r : CraftingManager.REGISTRY) {
+							for (IRecipe r : ForgeRegistries.RECIPES.getValuesCollection()) {
 								if (r.matches(inv, client.world)) {
 									ResourceLocation id = EmiPort.getId(r);
 									EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);

@@ -2,7 +2,6 @@ package com.rewindmc.retroemi;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
@@ -11,8 +10,8 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.config.EffectLocation;
 import dev.emi.emi.config.EmiConfig;
-import dev.emi.emi.mixin.accessor.CraftingManagerAccessor;
-import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
+import dev.emi.emi.mixin.accessor.FontRendererAccessor;
+import dev.emi.emi.mixinsupport.inject_interface.EmiFontRenderer;
 import dev.emi.emi.mixinsupport.inject_interface.EmiGuiContainer;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -22,18 +21,18 @@ import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.lwjgl.input.Mouse;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -56,14 +55,12 @@ public class REMIMixinHooks {
 	}
 
 	//SlotCrafting
-	public static void onCrafting(EntityPlayer thePlayer, IInventory craftMatrix) {
-		World world = thePlayer.world;
+	public static void onCrafting(EntityPlayer player, InventoryCrafting craftMatrix) {
+		World world = player.world;
 		if (world.isRemote) {
 			try {
-				InventoryCrafting inv = (InventoryCrafting) craftMatrix;
-				List<IRecipe> list = ((CraftingManagerAccessor) CraftingManager.REGISTRY).getRecipes();
-				for (IRecipe r : list) {
-					if (r.matches(inv, client.world)) {
+				for (IRecipe r : ForgeRegistries.RECIPES.getValuesCollection()) {
+					if (r.matches(craftMatrix, client.world)) {
 						ResourceLocation id = EmiPort.getId(r);
 						EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
 						if (recipe != null) {
@@ -87,8 +84,8 @@ public class REMIMixinHooks {
 				if (shadow) {
 					color = (color & 16579836) >> 2 | color & -16777216;
 				}
-				subject.textColor = color;
-                context.setColor((color >> 16) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, subject.alpha);
+                ((EmiFontRenderer) subject).setTextColor(color);
+                context.setColor((color >> 16) / 255.0F, (color >> 8 & 255) / 255.0F, (color & 255) / 255.0F, ((FontRendererAccessor) subject).getAlpha());
 				i += s.length()+1;
 			}
 		}
@@ -106,8 +103,8 @@ public class REMIMixinHooks {
         int height = scaledresolution.getScaledHeight();
         int mouseX = Mouse.getX() * width / client.displayWidth;
         int mouseY = height - Mouse.getY() * height / client.displayHeight - 1;
-        int debuffY = ((GuiContainerAccessor) screen).getGuiTop();
-        int debuffX = changeEffectSpace(screen, ((GuiContainerAccessor) screen).getGuiLeft() - EFFECT_WIDTH);
+        int debuffY = screen.getGuiTop();
+        int debuffX = changeEffectSpace(screen, screen.getGuiLeft() - EFFECT_WIDTH);
         boolean wide = !EmiConfig.effectLocation.compressed;
         Collection<PotionEffect> activePotionEffects = client.player.getActivePotionEffects();
         int num_effects = activePotionEffects.size();
@@ -127,7 +124,7 @@ public class REMIMixinHooks {
             for (Iterator<PotionEffect> iterator = activePotionEffects.iterator(); iterator.hasNext(); debuffY += spacing) {
                 PotionEffect potionEffect = iterator.next();
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                client.getTextureManager().bindTexture(((GuiContainerAccessor) screen).getInventoryResource());
+                client.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
                 drawStatusEffectBackgrounds(screen, debuffX, debuffY, wide);
 
                 int ew = wide ? 120 : 32;
@@ -152,7 +149,7 @@ public class REMIMixinHooks {
             return;
         }
         boolean wide = size == 1;
-        int y = ((GuiContainerAccessor) screen).getGuiTop() - 34;
+        int y = screen.getGuiTop() - 34;
         if (screen instanceof GuiContainerCreative) {
             y -= 28;
             if (screen instanceof GuiContainerCreative && EmiAgnos.isForge()) {
@@ -163,12 +160,12 @@ public class REMIMixinHooks {
         if (wide) {
             xOff = 122;
         } else if (size > 5) {
-            xOff = (((GuiContainerAccessor) screen).getXSize() - 32) / (size - 1);
+            xOff = (screen.getXSize() - 32) / (size - 1);
         }
         int width = (size - 1) * xOff + (wide ? 120 : 32);
-        int x = ((GuiContainerAccessor) screen).getGuiLeft() + (((GuiContainerAccessor) screen).getXSize() - width) / 2;
+        int x = screen.getGuiLeft() + (screen.getXSize() - width) / 2;
         PotionEffect hovered = null;
-        int restoreY = ((GuiContainerAccessor) screen).getYSize();
+        int restoreY = screen.getYSize();
         try {
             ((EmiGuiContainer) screen).setYSize(y);
             for (PotionEffect inst : effects) {
@@ -177,7 +174,7 @@ public class REMIMixinHooks {
                 context.resetColor();
                 RenderSystem.disableLighting();
                 RenderSystem.enableBlend();
-                client.getTextureManager().bindTexture(((GuiContainerAccessor) screen).getInventoryResource());
+                client.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
                 drawStatusEffectBackgrounds(screen, x, y, wide);
                 drawPotionIcon(screen, x, y, inst);
                 if (mouseX >= x && mouseX < x + ew && mouseY >= y && mouseY < y + 32) {
@@ -242,9 +239,9 @@ public class REMIMixinHooks {
 
     private static int changeEffectSpace(InventoryEffectRenderer screen, int original) {
         return switch (EmiConfig.effectLocation) {
-            case RIGHT, RIGHT_COMPRESSED, HIDDEN -> ((GuiContainerAccessor) screen).getGuiLeft() + ((GuiContainerAccessor) screen).getXSize() + 2;
-            case TOP -> ((GuiContainerAccessor) screen).getGuiLeft();
-            case LEFT_COMPRESSED -> ((GuiContainerAccessor) screen).getGuiLeft() - 2 - 32;
+            case RIGHT, RIGHT_COMPRESSED, HIDDEN -> screen.getGuiLeft() + screen.getXSize() + 2;
+            case TOP -> screen.getGuiLeft();
+            case LEFT_COMPRESSED -> screen.getGuiLeft() - 2 - 32;
             case LEFT -> original;
         };
     }

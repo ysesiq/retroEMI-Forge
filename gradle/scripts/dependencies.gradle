@@ -19,5 +19,5 @@ dependencies {
     if (propertyBool('enable_lwjglx')) {
         compileOnly "com.cleanroommc:lwjglx:1.0.0"
     }
-    modImplementation 'curse.maven:hei-557549:6187146'
+//    modImplementation 'curse.maven:hei-557549:6187146'
 }

@@ -1,8 +1,5 @@
 package dev.emi.emi.platform.forge;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-
 import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.network.CreateItemC2SPacket;
@@ -11,10 +8,11 @@ import dev.emi.emi.network.EmiNetwork;
 import dev.emi.emi.network.EmiPacket;
 import dev.emi.emi.network.FillRecipeC2SPacket;
 import dev.emi.emi.network.PingS2CPacket;
-import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.platform.EmiMain;
 import dev.emi.emi.registry.EmiCommands;
+import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -23,26 +21,18 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import shim.net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mod(
 	modid = "emi",
 	name = "EMI",
-	dependencies = """
-			required-after:gtnhlib@[0.6.0,);\
-			before:unimixins@[0.1,);\
-			""",
 	guiFactory = "dev.emi.emi.platform.forge.EmiGuiFactory"
 )
 public class EmiForge {
 
 	@Mod.EventHandler
 	public void preInit(FMLInitializationEvent event) {
-		if (EmiAgnos.isModLoaded("NotEnoughItems")) {
-			NemiPlugin.onLoad();
-		}
 	}
 
 	@Mod.EventHandler
@@ -56,14 +46,13 @@ public class EmiForge {
 			player.connection.sendPacket(toVanilla(packet));
 		});
 		MinecraftForge.EVENT_BUS.register(this);
-		FMLCommonHandler.instance().bus().register(this);
-    }
+	}
 
 	@Mod.EventHandler
 	public void postInit(FMLInitializationEvent event) {
 		if (FMLCommonHandler.instance().getSide().isServer()) {
-			PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
-			PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);
+            PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
+            PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);
 			PacketReader.registerServerPacketReader(EmiNetwork.CHESS, EmiChessPacket.C2S::new);
 		}
 	}
@@ -88,10 +77,8 @@ public class EmiForge {
 	}
 
 	public static SPacketCustomPayload toVanilla(EmiPacket packet) {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(baos);
-		PacketByteBuf buf = PacketByteBuf.out(dos);
-		packet.write(buf);
-		return new SPacketCustomPayload(packet.getId().toString(), baos.toByteArray());
+		PacketBuffer buf = new PacketBuffer(Unpooled.buffer());
+        packet.write(buf);
+		return new SPacketCustomPayload(packet.getId().toString(), buf);
 	}
 }

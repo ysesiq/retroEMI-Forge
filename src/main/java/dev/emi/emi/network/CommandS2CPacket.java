@@ -7,8 +7,8 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.bom.BoM;
 import dev.emi.emi.registry.EmiCommands;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import shim.net.minecraft.network.PacketByteBuf;
 
 public class CommandS2CPacket implements EmiPacket {
 	private final byte type;
@@ -19,11 +19,11 @@ public class CommandS2CPacket implements EmiPacket {
 		this.id = id;
 	}
 
-	public CommandS2CPacket(PacketByteBuf buf) {
+	public CommandS2CPacket(PacketBuffer buf) {
 		type = buf.readByte();
 		if (type == EmiCommands.VIEW_RECIPE || type == EmiCommands.TREE_GOAL || type == EmiCommands.TREE_RESOLUTION) {
-			String path = buf.readString();
-			String domain = buf.readString();
+			String path = buf.readString(255);
+			String domain = buf.readString(255);
 			id = EmiPort.id(domain, path);
 		} else {
 			id = null;
@@ -31,7 +31,7 @@ public class CommandS2CPacket implements EmiPacket {
 	}
 
 	@Override
-	public void write(PacketByteBuf buf) {
+	public void write(PacketBuffer buf) {
 		buf.writeByte(type);
 		if (type == EmiCommands.VIEW_RECIPE || type == EmiCommands.TREE_GOAL || type == EmiCommands.TREE_RESOLUTION) {
 			buf.writeString(id.getPath());

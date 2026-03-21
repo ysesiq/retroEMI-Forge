@@ -8,12 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -21,6 +21,7 @@ import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
@@ -28,7 +29,6 @@ import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Style;
 import shim.net.minecraft.text.Text;
-import shim.net.minecraft.util.SyntheticIdentifier;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
@@ -114,7 +114,7 @@ public final class EmiPort {
 //	}
 
 	public static void draw(BufferBuilder bufferBuilder) {
-        bufferBuilder.finishDrawing();
+        Tessellator.getInstance().draw();
 	}
 
 	public static int getGuiScale(Minecraft client) {
@@ -170,13 +170,13 @@ public final class EmiPort {
 	}
 
 	public static ResourceLocation getId(IRecipe recipe) {
-		return SyntheticIdentifier.generateId(recipe);
+		return ForgeRegistries.RECIPES.getKey(recipe);
 	}
 
 	public static @Nullable IRecipe getRecipe(ResourceLocation id) {
         Minecraft client = Minecraft.getMinecraft();
 		if (client.world != null && id != null) {
-            return CraftingManager.getRecipe(id);
+            return ForgeRegistries.RECIPES.getValue(id);
 		}
 		return null;
 	}

@@ -1,10 +1,12 @@
 package dev.emi.emi.network;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import net.minecraft.inventory.ClickType;
+import net.minecraft.network.PacketBuffer;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
@@ -17,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
-import shim.net.minecraft.network.PacketByteBuf;
 
 public class FillRecipeC2SPacket implements EmiPacket {
 	private final int syncId;
@@ -35,7 +36,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 		this.stacks = stacks;
 	}
 
-	public FillRecipeC2SPacket(PacketByteBuf buf) {
+	public FillRecipeC2SPacket(PacketBuffer buf) {
 		syncId = buf.readInt();
 		action = buf.readByte();
 		slots = parseCompressedSlots(buf);
@@ -53,12 +54,15 @@ public class FillRecipeC2SPacket implements EmiPacket {
 		int size = buf.readVarInt();
 		stacks = Lists.newArrayList();
 		for (int i = 0; i < size; i++) {
-			stacks.add(buf.readItemStack());
+            try {
+                stacks.add(buf.readItemStack());
+            } catch (IOException e) {
+            }
 		}
 	}
 
 	@Override
-	public void write(PacketByteBuf buf) {
+	public void write(PacketBuffer buf) {
 		buf.writeInt(syncId);
 		buf.writeByte(action);
 		writeCompressedSlots(slots, buf);
@@ -168,7 +172,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 		}
 	}
 
-	private static List<Integer> parseCompressedSlots(PacketByteBuf buf) {
+	private static List<Integer> parseCompressedSlots(PacketBuffer buf) {
 		List<Integer> list = Lists.newArrayList();
 		int amount = buf.readVarInt();
 		for (int i = 0; i < amount; i++) {
@@ -184,8 +188,8 @@ public class FillRecipeC2SPacket implements EmiPacket {
 		return list;
 	}
 
-	private static void writeCompressedSlots(List<Integer> list, PacketByteBuf buf) {
-		List<Consumer<PacketByteBuf>> postWrite = Lists.newArrayList();
+	private static void writeCompressedSlots(List<Integer> list, PacketBuffer buf) {
+		List<Consumer<PacketBuffer>> postWrite = Lists.newArrayList();
 		int groups = 0;
 		int i = 0;
 		while (i < list.size()) {
@@ -202,7 +206,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 			});
 		}
 		buf.writeVarInt(groups);
-		for (Consumer<PacketByteBuf> consumer : postWrite) {
+		for (Consumer<PacketBuffer> consumer : postWrite) {
 			consumer.accept(buf);
 		}
 	}

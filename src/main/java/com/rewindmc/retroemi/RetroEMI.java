@@ -10,7 +10,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.PotionUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -215,7 +214,7 @@ public class RetroEMI {
 				}
 				int dwheel = Mouse.getEventDWheel();
 				if (dwheel != 0) {
-					if (EmiScreenManager.mouseScrolled(mx, my, dwheel / 120D)) {
+					if (EmiScreenManager.mouseScrolled(mx, my, dwheel)) {
 						return true;
 					}
 				}
@@ -320,9 +319,9 @@ public class RetroEMI {
         }
         Item item = stack.getItem();
         if (item instanceof ItemBlock ib) {
-            return EmiPort.getBlockRegistry().getNameForObject(ib.getBlock()).getNamespace();
+            return EmiPort.getBlockRegistry().getNameForObject(ib.getBlock()).getPath();
         } else {
-            return EmiPort.getItemRegistry().getNameForObject(item).getNamespace();
+            return EmiPort.getItemRegistry().getNameForObject(item).getPath();
         }
     }
 }

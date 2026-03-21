@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(PlayerControllerMP.class)
 public interface PlayerControllerMPAccessor {
-    @Accessor("netClientHandler")
-     NetHandlerPlayClient getNetClientHandler();
+    @Accessor("connection")
+    NetHandlerPlayClient getNetClientHandler();
 }

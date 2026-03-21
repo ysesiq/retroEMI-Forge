@@ -3,8 +3,8 @@ package dev.emi.emi.network;
 import dev.emi.emi.chess.EmiChess;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import shim.net.minecraft.network.PacketByteBuf;
 
 public abstract class EmiChessPacket implements EmiPacket {
 	protected final String uuid;
@@ -17,12 +17,12 @@ public abstract class EmiChessPacket implements EmiPacket {
 		this.end = end;
 	}
 
-	public EmiChessPacket(PacketByteBuf buf) {
-		this(buf.readString(), buf.readByte(), buf.readByte(), buf.readByte());
+	public EmiChessPacket(PacketBuffer buf) {
+		this(buf.readString(255), buf.readByte(), buf.readByte(), buf.readByte());
 	}
 
 	@Override
-	public void write(PacketByteBuf buf) {
+	public void write(PacketBuffer buf) {
 		buf.writeString(uuid);
 		buf.writeByte(type);
 		buf.writeByte(start);
@@ -40,7 +40,7 @@ public abstract class EmiChessPacket implements EmiPacket {
 			super(uuid, type, start, end);
 		}
 
-		public S2C(PacketByteBuf buf) {
+		public S2C(PacketBuffer buf) {
 			super(buf);
 		}
 
@@ -56,7 +56,7 @@ public abstract class EmiChessPacket implements EmiPacket {
 			super(uuid, type, start, end);
 		}
 
-		public C2S(PacketByteBuf buf) {
+		public C2S(PacketBuffer buf) {
 			super(buf);
 		}
 

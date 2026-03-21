@@ -7,8 +7,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import net.minecraft.client.resources.IResourceManager;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -26,6 +24,8 @@ import dev.emi.emi.runtime.EmiReloadLog;
 import dev.emi.emi.runtime.EmiTagKey;
 import dev.emi.emi.util.InheritanceMap;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.registry.tag.TagKey;
 
@@ -143,17 +143,17 @@ public class EmiTags {
 		return (List<EmiTagKey<T>>) (List) SORTED_TAGS.getOrDefault(registry.getRegistryName(), shim.java.List.of());
 	}
 
-	public static void registerTagModels(IResourceManager manager, Consumer<ResourceLocation> consumer) {
+	public static void registerTagModels(IResourceManager manager, Consumer<ModelResourceLocation> consumer, String variant) {
 		EmiTags.MODELED_TAGS.clear();
 		for (ResourceLocation id : EmiPort.findResources(manager, "models/tag/item", s -> s.endsWith(".json"))) {
-            String path = id.getPath();
+			String path = id.getPath();
 			path = path.substring(11, path.length() - 5);
 			String[] parts = path.split("/");
 			if (parts.length > 1) {
 				TagKey<?> key = TagKey.of(TagKey.Type.of(EmiPort.id("minecraft", parts[0])), EmiPort.id(id.getNamespace(), path.substring(1 + parts[0].length())));
 				ResourceLocation mid = EmiPort.id(id.getNamespace(), "tag/" + path);
 				EmiTags.MODELED_TAGS.put(key, mid);
-				consumer.accept(mid);
+				consumer.accept(new ModelResourceLocation(mid, variant));
 			}
 		}
 		/*

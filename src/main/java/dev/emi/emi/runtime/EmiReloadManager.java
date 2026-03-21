@@ -23,7 +23,7 @@ import dev.emi.emi.screen.EmiScreenBase;
 import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.crafting.CraftingManager;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import shim.net.minecraft.text.Text;
 
 import java.util.HashMap;
@@ -143,7 +143,7 @@ public class EmiReloadManager {
 					if (client.world == null) {
 						EmiReloadLog.warn("World is null");
 						break;
-					} else if (CraftingManager.REGISTRY == null) {
+					} else if (ForgeRegistries.RECIPES == null) {
 						EmiReloadLog.warn("Recipe Manager is null");
 						break;
 					}

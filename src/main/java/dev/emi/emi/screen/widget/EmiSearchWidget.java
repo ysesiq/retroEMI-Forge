@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11;
 import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -22,6 +20,8 @@ import net.minecraft.client.gui.FontRenderer;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Style;
@@ -245,7 +245,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 		view.pushMatrix();
 		if (deg != 0) {
 			view.translate(this.x + (double) this.width / 2, this.y + (double) this.height / 2, 0);
-			view.multiply(() -> GL11.glRotatef(deg, 0, 0, -1));
+			view.multiply(() -> GlStateManager.rotate(deg, 0, 0, -1));
 			view.translate(-(this.x + (double) this.width / 2), -(this.y + (double) this.height / 2), 0);
 			EmiPort.applyModelViewMatrix();
 		}

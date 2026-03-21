@@ -1,66 +1,34 @@
 package com.rewindmc.retroemi;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import dev.emi.emi.EmiPort;
+import dev.emi.emi.mixin.accessor.FallbackResourceManagerAccessor;
+import dev.emi.emi.mixin.accessor.SimpleReloadableResourceManagerAccessor;
 import dev.emi.emi.platform.forge.EmiClientForge;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.resource.IResourceType;
+import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
+import org.jetbrains.annotations.NotNull;
 
-public class EmiResourceManager implements IResourceManagerReloadListener {
+public class EmiResourceManager implements ISelectiveResourceReloadListener {
     public static EmiResourceManager instance = new EmiResourceManager();
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
-        Minecraft client = Minecraft.getMinecraft();
-        for (ResourceLocation id : EmiPort.findResources(resourceManager, "lang", s -> s.endsWith(".json"))) {
-            if (!id.getNamespace().equals("emi")) {
-                continue;
-            }
-            try {
-                String code = id.getPath().replace("lang/", "").replace(".json", "");
-                if (code.equals(client.gameSettings.language.toLowerCase(Locale.ROOT))) {
-                    this.loadLocaleData(resourceManager.getAllResources(id), client.gameSettings.language);
-                }
-            } catch (IOException ignore) {
-            }
-        }
-        EmiClientForge.registerAdditionalModels();
+    public void onResourceManagerReload(@NotNull IResourceManager resourceManager, @NotNull Predicate<IResourceType> predicate) {
         EmiClientForge.registerResourceReloaders();
-    }
-
-    private void loadLocaleData(List<IResource> resources, String code) throws IOException {
-        Gson gson = new Gson();
-        for (IResource resource : resources) {
-            try (InputStream stream = resource.getInputStream(); InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                JsonObject jo = gson.fromJson(reader, JsonObject.class);
-                for (Map.Entry<String, JsonElement> entry : jo.entrySet()) {
-                    LanguageRegistry.instance().addStringLocalization(entry.getKey(), code, entry.getValue().getAsString());
-                }
-            }
-        }
     }
 
     public Map<ResourceLocation, IResource> findResources(IResourceManager manager, String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
@@ -77,9 +45,9 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
             folder = (cut < 0) ? "" : startingPath.substring(0, cut);
         }
 
-        for (Object entry : srm.domainResourceManagers.entrySet()) {
-            String namespace = ((Map.Entry<String, ?>) entry).getKey();
-            Object frmObj = ((Map.Entry<String, ?>) entry).getValue();
+        for (Map.Entry<String, ?> entry : ((SimpleReloadableResourceManagerAccessor) srm).getNamespaceResourceManagers().entrySet()) {
+            String namespace = entry.getKey();
+            Object frmObj = entry.getValue();
 
             if (!(frmObj instanceof FallbackResourceManager frm)) {
                 continue;
@@ -87,7 +55,7 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
 
             String assetPrefix = "assets/" + namespace + "/";
 
-            for (IResourcePack pack : frm.resourcePacks) {
+            for (IResourcePack pack : ((FallbackResourceManagerAccessor) frm).getResourcePacks()) {
                 if (!(pack instanceof FileResourcePack frp)) {
                     continue;
                 }

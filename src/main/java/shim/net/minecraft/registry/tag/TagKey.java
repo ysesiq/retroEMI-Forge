@@ -5,7 +5,6 @@ import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
-import dev.emi.emi.mixin.accessor.ItemBlockAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
@@ -48,7 +47,7 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
 
     public String toString() {
         String s = String.valueOf(this.type);
-        return "TagKey[" + s + " / " + this.tag + "]";
+        return "TagKey[" + s + "/" + this.tag + "]";
     }
 
     public ResourceLocation id() {
@@ -63,7 +62,7 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
         return switch (type) {
             case ITEM -> (List<T>) expand(OreDictionary.getOres(convertTag(tag))).stream().map(ItemKey::of).collect(Collectors.toList());
             case BLOCK -> (List<T>) expand(OreDictionary.getOres(convertTag(tag))).stream().filter(stack -> stack.getItem() instanceof ItemBlock)
-                .map(stack -> ((ItemBlockAccessor) stack.getItem()).getBlock()).collect(Collectors.toList());
+                .map(stack -> ((ItemBlock) stack.getItem()).getBlock()).collect(Collectors.toList());
             case FLUID -> {
                 //todo this probably breaks everything because backup fluids are not registered
                 String oredict = ":" + convertTag(tag);

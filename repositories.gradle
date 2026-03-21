@@ -1,0 +1,13 @@
+// Add any additional repositories for your dependencies here
+
+repositories {
+    maven {
+        name 'CurseMaven'
+        url 'https://curse.cleanroommc.com'
+    }
+    maven {
+        name 'Modrinth'
+        url 'https://api.modrinth.com/maven'
+    }
+    mavenLocal()
+}

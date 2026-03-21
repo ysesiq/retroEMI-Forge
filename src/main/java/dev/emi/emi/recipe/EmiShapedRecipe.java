@@ -2,11 +2,9 @@ package dev.emi.emi.recipe;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
-import com.rewindmc.retroemi.Prototype;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiUtil;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
@@ -16,9 +14,7 @@ import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.mixin.accessor.InventoryCraftingAccessor;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.util.NonNullList;
 
 public class EmiShapedRecipe extends EmiCraftingRecipe {
 
@@ -45,11 +41,11 @@ public class EmiShapedRecipe extends EmiCraftingRecipe {
 				List<EmiStack> stacks = input.get(i).getEmiStacks();
 				for (EmiStack stack : stacks) {
 					inv.setInventorySlotContents(i, stack.getItemStack().copy());
-                    if (stack.getItemStack().getItem().hasContainerItem()) {
+                    if (stack.getItemStack().getItem().hasContainerItem(stack.getItemStack())) {
                         stack.setRemainder(EmiStack.of(stack.getItemStack().getItem().getContainerItem()));
 					}
 				}
-                Arrays.fill(((InventoryCraftingAccessor) inv).getStackList(), null);
+				Arrays.fill(((InventoryCraftingAccessor) inv).getStackList().toArray(), null);
 			}
 		} catch (Exception e) {
 			EmiLog.error("Exception thrown setting remainders for " + EmiPort.getId(recipe), e);
@@ -64,7 +60,7 @@ public class EmiShapedRecipe extends EmiCraftingRecipe {
 				if (x >= recipe.recipeWidth || y >= recipe.recipeHeight || i >= recipe.getIngredients().size()) {
 					list.add(EmiStack.EMPTY);
 				} else {
-					list.add(EmiStack.of(recipe.getIngredients().get(i++).getMatchingStacks()[0]));
+					list.add(EmiIngredient.of(recipe.getIngredients().get(i++)));
 				}
 			}
 		}

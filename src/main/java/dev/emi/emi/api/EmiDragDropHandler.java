@@ -13,7 +13,6 @@ import com.google.common.collect.Maps;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.widget.Bounds;
-import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.runtime.EmiDrawContext;
 import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Gui;
@@ -113,8 +112,8 @@ public interface EmiDragDropHandler<T extends Gui> {
 				map(T t, Function<T, Collection<Slot>> slots, TriConsumer<T, Slot, EmiIngredient> consumer) {
 			Map<Bounds, Consumer<EmiIngredient>> map = Maps.newHashMap();
 			for (Slot slot : slots.apply(t)) {
-				map.put(new Bounds(((GuiContainerAccessor) t).getGuiLeft() + slot.xPos - 1,
-				    ((GuiContainerAccessor) t).getGuiTop() + slot.yPos - 1, 18, 18), i -> consumer.accept(t, slot, i));
+				map.put(new Bounds(t.getGuiLeft() + slot.xPos - 1,
+				    t.getGuiTop() + slot.yPos - 1, 18, 18), i -> consumer.accept(t, slot, i));
 			}
 			return map;
 		}

@@ -32,13 +32,13 @@ import java.util.stream.Collectors;
 public class DrawContext extends Gui {
 	private final Minecraft client;
 	private final MatrixStack matrices;
-    private final TextureMap guiAtlasManager;
-    public static final DrawContext INSTANCE = new DrawContext(Minecraft.getMinecraft(), MatrixStack.INSTANCE);
+	private final TextureMap guiAtlasManager;
+	public static final DrawContext INSTANCE = new DrawContext(Minecraft.getMinecraft(), MatrixStack.INSTANCE);
 
 	public DrawContext(Minecraft client, MatrixStack matrices) {
 		this.client = client;
 		this.matrices = matrices;
-        this.guiAtlasManager = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE));
+		this.guiAtlasManager = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE));
 	}
 
 	public MatrixStack getMatrices() {
@@ -82,10 +82,10 @@ public class DrawContext extends Gui {
 			y2 = i;
 		}
 
-		float r = (float)(color >> 24 & 255) / 255.0F;
-		float g = (float)(color >> 16 & 255) / 255.0F;
-		float b = (float)(color >> 8 & 255) / 255.0F;
-		float a = (float)(color & 255) / 255.0F;
+        float a = (float) (color >> 24 & 255) / 255.0F;
+        float r = (float) (color >> 16 & 255) / 255.0F;
+        float g = (float) (color >> 8 & 255) / 255.0F;
+        float b = (float) (color & 255) / 255.0F;
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 		RenderSystem.enableBlend();
         GlStateManager.disableTexture2D();
@@ -96,7 +96,7 @@ public class DrawContext extends Gui {
         bufferBuilder.pos(x2, y1, z).color(r, g, b, a).endVertex();
         bufferBuilder.pos(x1, y1, z).color(r, g, b, a).endVertex();
         EmiPort.draw(bufferBuilder);
-        EmiPort.setPositionTexShader();
+        GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
 	}
 
@@ -105,30 +105,30 @@ public class DrawContext extends Gui {
 	}
 
 	public void fillGradient(int startX, int startY, int endX, int endY, int z, int colorStart, int colorEnd) {
-		float rs = (float)(colorStart >> 24 & 255) / 255.0F;
-		float gs = (float)(colorStart >> 16 & 255) / 255.0F;
-		float bs = (float)(colorStart >> 8 & 255) / 255.0F;
-		float as = (float)(colorStart & 255) / 255.0F;
-		float re = (float)(colorEnd >> 24 & 255) / 255.0F;
-		float ge = (float)(colorEnd >> 16 & 255) / 255.0F;
-		float be = (float)(colorEnd >> 8 & 255) / 255.0F;
-		float ae = (float)(colorEnd & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
+		float as = (float)(colorStart >> 24 & 255) / 255.0F;
+		float rs = (float)(colorStart >> 16 & 255) / 255.0F;
+		float gs = (float)(colorStart >> 8 & 255) / 255.0F;
+		float bs = (float)(colorStart & 255) / 255.0F;
+		float ae = (float)(colorEnd >> 24 & 255) / 255.0F;
+		float re = (float)(colorEnd >> 16 & 255) / 255.0F;
+		float ge = (float)(colorEnd >> 8 & 255) / 255.0F;
+		float be = (float)(colorEnd & 255) / 255.0F;
+		GlStateManager.disableTexture2D();
 		RenderSystem.enableBlend();
-        GlStateManager.disableAlpha();
+		GlStateManager.disableAlpha();
 		RenderSystem.defaultBlendFunc();
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        bufferBuilder.pos(endX, startY, z).color(gs, bs, as, rs).endVertex();
-		bufferBuilder.pos(startX, startY, z).color(gs, bs, as, rs).endVertex();
-		bufferBuilder.pos(startX, endY, z).color(ge, be, ae, re).endVertex();
-		bufferBuilder.pos(endX, endY, z).color(ge, be, ae, re).endVertex();
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+		bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		bufferBuilder.pos(endX, startY, z).color(rs, gs, bs, as).endVertex();
+		bufferBuilder.pos(startX, startY, z).color(rs, gs, bs, as).endVertex();
+		bufferBuilder.pos(startX, endY, z).color(re, ge, be, ae).endVertex();
+		bufferBuilder.pos(endX, endY, z).color(re, ge, be, ae).endVertex();
 		EmiPort.draw(bufferBuilder);
-        GlStateManager.shadeModel(GL11.GL_FLAT);
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
 		GlStateManager.enableAlpha();
-        EmiPort.setPositionTexShader();
+		EmiPort.setPositionTexShader();
 	}
 
 	public void drawCenteredTextWithShadow(FontRenderer textRenderer, String text, int centerX, int y, int color) {
@@ -193,33 +193,33 @@ public class DrawContext extends Gui {
 		return this.drawText(textRenderer, text, x, y, color, true);
 	}
 
-    public void drawGuiTexture(ResourceLocation texture, int x, int y, int width, int height) {
-        this.drawGuiTexture(texture, x, y, 0, width, height);
-    }
+	public void drawGuiTexture(ResourceLocation texture, int x, int y, int width, int height) {
+		this.drawGuiTexture(texture, x, y, 0, width, height);
+	}
 
-    public void drawGuiTexture(ResourceLocation texture, int x, int y, int z, int width, int height) {
-        this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), x, y, z, width, height);
-    }
+	public void drawGuiTexture(ResourceLocation texture, int x, int y, int z, int width, int height) {
+		this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), x, y, z, width, height);
+	}
 
-    public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int width, int height) {
-        this.drawGuiTexture(texture, i, j, k, l, x, y, 0, width, height);
-    }
+	public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int width, int height) {
+		this.drawGuiTexture(texture, i, j, k, l, x, y, 0, width, height);
+	}
 
-    public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
-        this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), i, j, k, l, x, y, z, width, height);
-    }
+	public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
+		this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), i, j, k, l, x, y, z, width, height);
+	}
 
-    private void drawSprite(TextureAtlasSprite sprite, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
-        if (width != 0 && height != 0) {
-            this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getInterpolatedU((float)k / (float)i), sprite.getInterpolatedU((float)(k + width) / (float)i), sprite.getInterpolatedV((float)l / (float)j), sprite.getInterpolatedV((float)(l + height) / (float)j));
-        }
-    }
+	private void drawSprite(TextureAtlasSprite sprite, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
+		if (width != 0 && height != 0) {
+			this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getInterpolatedU((float)k / (float)i), sprite.getInterpolatedU((float)(k + width) / (float)i), sprite.getInterpolatedV((float)l / (float)j), sprite.getInterpolatedV((float)(l + height) / (float)j));
+		}
+	}
 
-    private void drawSprite(TextureAtlasSprite sprite, int x, int y, int z, int width, int height) {
-        if (width != 0 && height != 0) {
-            this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
-        }
-    }
+	private void drawSprite(TextureAtlasSprite sprite, int x, int y, int z, int width, int height) {
+		if (width != 0 && height != 0) {
+			this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+		}
+	}
 
 	public void drawTexture(ResourceLocation texture, int x, int y, int u, int v, int width, int height) {
 		this.drawTexture(texture, x, y, 0, (float)u, (float)v, width, height, 256, 256);
@@ -243,45 +243,45 @@ public class DrawContext extends Gui {
 
 	void drawTexturedQuad(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2) {
 		RenderSystem.setShaderTexture(0, texture);
-        EmiPort.setPositionTexShader();
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex();
-        bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex();
-        bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex();
-        bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex();
+		EmiPort.setPositionTexShader();
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+		bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex();
+		bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex();
+		bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex();
+		bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex();
 		EmiPort.draw(bufferBuilder);
 	}
 
 	public void drawTexturedQuad(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2, float red, float green, float blue, float alpha) {
 		RenderSystem.setShaderTexture(0, texture);
-        EmiPort.setPositionTexShader();
+		EmiPort.setPositionTexShader();
 		RenderSystem.enableBlend();
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferBuilder.pos(x1, y2, z).tex(u1, v2).color(red, green, blue, alpha).endVertex();
-        bufferBuilder.pos(x2, y2, z).tex(u2, v2).color(red, green, blue, alpha).endVertex();
-        bufferBuilder.pos(x2, y1, z).tex(u2, v1).color(red, green, blue, alpha).endVertex();
-        bufferBuilder.pos(x1, y1, z).tex(u1, v1).color(red, green, blue, alpha).endVertex();
-        EmiPort.draw(bufferBuilder);
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+		bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		bufferBuilder.pos(x1, y2, z).tex(u1, v2).color(red, green, blue, alpha).endVertex();
+		bufferBuilder.pos(x2, y2, z).tex(u2, v2).color(red, green, blue, alpha).endVertex();
+		bufferBuilder.pos(x2, y1, z).tex(u2, v1).color(red, green, blue, alpha).endVertex();
+		bufferBuilder.pos(x1, y1, z).tex(u1, v1).color(red, green, blue, alpha).endVertex();
+		EmiPort.draw(bufferBuilder);
 		RenderSystem.disableBlend();
 	}
 
 	public void drawItem(ItemStack stack, int x, int y) {
 		if (stack == null) return;
-		RetroEMI.instance.itemRenderer.zLevel += 100;
+//		RetroEMI.instance.itemRenderer.zLevel += 100;
 		RetroEMI.instance.itemRenderer.renderItemAndEffectIntoGUI(stack, x, y);
-		RetroEMI.instance.itemRenderer.zLevel -= 100;
+//		RetroEMI.instance.itemRenderer.zLevel -= 100;
 		RenderSystem.defaultBlendFunc();
 	}
 
 	public void drawItemInSlot(FontRenderer fontRenderer, ItemStack stack, int x, int y) {
-		RetroEMI.instance.itemRenderer.zLevel += 200;
+//		RetroEMI.instance.itemRenderer.zLevel += 200;
 		int count = stack.getCount();
 		stack.setCount(1);
 		RetroEMI.instance.itemRenderer.renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
 		stack.setCount(count);
-		RetroEMI.instance.itemRenderer.zLevel -= 200;
+//		RetroEMI.instance.itemRenderer.zLevel -= 200;
 	}
 
 	public void drawTooltip(FontRenderer fontRenderer, List<Text> txt, int mouseX, int mouseY) {

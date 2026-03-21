@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import net.minecraft.client.resources.I18n;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Iterables;
@@ -38,8 +37,13 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class EmiRecipes {
 	public static volatile Worker activeWorker = null;
@@ -66,16 +70,16 @@ public class EmiRecipes {
 		byWorkstation.clear();
 		decorators.clear();
 		manager = Manager.EMPTY;
-//		Minecraft client = Minecraft.getMinecraft();
-//		if (client.theWorld != null) {
-//			CraftingManager manager = CraftingManager.getInstance();
-//			recipeIds = new Reference2ObjectOpenHashMap<>();
-//			if (manager != null) {
-//				for (IRecipe entry : (List<IRecipe>) manager.getRecipeList()) {
-//					recipeIds.put(entry, SyntheticIdentifier.generateId(entry));
-//				}
-//			}
-//		}
+		Minecraft client = Minecraft.getMinecraft();
+		if (client.world != null) {
+            IForgeRegistry<IRecipe> manager = ForgeRegistries.RECIPES;
+			recipeIds = new Reference2ObjectOpenHashMap<>();
+			if (manager != null) {
+				for (IRecipe entry : manager.getValuesCollection()) {
+					recipeIds.put(entry, entry.getRegistryName());
+				}
+			}
+		}
 	}
 
 	public static void bake() {
@@ -154,7 +158,7 @@ public class EmiRecipes {
 			this.recipes = Lists.newArrayList(recipes);
 
 			Object2IntMap<ResourceLocation> duplicateIds = new Object2IntOpenHashMap<>();
-//			Set<ResourceLocation> incorrectIds = new ObjectArraySet<>();
+			Set<ResourceLocation> incorrectIds = new ObjectArraySet<>();
 			for (EmiRecipe recipe : recipes) {
 				ResourceLocation id = recipe.getId();
 				EmiRecipeCategory category = recipe.getCategory();
@@ -178,9 +182,9 @@ public class EmiRecipes {
 						byId.put(id, recipe);
 					}
 
-//					if (EmiConfig.devMode && !id.getResourceDomain().startsWith("/") && !recipeIds.containsValue(id)) {
-//						incorrectIds.add(id);
-//					}
+					if (EmiConfig.devMode && !id.getPath().startsWith("/") && !recipeIds.containsValue(id)) {
+						incorrectIds.add(id);
+					}
 				}
 			}
 
@@ -188,9 +192,9 @@ public class EmiRecipes {
 				for (ResourceLocation id : duplicateIds.keySet()) {
 					EmiReloadLog.warn(duplicateIds.getInt(id) + " recipes loaded with the same id: " + id);
 				}
-//				for (ResourceLocation id : incorrectIds) {
-//					EmiReloadLog.warn("Recipe " + id + " not present in recipe manager. Consider prefixing its path with '/' if it is synthetic.");
-//				}
+				for (ResourceLocation id : incorrectIds) {
+					EmiReloadLog.warn("Recipe " + id + " not present in recipe manager. Consider prefixing its path with '/' if it is synthetic.");
+				}
 			}
 
 			Map<EmiStack, Set<EmiRecipe>> byInput = new Object2ObjectOpenCustomHashMap<>(new EmiStackList.ComparisonHashStrategy());
@@ -254,7 +258,7 @@ public class EmiRecipes {
 
 			if (EmiConfig.devMode) {
 				EmiDev.duplicateRecipeIds = duplicateIds.keySet();
-//				EmiDev.incorrectRecipeIds = incorrectIds;
+				EmiDev.incorrectRecipeIds = incorrectIds;
 			}
 		}
 

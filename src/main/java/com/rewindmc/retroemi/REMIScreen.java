@@ -1,9 +1,5 @@
 package com.rewindmc.retroemi;
 
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -77,7 +73,7 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 		if (Mouse.getEventDWheel() != 0) {
-			mouseScrolled(lastMouseX, lastMouseY, Mouse.getEventDWheel() / 120D);
+			mouseScrolled(lastMouseX, lastMouseY, Mouse.getEventDWheel());
 		}
 	}
 
@@ -102,13 +98,13 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 		mouseDown = mouseButton;
 	}
 
-//	@Override
-//	public final void mouseMovedOrUp(int mouseX, int mouseY, int mouseButton) {
-//		mouseReleased((double) mouseX, (double) mouseY, mouseButton);
-//		if (mouseButton == mouseDown) {
-//			mouseDown = -1;
-//		}
-//	}
+	@Override
+	public final void mouseReleased(int mouseX, int mouseY, int mouseButton) {
+		mouseReleased((double) mouseX, (double) mouseY, mouseButton);
+		if (mouseButton == mouseDown) {
+			mouseDown = -1;
+		}
+	}
 
 	@Override
 	public final boolean doesGuiPauseGame() {

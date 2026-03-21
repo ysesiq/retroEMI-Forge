@@ -86,7 +86,7 @@ public class EmiRenderHelper {
 		}
 		EmiPort.setPositionColorTexShader();
 		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-		RenderSystem.setShaderTexture(0, EmiPort.id(sprite.getIconName()));
+//		RenderSystem.setShaderTexture(0, EmiPort.id(sprite.getIconName()));
 		RenderSystem.enableBlend();
 
 		float r = ((color >> 16) & 255) / 256f;
@@ -105,10 +105,10 @@ public class EmiRenderHelper {
 		float vMin = sprite.getMinV() + vSpan / 16 * yOff;
 		float uMax = sprite.getMaxU() - uSpan / 16 * (16 - (width + xOff));
 		float vMax = sprite.getMaxV() - vSpan / 16 * (16 - (height + yOff));
-		bufferBuilder.pos(xMin, yMax, 1).color(r, g, b, 1).tex(uMin, vMax).endVertex();
-		bufferBuilder.pos(xMax, yMax, 1).color(r, g, b, 1).tex(uMax, vMax).endVertex();
-		bufferBuilder.pos(xMax, yMin, 1).color(r, g, b, 1).tex(uMax, vMin).endVertex();
-		bufferBuilder.pos(xMin, yMin, 1).color(r, g, b, 1).tex(uMin, vMin).endVertex();
+		bufferBuilder.pos(xMin, yMax, 1).tex(uMin, vMax).endVertex();
+		bufferBuilder.pos(xMax, yMax, 1).tex(uMax, vMax).endVertex();
+		bufferBuilder.pos(xMax, yMin, 1).tex(uMax, vMin).endVertex();
+		bufferBuilder.pos(xMin, yMin, 1).tex(uMin, vMin).endVertex();
 		EmiPort.draw(bufferBuilder);
 	}
 

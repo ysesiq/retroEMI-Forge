@@ -1,12 +1,12 @@
 package dev.emi.emi.network;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import shim.net.minecraft.network.PacketByteBuf;
 
 public interface EmiPacket {
 
-	void write(PacketByteBuf buf);
+	void write(PacketBuffer buf);
 
 	void apply(EntityPlayer player);
 

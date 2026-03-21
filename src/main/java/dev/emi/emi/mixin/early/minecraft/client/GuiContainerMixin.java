@@ -1,8 +1,8 @@
 package dev.emi.emi.mixin.early.minecraft.client;
 
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.mixinsupport.inject_interface.EmiGuiContainer;
 import dev.emi.emi.screen.EmiScreenManager;
-import dev.emi.emi.mixinsupport.inject_interface.EmiSearchInput;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
@@ -18,11 +18,9 @@ import com.rewindmc.retroemi.REMIMixinHooks;
 public class GuiContainerMixin extends GuiScreen implements EmiGuiContainer {
     @Shadow public Container inventorySlots;
 
-    @Shadow
-    protected int xSize;
+    @Shadow protected int xSize;
 
-    @Shadow
-    protected int ySize;
+    @Shadow protected int ySize;
 
     @Inject(method = "initGui", at = @At("TAIL"))
     private void addEMIWidgets(CallbackInfo ci) {
@@ -36,7 +34,7 @@ public class GuiContainerMixin extends GuiScreen implements EmiGuiContainer {
 
     @Inject(method = "keyTyped", at = @At("HEAD"), cancellable = true)
     public void disableHotkeyInEMISearchInput(char c, int k, CallbackInfo ci) {
-        if (((EmiSearchInput) this).getEMISearchInput()) {
+        if (RetroEMI.handleKeyboardInput()) {
             ci.cancel();
         }
     }

@@ -1,6 +1,5 @@
 package dev.emi.emi.registry;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,7 +20,6 @@ import dev.emi.emi.config.IndexSource;
 import dev.emi.emi.data.EmiAlias;
 import dev.emi.emi.data.EmiData;
 import dev.emi.emi.data.IndexStackData;
-import dev.emi.emi.mixin.accessor.ItemBlockAccessor;
 import dev.emi.emi.runtime.EmiHidden;
 import dev.emi.emi.runtime.EmiLog;
 import it.unimi.dsi.fastutil.Hash;
@@ -133,7 +131,7 @@ public class EmiStackList {
 	@SuppressWarnings({"deprecation", "unchecked"})
 	private static <T> boolean isHiddenFromRecipeViewers(T key) {
 		if (key instanceof Item i) {
-			if (i instanceof ItemBlock bi && BLOCK_HIDDEN.contains(((ItemBlockAccessor) bi).getBlock())) {
+			if (i instanceof ItemBlock bi && BLOCK_HIDDEN.contains(bi.getBlock())) {
 				return true;
 			} else if (ITEM_HIDDEN.contains(ItemKey.of(new ItemStack(i)))) {
 				return true;

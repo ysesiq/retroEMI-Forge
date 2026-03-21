@@ -2,7 +2,6 @@ package dev.emi.emi.api.stack;
 
 import com.google.common.collect.Lists;
 import com.rewindmc.retroemi.ItemStacks;
-import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.render.EmiRender;
@@ -11,6 +10,7 @@ import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.StackBatcher;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -27,9 +27,6 @@ import shim.net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL12.GL_RESCALE_NORMAL;
 
 @ApiStatus.Internal
 public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
@@ -124,13 +121,13 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 		EmiDrawContext context = EmiDrawContext.wrap(draw);
 		ItemStack stack = getItemStack();
 		if ((flags & RENDER_ICON) != 0) {
-			glEnable(GL_RESCALE_NORMAL);
+            GlStateManager.enableRescaleNormal();
 			context.enableDepthTest();
 			RenderHelper.enableGUIStandardItemLighting();
 			if (stack.getItem() instanceof ItemBlock && stack.getItemDamage() == 32767) stack.setItemDamage(0);
-			draw.drawItem(stack, x, y);
-			draw.drawItemInSlot(Minecraft.getMinecraft().fontRenderer, stack, x, y);
-//			RenderHelper.disableStandardItemLighting();
+            draw.drawItem(stack, x, y);
+            draw.drawItemInSlot(Minecraft.getMinecraft().fontRenderer, stack, x, y);
+			RenderHelper.disableStandardItemLighting();
 		}
 		if ((flags & RENDER_AMOUNT) != 0) {
 			String count = "";

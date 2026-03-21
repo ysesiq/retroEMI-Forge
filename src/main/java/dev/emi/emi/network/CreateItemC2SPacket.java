@@ -4,11 +4,13 @@ import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
-import shim.net.minecraft.network.PacketByteBuf;
+
+import java.io.IOException;
 
 public class CreateItemC2SPacket implements EmiPacket {
 	private final int mode;
@@ -19,12 +21,18 @@ public class CreateItemC2SPacket implements EmiPacket {
 		this.stack = stack;
 	}
 
-	public CreateItemC2SPacket(PacketByteBuf buf) {
-		this(buf.readByte(), buf.readItemStack());
+	public CreateItemC2SPacket(PacketBuffer buf) {
+        ItemStack stack = ItemStack.EMPTY;
+        try {
+            stack = buf.readItemStack();
+        } catch (IOException ignored) {
+        }
+        this.mode = buf.readByte();
+        this.stack = stack;
 	}
 
 	@Override
-	public void write(PacketByteBuf buf) {
+	public void write(PacketBuffer buf) {
 		buf.writeByte(mode);
 		buf.writeItemStack(stack);
 	}

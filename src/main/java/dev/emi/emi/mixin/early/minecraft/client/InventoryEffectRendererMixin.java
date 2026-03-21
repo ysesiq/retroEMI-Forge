@@ -17,9 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = InventoryEffectRenderer.class, priority = 2000)
 public abstract class InventoryEffectRendererMixin extends GuiContainer {
-    @Shadow
-    private boolean field_147045_u;
-
+    @Shadow protected boolean hasActivePotionEffects;
 
     public InventoryEffectRendererMixin(Container handlerScreen) {
         super(handlerScreen);
@@ -38,7 +36,7 @@ public abstract class InventoryEffectRendererMixin extends GuiContainer {
     @Inject(method = "initGui", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/inventory/GuiContainer;initGui()V", shift = At.Shift.AFTER), cancellable = true)
     private void initGui(CallbackInfo ci) {
         if (EmiConfig.effectLocation == EffectLocation.TOP || EmiConfig.effectLocation == EffectLocation.HIDDEN) {
-            this.field_147045_u = false;
+            this.hasActivePotionEffects = false;
             ci.cancel();
         }
     }

@@ -44,6 +44,6 @@ public class REMIEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixinConfigs() {
-        return List.of("mixins.emi.json", "mixins.emi.early.json", "mixins.emi.late.json");
+        return List.of("emi.mixins.json");
     }
 }
