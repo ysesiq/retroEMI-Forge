@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
@@ -14,7 +15,6 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiWorldInteractionRecipe implements EmiRecipe {
 	private final ResourceLocation id;
@@ -179,7 +179,7 @@ public class EmiWorldInteractionRecipe implements EmiRecipe {
 		}
 
 		/**
-		 * Assigns an identifier to the recipe.
+		 * Assigns an ResourceLocation to the recipe.
 		 * If not called, the id will be null.
 		 */
 		public Builder id(ResourceLocation id) {

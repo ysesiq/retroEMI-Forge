@@ -8,7 +8,7 @@ import org.jetbrains.annotations.ApiStatus;
 import dev.emi.emi.runtime.EmiLog;
 
 public class Comparison {
-	private static final Comparison COMPARE_COMPONENTS = Comparison.compareData(stack -> stack.getNbt());
+	private static final Comparison COMPARE_COMPONENTS = Comparison.compareData(stack -> stack.getComponentChanges());
 	public static final Comparison DEFAULT_COMPARISON = Comparison.of((a, b) -> true);
 	private Predicate predicate;
 	private HashFunction hash;

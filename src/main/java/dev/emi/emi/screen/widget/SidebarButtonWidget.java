@@ -8,8 +8,8 @@ import dev.emi.emi.config.SidebarType;
 import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.screen.EmiScreenManager.SidebarPanel;
-import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 import java.util.List;
 
@@ -24,10 +24,10 @@ public class SidebarButtonWidget extends SizedButtonWidget {
 			list.add(panel.getType().getText());
 			list.add(panel.getType().getDescription());
 			if (panel.getType() == SidebarType.FAVORITES && EmiConfig.favorite.isBound()) {
-				list.add(EmiPort.translatable("emi.sidebar.favorite_stack", EmiConfig.favorite.getBindText()).formatted(TextFormatting.GRAY));
+				list.add(EmiPort.translatable("emi.sidebar.favorite_stack", EmiConfig.favorite.getBindText()).formatted(Formatting.GRAY));
 			}
 			if (panel.pages.pages.size() > 1) {
-				list.add(EmiPort.translatable("emi.sidebar.cycle", EmiBind.LEFT_CLICK.getBindText()).formatted(TextFormatting.GRAY));
+				list.add(EmiPort.translatable("emi.sidebar.cycle", EmiBind.LEFT_CLICK.getBindText()).formatted(Formatting.GRAY));
 			}
 			return list;
 		});

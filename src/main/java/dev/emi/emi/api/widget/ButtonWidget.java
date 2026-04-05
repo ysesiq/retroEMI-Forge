@@ -6,9 +6,9 @@ import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.util.ResourceLocation;
 
 public class ButtonWidget extends Widget {
 	protected final int x, y, width, height, u, v;

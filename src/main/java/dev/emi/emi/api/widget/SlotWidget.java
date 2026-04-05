@@ -19,11 +19,11 @@ import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.screen.RecipeScreen;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import dev.emi.emi.screen.tooltip.RecipeCostTooltipComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 import java.util.List;
 import java.util.function.Function;
@@ -132,7 +132,7 @@ public class SlotWidget extends Widget {
 
 	/**
 	 * Sets the slot to use a custom texture and custom sizing
-	 * @param id The texture identifier to use to draw the background
+	 * @param id The texture ResourceLocation to use to draw the background
 	 */
 	public SlotWidget customBackground(ResourceLocation id, int u, int v, int width, int height) {
 		backgroundTexture(id, u, v);
@@ -234,7 +234,7 @@ public class SlotWidget extends Widget {
 		EmiRecipe recipe = getRecipe();
 		if (recipe != null) {
 			if (recipe.getId() != null && EmiConfig.showRecipeIds) {
-				list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(recipe.getId().toString(), TextFormatting.GRAY))));
+				list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(recipe.getId().toString(), Formatting.GRAY))));
 			}
 			if (canResolve() && EmiConfig.helpLevel.has(HelpLevel.NORMAL)) {
 				if (EmiConfig.viewRecipes.isBound()) {

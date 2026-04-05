@@ -2,10 +2,10 @@ package dev.emi.emi.screen.widget.config;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.screen.ConfigScreen.Mutator;
-import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
 import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -27,9 +27,9 @@ public class BooleanWidget extends ConfigEntryWidget {
 
 	public Text getText() {
 		if (mutator.get()) {
-			return EmiPort.literal("true", TextFormatting.GREEN);
+			return EmiPort.literal("true", Formatting.GREEN);
 		} else {
-			return EmiPort.literal("false", TextFormatting.RED);
+			return EmiPort.literal("false", Formatting.RED);
 		}
 	}
 

@@ -15,9 +15,9 @@ public class DisabledToast implements IToast {
 	public Visibility draw(GuiToast manager, long time) {
 		EmiDrawContext context = EmiDrawContext.wrap(DrawContext.INSTANCE);
 		context.resetColor();
-        DrawContext.INSTANCE.drawGuiTexture(TEXTURE, 0, 0, 160, 32);
-		context.drawCenteredText(EmiPort.translatable("emi.disabled"), 30, 7);
-		context.drawCenteredText(EmiConfig.toggleVisibility.getBindText(), 30, 18);
+		DrawContext.INSTANCE.drawGuiTexture(TEXTURE, 0, 0, 160, 32);
+		context.drawCenteredText(EmiPort.translatable("emi.disabled"), 160 / 2, 7);
+		context.drawCenteredText(EmiConfig.toggleVisibility.getBindText(), 160 / 2, 18);
 		if (time > 8_000 || EmiConfig.enabled) {
 			return Visibility.HIDE;
 		}

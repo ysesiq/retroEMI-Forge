@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import net.minecraft.util.ResourceLocation;
 
 public class TagExclusions {

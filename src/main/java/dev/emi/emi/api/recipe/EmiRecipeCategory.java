@@ -3,6 +3,7 @@ package dev.emi.emi.api.recipe;
 import java.util.Comparator;
 import java.util.List;
 
+import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,8 +18,7 @@ import dev.emi.emi.data.EmiRecipeCategoryProperties;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.util.Formatting;
 
 public class EmiRecipeCategory implements EmiRenderable {
 	public ResourceLocation id;
@@ -75,11 +75,11 @@ public class EmiRecipeCategory implements EmiRenderable {
 		List<TooltipComponent> list = Lists.newArrayList();
 		list.add(TooltipComponent.of(EmiPort.ordered(getName())));
 		if (EmiUtil.showAdvancedTooltips()) {
-			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(id.toString(), TextFormatting.DARK_GRAY))));
+			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(id.toString(), Formatting.DARK_GRAY))));
 		}
 		if (EmiConfig.appendModId) {
 			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(EmiUtil.getModName(getId().getNamespace()),
-                TextFormatting.BLUE, TextFormatting.ITALIC))));
+                Formatting.BLUE, Formatting.ITALIC))));
 		}
 		return list;
 	}

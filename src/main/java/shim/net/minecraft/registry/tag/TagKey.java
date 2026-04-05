@@ -10,13 +10,14 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -37,15 +38,15 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
         return (TagKey) INTERNER.intern(new TagKey(tag, type));
     }
 
-    public boolean isOf(RegistryNamespaced registry) {
-        return registry.containsKey(this.tag.getPath());
+    public boolean isOf(RegistryNamespaced<ResourceLocation, T> registry) {
+        return registry.containsKey(this.tag);
     }
 
-    public <E> Optional<TagKey<E>> tryCast(RegistryNamespaced registryRef) {
+    public <E> Optional<TagKey<E>> tryCast(RegistryNamespaced<ResourceLocation, T> registryRef) {
         return this.isOf(registryRef) ? Optional.of((TagKey<E>) this) : Optional.empty();
     }
 
-    public String toString() {
+    public @NonNull String toString() {
         String s = String.valueOf(this.type);
         return "TagKey[" + s + "/" + this.tag + "]";
     }
@@ -79,7 +80,7 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
         for (ItemStack stack : stacks) {
             if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 NonNullList<ItemStack> itemStacks = NonNullList.create();
-                stack.getItem().getSubItems(CreativeTabs.MISC, itemStacks);
+                stack.getItem().getSubItems(CreativeTabs.SEARCH, itemStacks);
                 result.addAll(itemStacks);
             } else {
                 result.add(stack);

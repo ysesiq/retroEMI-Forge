@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +26,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -165,8 +165,8 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 		{	// Render background
 			RenderSystem.enableBlend();
 			context.setColor(32.0f / 255.0f, 32.0f / 255.0f, 32.0f / 255.0f, 1.0f);
-			ResourceLocation identifier = MENU_LIST_BACKGROUND_TEXTURE;
-			draw.drawTexture(identifier, left, top, right, bottom + (int)scrollAmount, right - left, bottom - top, 32, 32);
+			ResourceLocation ResourceLocation = MENU_LIST_BACKGROUND_TEXTURE;
+			draw.drawTexture(ResourceLocation, left, top, right, bottom + (int)scrollAmount, right - left, bottom - top, 32, 32);
 			context.resetColor();
 			RenderSystem.disableBlend();
 		}

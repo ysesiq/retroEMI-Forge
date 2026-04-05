@@ -1,7 +1,17 @@
 package dev.emi.emi.api.stack;
 
+import java.util.List;
+
+import dev.emi.emi.EmiUtil;
+import dev.emi.emi.screen.tooltip.EmiTextTooltipWrapper;
+import dev.emi.emi.search.EmiSearch;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
+
 import com.google.common.collect.Lists;
-import com.rewindmc.retroemi.ItemStacks;
+
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.render.EmiRender;
@@ -12,21 +22,20 @@ import dev.emi.emi.screen.StackBatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus;
 import shim.net.minecraft.client.gui.DrawContext;
+import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.item.TooltipContext;
+import shim.net.minecraft.client.render.VertexConsumerProvider;
 import shim.net.minecraft.registry.tag.ItemKey;
 import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @ApiStatus.Internal
 public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
@@ -73,11 +82,11 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 
 	@Override
 	public boolean isEmpty() {
-		return amount == 0 || ItemStacks.isEmpty(getItemStack());
+		return amount == 0 || getItemStack().isEmpty();
 	}
 
 	@Override
-	public NBTTagCompound getNbt() {
+	public NBTTagCompound getComponentChanges() {
 		return componentChanges;
 	}
 
@@ -112,7 +121,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Item.getIdFromItem(item);
-		result = prime * result + (item.getHasSubtypes() ? getItemStack().getItemDamage() : 0);
+		result = prime * result + getSubtype();
 		return result;
 	}
 
@@ -121,12 +130,12 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 		EmiDrawContext context = EmiDrawContext.wrap(draw);
 		ItemStack stack = getItemStack();
 		if ((flags & RENDER_ICON) != 0) {
-            GlStateManager.enableRescaleNormal();
+			GlStateManager.enableRescaleNormal();
 			context.enableDepthTest();
 			RenderHelper.enableGUIStandardItemLighting();
-			if (stack.getItem() instanceof ItemBlock && stack.getItemDamage() == 32767) stack.setItemDamage(0);
-            draw.drawItem(stack, x, y);
-            draw.drawItemInSlot(Minecraft.getMinecraft().fontRenderer, stack, x, y);
+			if (stack.getItemDamage() == 32767) stack.setItemDamage(0);
+			draw.drawItem(stack, x, y);
+			draw.drawItemInSlot(Minecraft.getMinecraft().fontRenderer, stack, x, y);
 			RenderHelper.disableStandardItemLighting();
 		}
 		if ((flags & RENDER_AMOUNT) != 0) {
@@ -143,13 +152,14 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 
 	@Override
 	public boolean isSideLit() {
-        return client.getRenderItem().getItemModelWithOverrides(getItemStack(), null, null).isGui3d();
+		return client.getRenderItem().getItemModelWithOverrides(getItemStack(), null, null).isGui3d();
 	}
 
 	@Override
 	public boolean isUnbatchable() {
 		ItemStack stack = getItemStack();
-		return unbatchable || stack.isItemEnchanted() || stack.isItemDamaged() || !EmiAgnos.canBatch(stack);
+		return unbatchable || stack.isItemEnchanted() || stack.isItemDamaged() || !EmiAgnos.canBatch(stack)
+			|| client.getRenderItem().getItemModelWithOverrides(getItemStack(), null, null).isBuiltInRenderer();
 	}
 
 	@Override
@@ -158,26 +168,25 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 	}
 
 	@Override
-	public void renderForBatch(DrawContext draw, int x, int y, int z, float delta) {
-//		EmiDrawContext context = EmiDrawContext.wrap(draw);
-//		ItemStack stack = getItemStack();
-//		ItemRenderer ir = client.getItemRenderer();
-//		BakedModel model = ir.getModel(stack, null, null, 0);
-//		context.push();
-//		try {
-//			context.matrices().translate(x, y, 100.0f + z + (model.hasDepth() ? 50 : 0));
-//			context.matrices().translate(8.0, 8.0, 0.0);
-//			context.matrices().scale(16.0f, 16.0f, 16.0f);
-//			ir.renderItem(stack, ModelTransformationMode.GUI, false, context.matrices(), vcp, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, model);
-//		} finally {
-//			context.pop();
-//		}
+	public void renderForBatch(VertexConsumerProvider vcp, DrawContext draw, int x, int y, int z, float delta) {
+		EmiDrawContext context = EmiDrawContext.wrap(draw);
+		ItemStack stack = getItemStack();
+		RenderItem ir = client.getRenderItem();
+		IBakedModel model = ir.getItemModelWithOverrides(stack, null, null);
+		context.push();
+		try {
+			context.matrices().translate(x, y, 100.0f + z + 0);
+			context.matrices().translate(8.0, 8.0, 0.0);
+			context.matrices().scale(16.0f, 16.0f, 16.0f);
+			ir.renderItem(stack, model);
+		} finally {
+			context.pop();
+		}
 	}
 
 	@Override
 	public List<Text> getTooltipText() {
-		return getItemStack().getTooltip(client.player, ITooltipFlag.TooltipFlags.NORMAL)
-			.stream().map(Text::literal).collect(Collectors.toList());
+		return RetroEMI.getItemToolTip(getItemStack(), TooltipContext.BASIC);
 	}
 
 	@Override
@@ -186,14 +195,13 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 		List<TooltipComponent> list = Lists.newArrayList();
 		if (!isEmpty()) {
 			list.addAll(EmiAgnos.getItemTooltip(stack));
-			//String namespace = EmiPort.getItemRegistry().getNameForObject(stack.getItem());
-			//String mod = EmiUtil.getModName(namespace);
-			//list.add(TooltipComponent.of(Text.literal(mod).formatted(Formatting.BLUE, Formatting.ITALIC)));
-			if (EmiConfig.appendModId || EmiConfig.appendItemModId) {
-				String stackNamespace = stack.getItem().getRegistryName().getNamespace();
-				String modNamespaceBase = stackNamespace.replaceAll(":.*", "");
-				String modNamespace = modNamespaceBase.substring(0, 1).toUpperCase() + modNamespaceBase.substring(1);
-				list.add(TooltipComponent.of(Text.literal(modNamespace).formatted(TextFormatting.BLUE, TextFormatting.ITALIC)));
+			if (!list.isEmpty() && list.get(0) instanceof OrderedTextTooltipComponent ottc) {
+				list.set(0, new EmiTextTooltipWrapper(this, ottc));
+			}
+			if (EmiConfig.appendItemModId && EmiConfig.appendModId && Thread.currentThread() != EmiSearch.searchThread) {
+				String namespace = EmiPort.getItemRegistry().getNameForObject(stack.getItem()).getNamespace();
+				String mod = EmiUtil.getModName(namespace);
+				list.add(TooltipComponent.of(EmiPort.literal(mod, Formatting.BLUE, Formatting.ITALIC)));
 			}
 			list.addAll(super.getTooltip());
 		}

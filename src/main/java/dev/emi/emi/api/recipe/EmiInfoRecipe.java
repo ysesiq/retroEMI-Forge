@@ -1,10 +1,10 @@
 package dev.emi.emi.api.recipe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,6 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiInfoRecipe implements EmiRecipe {
 	private static final int STACK_WIDTH = 6, MAX_STACKS = STACK_WIDTH * 3;

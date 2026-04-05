@@ -12,9 +12,9 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.TagEmiIngredient;
 import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.registry.tag.TagKey;
 import shim.net.minecraft.util.JsonHelper;
-import net.minecraft.util.ResourceLocation;
 
 public class TagEmiIngredientSerializer implements EmiIngredientSerializer<TagEmiIngredient> {
 	static final Pattern STACK_REGEX = Pattern.compile("^#([\\w_\\-.:]+):([\\w_\\-.]+):([\\w_\\-./]+)(\\{.*\\})?$");

@@ -10,11 +10,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import com.rewindmc.retroemi.RetroEMI;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -32,13 +29,11 @@ import java.util.stream.Collectors;
 public class DrawContext extends Gui {
 	private final Minecraft client;
 	private final MatrixStack matrices;
-	private final TextureMap guiAtlasManager;
 	public static final DrawContext INSTANCE = new DrawContext(Minecraft.getMinecraft(), MatrixStack.INSTANCE);
 
 	public DrawContext(Minecraft client, MatrixStack matrices) {
 		this.client = client;
 		this.matrices = matrices;
-		this.guiAtlasManager = ((TextureMap) Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE));
 	}
 
 	public MatrixStack getMatrices() {
@@ -82,21 +77,21 @@ public class DrawContext extends Gui {
 			y2 = i;
 		}
 
-        float a = (float) (color >> 24 & 255) / 255.0F;
-        float r = (float) (color >> 16 & 255) / 255.0F;
-        float g = (float) (color >> 8 & 255) / 255.0F;
-        float b = (float) (color & 255) / 255.0F;
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+		float a = (float) (color >> 24 & 255) / 255.0F;
+		float r = (float) (color >> 16 & 255) / 255.0F;
+		float g = (float) (color >> 8 & 255) / 255.0F;
+		float b = (float) (color & 255) / 255.0F;
+		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 		RenderSystem.enableBlend();
-        GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture2D();
 		RenderSystem.defaultBlendFunc();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        bufferBuilder.pos(x1, y2, z).color(r, g, b, a).endVertex();
-        bufferBuilder.pos(x2, y2, z).color(r, g, b, a).endVertex();
-        bufferBuilder.pos(x2, y1, z).color(r, g, b, a).endVertex();
-        bufferBuilder.pos(x1, y1, z).color(r, g, b, a).endVertex();
-        EmiPort.draw(bufferBuilder);
-        GlStateManager.enableTexture2D();
+		bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		bufferBuilder.pos(x1, y2, z).color(r, g, b, a).endVertex();
+		bufferBuilder.pos(x2, y2, z).color(r, g, b, a).endVertex();
+		bufferBuilder.pos(x2, y1, z).color(r, g, b, a).endVertex();
+		bufferBuilder.pos(x1, y1, z).color(r, g, b, a).endVertex();
+		EmiPort.draw(bufferBuilder);
+		GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
 	}
 
@@ -198,7 +193,7 @@ public class DrawContext extends Gui {
 	}
 
 	public void drawGuiTexture(ResourceLocation texture, int x, int y, int z, int width, int height) {
-		this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), x, y, z, width, height);
+		this.drawSprite(texture, x, y, z, width, height);
 	}
 
 	public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int width, int height) {
@@ -206,18 +201,20 @@ public class DrawContext extends Gui {
 	}
 
 	public void drawGuiTexture(ResourceLocation texture, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
-		this.drawSprite(guiAtlasManager.getAtlasSprite(texture.toString()), i, j, k, l, x, y, z, width, height);
+		this.drawSprite(texture, i, j, k, l, x, y, z, width, height);
 	}
 
-	private void drawSprite(TextureAtlasSprite sprite, int i, int j, int k, int l, int x, int y, int z, int width, int height) {
+	private void drawSprite(ResourceLocation sprite, int u1, int v1, int u2, int v2, int x, int y, int z, int width, int height) {
 		if (width != 0 && height != 0) {
-			this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getInterpolatedU((float)k / (float)i), sprite.getInterpolatedU((float)(k + width) / (float)i), sprite.getInterpolatedV((float)l / (float)j), sprite.getInterpolatedV((float)(l + height) / (float)j));
+			float scale = 1.0f / 256.0f;
+			this.drawTexturedQuad(sprite, x, x + width, y, y + height, z, u1 * scale, (u1 + u2) * scale, v1 * scale, (v1 + v2) * scale);
 		}
 	}
 
-	private void drawSprite(TextureAtlasSprite sprite, int x, int y, int z, int width, int height) {
+	private void drawSprite(ResourceLocation sprite, int x, int y, int z, int width, int height) {
 		if (width != 0 && height != 0) {
-			this.drawTexturedQuad(EmiPort.id(sprite.getIconName()), x, x + width, y, y + height, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+			float scale = 1.0f / 256.0f;
+			this.drawTexturedQuad(sprite, x, x + width, y, y + height, z, 0 * scale, width * scale, 0 * scale, height * scale);
 		}
 	}
 
@@ -267,21 +264,111 @@ public class DrawContext extends Gui {
 		RenderSystem.disableBlend();
 	}
 
+//	public void drawItem(ItemStack item, int x, int y) {
+//		this.drawItem(this.client.player, this.client.world, item, x, y, 0);
+//	}
+//
+//	public void drawItem(ItemStack stack, int x, int y, int seed) {
+//		this.drawItem(this.client.player, this.client.world, stack, x, y, seed);
+//	}
+//
+//	public void drawItem(ItemStack stack, int x, int y, int seed, int z) {
+//		this.drawItem(this.client.player, this.client.world, stack, x, y, seed, z);
+//	}
+//
+//	public void drawItemWithoutEntity(ItemStack stack, int x, int y) {
+//		this.drawItemWithoutEntity(stack, x, y, 0);
+//	}
+//
+//	public void drawItemWithoutEntity(ItemStack stack, int x, int y, int seed) {
+//		this.drawItem(null, this.client.world, stack, x, y, seed);
+//	}
+//
+//	public void drawItem(EntityLivingBase entity, ItemStack stack, int x, int y, int seed) {
+//		this.drawItem(entity, entity.getEntityWorld(), stack, x, y, seed);
+//	}
+//
+//	private void drawItem(@Nullable EntityLivingBase entity, @Nullable World world, ItemStack stack, int x, int y, int seed) {
+//		this.drawItem(entity, world, stack, x, y, seed, 0);
+//	}
+//
+//	private void drawItem(@Nullable EntityLivingBase entity, @Nullable World world, ItemStack stack, int x, int y, int seed, int z) {
+//		if (!stack.isEmpty()) {
+//			IBakedModel bakedModel = this.client.getRenderItem().getItemModelWithOverrides(stack, world, entity);
+//			this.matrices.push();
+////			this.matrices.translate((float)(x + 8), (float)(y + 8), (float)(150 + z));
+//
+//			try {
+////				this.matrices.scale(16.0F, -16.0F, 16.0F);
+//				boolean bl = !bakedModel.isGui3d();
+//				if (bl) {
+//					RenderHelper.disableStandardItemLighting();
+//				}
+//
+//				this.client.getRenderItem().renderItemIntoGUI(stack, x, y);
+//				if (bl) {
+//					RenderHelper.enableGUIStandardItemLighting();
+//				}
+//			} catch (Throwable throwable) {
+//				CrashReport crashReport = CrashReport.makeCrashReport(throwable, "Rendering item");
+//				CrashReportCategory crashReportSection = crashReport.makeCategory("Item being rendered");
+//				crashReportSection.addDetail("Item Type", () -> String.valueOf(stack.getItem()));
+//				crashReportSection.addDetail("Item Components", () -> String.valueOf(stack.getTagCompound()));
+//				crashReportSection.addDetail("Item Foil", () -> String.valueOf(stack.hasEffect()));
+//				throw new ReportedException(crashReport);
+//			}
+//
+//			this.matrices.pop();
+//		}
+//	}
+//
+//	public void drawItemInSlot(FontRenderer textRenderer, ItemStack stack, int x, int y) {
+//		this.drawItemInSlot(textRenderer, stack, x, y, null);
+//	}
+//
+//	public void drawItemInSlot(FontRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride) {
+//		if (!stack.isEmpty()) {
+//			this.matrices.push();
+//			if (stack.getCount() != 1 || countOverride != null) {
+//				String string = countOverride == null ? String.valueOf(stack.getCount()) : countOverride;
+//				this.matrices.translate(0.0F, 0.0F, 200.0F);
+//				this.drawText(textRenderer, string, x + 19 - 2 - textRenderer.getStringWidth(string), y + 6 + 3, 16777215, true);
+//			}
+//
+//			if (stack.getItem().showDurabilityBar(stack)) {
+//				RenderSystem.disableDepthTest();
+//				int i = Math.round(13.0F - (float) stack.getItem().getDurabilityForDisplay(stack) * 13.0F);
+//				int j = stack.getItem().getRGBDurabilityForDisplay(stack);
+//				int k = x + 2;
+//				int l = y + 13;
+//				this.fill(k, l, k + 13, l + 2, 0xff000000);
+//				this.fill(k, l, k + i, l + 1, j | 0xff000000);
+//				RenderSystem.enableDepthTest();
+//			}
+//
+//			EntityPlayerSP clientPlayerEntity = this.client.player;
+//			float f = clientPlayerEntity == null ? 0.0F : clientPlayerEntity.getCooldownTracker().getCooldown(stack.getItem(), this.client.getRenderPartialTicks());
+//			if (f > 0.0F) {
+//				int k = y + MathHelper.floor(16.0F * (1.0F - f));
+//				int l = k + MathHelper.ceil(16.0F * f);
+//				this.fill(x, k, x + 16, l, Integer.MAX_VALUE);
+//			}
+//
+//			this.matrices.pop();
+//		}
+//	}
+
 	public void drawItem(ItemStack stack, int x, int y) {
 		if (stack == null) return;
-//		RetroEMI.instance.itemRenderer.zLevel += 100;
-		RetroEMI.instance.itemRenderer.renderItemAndEffectIntoGUI(stack, x, y);
-//		RetroEMI.instance.itemRenderer.zLevel -= 100;
+		client.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
 		RenderSystem.defaultBlendFunc();
 	}
 
 	public void drawItemInSlot(FontRenderer fontRenderer, ItemStack stack, int x, int y) {
-//		RetroEMI.instance.itemRenderer.zLevel += 200;
 		int count = stack.getCount();
 		stack.setCount(1);
-		RetroEMI.instance.itemRenderer.renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
+		client.getRenderItem().renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
 		stack.setCount(count);
-//		RetroEMI.instance.itemRenderer.zLevel -= 200;
 	}
 
 	public void drawTooltip(FontRenderer fontRenderer, List<Text> txt, int mouseX, int mouseY) {

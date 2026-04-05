@@ -7,12 +7,12 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
@@ -85,7 +85,7 @@ class ChessEmiStack extends EmiStack {
     }
 
     @Override
-    public NBTTagCompound getNbt() {
+    public NBTTagCompound getComponentChanges() {
         return null;
     }
 

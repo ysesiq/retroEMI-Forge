@@ -2,6 +2,7 @@ package dev.emi.emi.api.stack;
 
 import java.util.List;
 
+import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 import dev.emi.emi.EmiPort;
@@ -11,8 +12,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
-import com.rewindmc.retroemi.ItemStacks;
 
 @ApiStatus.Internal
 public class EmptyEmiStack extends EmiStack {
@@ -52,7 +51,7 @@ public class EmptyEmiStack extends EmiStack {
 	}
 
 	@Override
-	public NBTTagCompound getNbt() {
+	public NBTTagCompound getComponentChanges() {
 		return null;
 	}
 
@@ -63,7 +62,7 @@ public class EmptyEmiStack extends EmiStack {
 
 	@Override
 	public ItemStack getItemStack() {
-		return ItemStacks.EMPTY;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

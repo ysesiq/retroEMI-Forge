@@ -11,7 +11,6 @@ import dev.emi.emi.bom.MaterialTree;
 import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.text.Text;
 import shim.net.minecraft.util.Formatting;
 
@@ -101,7 +100,7 @@ public class RecipeCostTooltipComponent implements EmiTooltipComponent {
 
 	@Override
 	public void drawTooltipText(TextRenderData text) {
-		text.draw(COST, 0, 0, Formatting.getColorValue(TextFormatting.GRAY), true);
+		text.draw(COST, 0, 0, Formatting.GRAY.getColorValue(), true);
 	}
 
 	private static class Node {
@@ -112,7 +111,7 @@ public class RecipeCostTooltipComponent implements EmiTooltipComponent {
 		public Node(EmiIngredient stack, double amount, boolean chanced) {
 			this.stack = stack;
 			if (chanced) {
-				text = EmiPort.append(EmiPort.literal("≈"), EmiRenderHelper.getAmountText(stack, amount)).formatted(TextFormatting.GOLD);
+				text = EmiPort.append(EmiPort.literal("≈"), EmiRenderHelper.getAmountText(stack, amount)).formatted(Formatting.GOLD);
 			} else {
 				text = EmiRenderHelper.getAmountText(stack, amount);
 			}

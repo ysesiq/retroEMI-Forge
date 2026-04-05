@@ -5,5 +5,5 @@ import shim.net.minecraft.resource.ResourceReloader;
 
 public interface EmiResourceReloadListener extends ResourceReloader {
 
-	ResourceLocation getEmiId();
+    ResourceLocation getEmiId();
 }

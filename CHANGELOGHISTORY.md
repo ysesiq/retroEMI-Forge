@@ -1,3 +1,9 @@
+# 1.1.22-beta4 (1.12.2 cleanroom)
+
+* Fix: Some tags are not displayed
+
+---
+
 # 1.1.22-beta3
 
 * Feature: Reimplemented EMI Data

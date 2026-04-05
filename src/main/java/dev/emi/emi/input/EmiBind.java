@@ -2,10 +2,10 @@ package dev.emi.emi.input;
 
 import com.google.common.collect.Lists;
 import dev.emi.emi.EmiPort;
-import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.client.util.InputUtil;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class EmiBind {
 
 	public Text getBindText() {
 		if (!isBound()) {
-			return EmiPort.literal("[]", TextFormatting.GOLD);
+			return EmiPort.literal("[]", Formatting.GOLD);
 		} else {
 			ModifiedKey bind = boundKeys.get(0);
 			for (ModifiedKey key : boundKeys) {
@@ -65,9 +65,9 @@ public class EmiBind {
 					break;
 				}
 			}
-			return EmiPort.literal("[", TextFormatting.GOLD)
-				.append(bind.getKeyText(TextFormatting.GOLD))
-				.append(EmiPort.literal("]", TextFormatting.GOLD));
+			return EmiPort.literal("[", Formatting.GOLD)
+				.append(bind.getKeyText(Formatting.GOLD))
+				.append(EmiPort.literal("]", Formatting.GOLD));
 		}
 	}
 
@@ -186,7 +186,7 @@ public class EmiBind {
 			return key == InputUtil.UNKNOWN_KEY;
 		}
 
-		public MutableText getKeyText(TextFormatting formatting) {
+		public MutableText getKeyText(Formatting formatting) {
 			MutableText text = EmiPort.literal("", formatting);
 			appendModifiers(text, modifiers());
 			EmiPort.append(text, key().getLocalizedText());

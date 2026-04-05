@@ -1,7 +1,6 @@
 package dev.emi.emi.data;
 
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -12,8 +11,8 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import shim.net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.resource.SinglePreparationResourceReloader;
 import shim.net.minecraft.util.JsonHelper;
 import net.minecraft.profiler.Profiler;
 
@@ -27,7 +26,7 @@ public class EmiDataLoader<T> extends SinglePreparationResourceReloader<T>
 	private final Consumer<T> apply;
 
 	public EmiDataLoader(ResourceLocation id, String path, Supplier<T> baseSupplier,
-			DataConsumer<T> prepare, Consumer<T> apply) {
+                         DataConsumer<T> prepare, Consumer<T> apply) {
 		this.id = id;
 		this.path = path;
 		this.baseSupplier = baseSupplier;
@@ -43,7 +42,7 @@ public class EmiDataLoader<T> extends SinglePreparationResourceReloader<T>
 				continue;
 			}
 			try {
-				for (IResource resource : (List<IResource>) manager.getAllResources(id)) {
+				for (IResource resource : manager.getAllResources(id)) {
 					InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream(resource));
 					JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
 					prepare.accept(t, json, id);

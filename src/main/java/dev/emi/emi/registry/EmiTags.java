@@ -158,12 +158,12 @@ public class EmiTags {
 		}
 		/*
 		Disable legacy tag models in 1.21+ due to modeling complications
-		for (Identifier id : EmiPort.findResources(manager, "models/item/tags", s -> s.endsWith(".json"))) {
+		for (ResourceLocation id : EmiPort.findResources(manager, "models/item/tags", s -> s.endsWith(".json"))) {
 			String path = id.getPath();
 			path = path.substring(0, path.length() - 5);
 			String[] parts = path.substring(17).split("/");
 			if (id.getNamespace().equals("emi") && parts.length > 1) {
-				Identifier mid = new ModelIdentifier(id.getNamespace(), path.substring(12), "inventory");
+				ResourceLocation mid = new ModelResourceLocation(id.getNamespace(), path.substring(12), "inventory");
 				EmiTags.MODELED_TAGS.put(TagKey.of(EmiPort.getItemRegistry().getKey(), EmiPort.id(parts[0], path.substring(18 + parts[0].length()))), mid);
 				consumer.accept(mid);
 			}

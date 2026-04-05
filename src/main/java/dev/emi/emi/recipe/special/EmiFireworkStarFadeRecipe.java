@@ -13,14 +13,15 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
 import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemDye;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import shim.net.minecraft.util.DyeColor;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiFireworkStarFadeRecipe extends EmiPatternCraftingRecipe {
-	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
+	private static final List<DyeItem> DYES = Stream.of(EnumDyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
 
 	public EmiFireworkStarFadeRecipe(ResourceLocation id) {
 		super(shim.java.List.of(
@@ -89,7 +90,7 @@ public class EmiFireworkStarFadeRecipe extends EmiPatternCraftingRecipe {
 		List<DyeItem> dyeItems = getDyes(random, 8 - items);
 		List<Integer> colors = Lists.newArrayList();
 		for (DyeItem dyeItem : dyeItems) {
-			colors.add(dyeItem.color().getFireworkColor());
+			colors.add(ItemDye.DYE_COLORS[dyeItem.color().ordinal()]);
 		}
 		explosion.setIntArray("Colors", colors.stream().mapToInt(Integer::intValue).toArray());
 
@@ -97,7 +98,7 @@ public class EmiFireworkStarFadeRecipe extends EmiPatternCraftingRecipe {
 			List<DyeItem> dyeItemsFaded = getDyes(random, 8);
 			List<Integer> fadedColors = Lists.newArrayList();
 			for (DyeItem dyeItem : dyeItemsFaded) {
-				fadedColors.add(dyeItem.color().getFireworkColor());
+				fadedColors.add(ItemDye.DYE_COLORS[dyeItem.color().ordinal()]);
 			}
 			explosion.setIntArray("FadeColors", fadedColors.stream().mapToInt(Integer::intValue).toArray());
 		}

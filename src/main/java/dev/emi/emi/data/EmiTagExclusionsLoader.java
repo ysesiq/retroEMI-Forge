@@ -1,7 +1,6 @@
 package dev.emi.emi.data;
 
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -15,8 +14,8 @@ import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import shim.net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.resource.SinglePreparationResourceReloader;
 import shim.net.minecraft.util.JsonHelper;
 import net.minecraft.profiler.Profiler;
 
@@ -33,7 +32,7 @@ public class EmiTagExclusionsLoader extends SinglePreparationResourceReloader<Ta
 				continue;
 			}
 			try {
-				for (IResource resource : (List<IResource>) manager.getAllResources(id)) {
+				for (IResource resource : manager.getAllResources(id)) {
 					InputStreamReader reader = new InputStreamReader(EmiPort.getInputStream(resource));
 					JsonObject json = JsonHelper.deserialize(GSON, reader, JsonObject.class);
 					try {

@@ -1,7 +1,6 @@
 package dev.emi.emi.api.stack;
 
 import com.google.common.collect.Lists;
-import com.rewindmc.retroemi.ItemStacks;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.EmiUtil;
@@ -18,12 +17,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.registry.tag.TagKey;
+import shim.net.minecraft.util.Formatting;
 
 import java.util.List;
 import java.util.Optional;
@@ -132,7 +132,7 @@ public class TagEmiIngredient implements EmiIngredient {
 //				VertexConsumerProvider.Immediate immediate = context.raw().getVertexConsumers();
 
 				client.getRenderItem()
-                    .renderItem(ItemStacks.EMPTY,
+                    .renderItem(ItemStack.EMPTY,
                         model);
 //				immediate.draw();
 
@@ -163,14 +163,14 @@ public class TagEmiIngredient implements EmiIngredient {
 		List<TooltipComponent> list = Lists.newArrayList();
 		list.add(new EmiTextTooltipWrapper(this, EmiPort.ordered(tagKey.getTagName())));
 		if (EmiUtil.showAdvancedTooltips()) {
-			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal("#" + id, TextFormatting.DARK_GRAY))));
+			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal("#" + id, Formatting.DARK_GRAY))));
 		}
 //		if (tagKey.isOf(EmiPort.getFluidRegistry()) && amount > 1) {
 //			list.add(TooltipComponent.of(EmiPort.ordered(EmiRenderHelper.getAmountText(this, amount))));
 //		}
 		if (EmiConfig.appendModId) {
 			String mod = EmiUtil.getModName(id.getNamespace());
-			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(mod, TextFormatting.BLUE, TextFormatting.ITALIC))));
+			list.add(TooltipComponent.of(EmiPort.ordered(EmiPort.literal(mod, Formatting.BLUE, Formatting.ITALIC))));
 		}
 		list.add(new TagTooltipComponent(stacks));
 		for (EmiStack stack : stacks) {

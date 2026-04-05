@@ -12,15 +12,16 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
 import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemDye;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import shim.net.minecraft.util.DyeColor;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
-	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
+	private static final List<DyeItem> DYES = Stream.of(EnumDyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
 
 	public EmiFireworkRocketRecipe(ResourceLocation id) {
 		super(shim.java.List.of(
@@ -61,7 +62,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 		int gunpowder = 0;
 		for (EmiStack item : items) {
 			if (item.getId() == EmiStack.of(Items.FIREWORK_CHARGE).getId()) {
-				explosions.appendTag(item.getNbt().getTagList("Explosion", 0));
+				explosions.appendTag(item.getComponentChanges().getTagList("Explosion", 0));
 			} else if (item.isEqual(EmiStack.of(Items.GUNPOWDER))) {
 				gunpowder++;
 			}
@@ -131,7 +132,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 		List<DyeItem> dyeItems = getDyes(random, 8 - items);
 		List<Integer> colors = Lists.newArrayList();
 		for (DyeItem dyeItem : dyeItems) {
-			colors.add(dyeItem.color().getFireworkColor());
+			colors.add(ItemDye.DYE_COLORS[dyeItem.color().ordinal()]);
 		}
 		explosion.setIntArray("Colors", colors.stream().mapToInt(Integer::intValue).toArray());
 
@@ -141,7 +142,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 			List<DyeItem> dyeItemsFaded = getDyes(random, 8);
 			List<Integer> fadedColors = Lists.newArrayList();
 			for (DyeItem dyeItem : dyeItemsFaded) {
-				fadedColors.add(dyeItem.color().getFireworkColor());
+				fadedColors.add(ItemDye.DYE_COLORS[dyeItem.color().ordinal()]);
 			}
 			explosion.setIntArray("FadeColors", fadedColors.stream().mapToInt(Integer::intValue).toArray());
 		}

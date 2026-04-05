@@ -75,7 +75,7 @@ public interface EmiRegistry {
 	void removeRecipes(Predicate<EmiRecipe> predicate);
 
 	/**
-	 * Adds a predicate to run on all current and future recipes to prevent certain ones with the given identifier from being added.
+	 * Adds a predicate to run on all current and future recipes to prevent certain ones with the given ResourceLocation from being added.
 	 */
 	default void removeRecipes(ResourceLocation id) {
 		removeRecipes(r -> id.equals(r.getId()));

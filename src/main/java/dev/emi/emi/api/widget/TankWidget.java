@@ -4,8 +4,8 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.FluidEmiStack;
 import dev.emi.emi.platform.EmiAgnos;
-import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraftforge.fluids.Fluid;
 
 public class TankWidget extends SlotWidget {
@@ -35,7 +35,7 @@ public class TankWidget extends SlotWidget {
 		EmiIngredient ingredient = getStack();
 		for (EmiStack stack : ingredient.getEmiStacks()) {
 			if (stack.getKey() instanceof Fluid fluid) {
-				FluidEmiStack fes = new FluidEmiStack(fluid, stack.getNbt(), ingredient.getAmount());
+				FluidEmiStack fes = new FluidEmiStack(fluid, stack.getComponentChanges(), ingredient.getAmount());
 				boolean floaty = EmiAgnos.isFloatyFluid(fes);
 				Bounds bounds = getBounds();
 				int x = bounds.x() + 1;

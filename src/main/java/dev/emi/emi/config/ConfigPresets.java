@@ -77,45 +77,45 @@ public class ConfigPresets {
 		);
 	};
 
-//	@Comment("Use a smaller, recipe book styled panel on the left for craftables and favorites,"
-//		+ " and use a classic index on the right.")
-//	@ConfigValue("presets.recipe-book-plus")
-//	public static Runnable recipeBookPlus = () -> {
-//		setPages(EmiConfig.rightSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
-//			new SidebarPages.SidebarPage(SidebarType.INDEX)
-//		));
-//
-//		setPages(EmiConfig.leftSidebarPages, com.rewindmc.retroemi.shim.java.List.of(
-//			new SidebarPages.SidebarPage(SidebarType.CRAFTABLES),
-//			new SidebarPages.SidebarPage(SidebarType.FAVORITES)
-//		));
-//
-//		setPages(EmiConfig.topSidebarPages, com.rewindmc.retroemi.shim.java.List.of());
-//
-//		setPages(EmiConfig.bottomSidebarPages, com.rewindmc.retroemi.shim.java.List.of());
-//
-//		EmiConfig.leftSidebarTheme = SidebarTheme.VANILLA;
-//		EmiConfig.leftSidebarHeader = HeaderType.VISIBLE;
-//
-//		EmiConfig.leftSidebarSize.values.set(0, 8);
-//		EmiConfig.leftSidebarSize.values.set(1, 7);
-//
-//		EmiConfig.leftSidebarAlign = new ScreenAlign(
-//			ScreenAlign.Horizontal.RIGHT,
-//			ScreenAlign.Vertical.CENTER
-//		);
-//
-//		EmiConfig.rightSidebarTheme = SidebarTheme.MODERN;
-//		EmiConfig.rightSidebarHeader = HeaderType.VISIBLE;
-//
-//		EmiConfig.rightSidebarSize.values.set(0, 12);
-//		EmiConfig.rightSidebarSize.values.set(1, 100);
-//
-//		EmiConfig.rightSidebarAlign = new ScreenAlign(
-//			ScreenAlign.Horizontal.RIGHT,
-//			ScreenAlign.Vertical.TOP
-//		);
-//	};
+	@Comment("Use a smaller, recipe book styled panel on the left for craftables and favorites,"
+		+ " and use a classic index on the right.")
+	@ConfigValue("presets.recipe-book-plus")
+	public static Runnable recipeBookPlus = () -> {
+		setPages(EmiConfig.rightSidebarPages, shim.java.List.of(
+			new SidebarPages.SidebarPage(SidebarType.INDEX)
+		));
+
+		setPages(EmiConfig.leftSidebarPages, shim.java.List.of(
+			new SidebarPages.SidebarPage(SidebarType.CRAFTABLES),
+			new SidebarPages.SidebarPage(SidebarType.FAVORITES)
+		));
+
+		setPages(EmiConfig.topSidebarPages, shim.java.List.of());
+
+		setPages(EmiConfig.bottomSidebarPages, shim.java.List.of());
+
+		EmiConfig.leftSidebarTheme = SidebarTheme.VANILLA;
+		EmiConfig.leftSidebarHeader = HeaderType.VISIBLE;
+
+		EmiConfig.leftSidebarSize.values.set(0, 8);
+		EmiConfig.leftSidebarSize.values.set(1, 7);
+
+		EmiConfig.leftSidebarAlign = new ScreenAlign(
+			ScreenAlign.Horizontal.RIGHT,
+			ScreenAlign.Vertical.CENTER
+		);
+
+		EmiConfig.rightSidebarTheme = SidebarTheme.MODERN;
+		EmiConfig.rightSidebarHeader = HeaderType.VISIBLE;
+
+		EmiConfig.rightSidebarSize.values.set(0, 12);
+		EmiConfig.rightSidebarSize.values.set(1, 100);
+
+		EmiConfig.rightSidebarAlign = new ScreenAlign(
+			ScreenAlign.Horizontal.RIGHT,
+			ScreenAlign.Vertical.TOP
+		);
+	};
 
 	@Comment("Use the right sidebar as the index, but only while searching")
 	@ConfigValue("presets.low-distraction")

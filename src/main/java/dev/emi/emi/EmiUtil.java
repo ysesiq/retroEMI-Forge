@@ -29,6 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
+import shim.net.minecraft.item.DyeItem;
 
 public class EmiUtil {
 	public static final Random RANDOM = new Random();
@@ -49,8 +50,15 @@ public class EmiUtil {
 		return subId(EmiPort.id(fluid.getName()));
 	}
 
+	public static String subId(DyeItem dyeItem) {
+		return String.format("%s#%d", subId(dyeItem.toStack().getItem().getRegistryName()), dyeItem.toStack().getItemDamage());
+	}
+
 	public static String subId(ItemStack stack) {
-		return subId(EmiPort.id(stack.getDisplayName()));
+		if (stack.getHasSubtypes()) {
+			return String.format("%s#%d", subId(stack.getItem().getRegistryName()), stack.getItemDamage());
+		}
+		return subId(stack.getItem().getRegistryName());
 	}
 
 	public static boolean showAdvancedTooltips() {

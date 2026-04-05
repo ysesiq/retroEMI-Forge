@@ -61,7 +61,7 @@ public class EmiStackProviders {
 							Minecraft client = Minecraft.getMinecraft();
 							for (IRecipe r : ForgeRegistries.RECIPES.getValuesCollection()) {
 								if (r.matches(inv, client.world)) {
-									ResourceLocation id = EmiPort.getId(r);
+                                    ResourceLocation id = EmiPort.getId(r);
 									EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
 									if (recipe != null) {
 										return new EmiStackInteraction(EmiStack.of(stack), recipe, false);

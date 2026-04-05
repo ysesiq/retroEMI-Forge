@@ -21,8 +21,8 @@ import dev.emi.emi.api.stack.TagEmiIngredient;
 import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import dev.emi.emi.data.RecipeDefaults;
 import dev.emi.emi.runtime.EmiPersistentData;
-import net.minecraft.util.ResourceLocation;
 import com.rewindmc.retroemi.RetroEMI;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.util.JsonHelper;
 
 public class BoM {

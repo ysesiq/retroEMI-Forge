@@ -24,13 +24,12 @@ import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadLog;
 import dev.emi.emi.screen.EmiScreenManager;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.search.SuffixArray;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.text.Text;
 
 public class EmiSearch {
@@ -87,30 +86,30 @@ public class EmiSearch {
 					names.add(searchStack, id.getPath().toLowerCase());
 				}
 				if (stack instanceof ItemEmiStack && stack.getItemStack().getItem() == Items.ENCHANTED_BOOK) {
-                    NBTTagList enchantments = stack.getNbt() != null ?
-                        stack.getNbt().getTagList("StoredEnchantments", 10) : null;
+					NBTTagList enchantments = stack.getComponentChanges() != null ?
+						stack.getComponentChanges().getTagList("StoredEnchantments", 10) : null;
 
-                    if (enchantments != null) {
-                        for (int i = 0; i < enchantments.tagCount(); i++) {
-                            NBTTagCompound enchantmentTag = enchantments.getCompoundTagAt(i);
-                            int enchantmentId = enchantmentTag.getShort("id");
-                            Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentId);
+					if (enchantments != null) {
+						for (int i = 0; i < enchantments.tagCount(); i++) {
+							NBTTagCompound enchantmentTag = enchantments.getCompoundTagAt(i);
+							int enchantmentId = enchantmentTag.getShort("id");
+							Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentId);
 
-                            if (enchantment != null) {
-                                String enchantmentName = enchantment.getName();
-                                String modId = "minecraft";
+							if (enchantment != null) {
+								String enchantmentName = enchantment.getName();
+								String modId = "minecraft";
 
-                                if (enchantmentName.startsWith("enchantment.")) {
-                                    modId = enchantmentName.split("\\.")[1];
-                                }
+								if (enchantmentName.startsWith("enchantment.")) {
+									modId = enchantmentName.split("\\.")[1];
+								}
 
-                                if (!modId.equals("minecraft")) {
-                                    mods.add(searchStack, modId.toLowerCase());
-                                }
-                            }
-                        }
-                    }
-                }
+								if (!modId.equals("minecraft")) {
+									mods.add(searchStack, modId.toLowerCase());
+								}
+							}
+						}
+					}
+				}
 			} catch (Exception e) {
 				EmiLog.error("EMI caught an exception while baking search for " + stack, e);
 			}
@@ -118,7 +117,7 @@ public class EmiSearch {
 		for (Supplier<EmiAlias> supplier : EmiData.aliases) {
 			EmiAlias alias = supplier.get();
 			for (String key : alias.keys()) {
-				if (!I18n.hasKey(key)) {
+				if (!RetroEMI.hasTranslation(key)) {
 					EmiReloadLog.warn("Untranslated alias " + key);
 				}
 				String text = RetroEMI.translate(key).toLowerCase();

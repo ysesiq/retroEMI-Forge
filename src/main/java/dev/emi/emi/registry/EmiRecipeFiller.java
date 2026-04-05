@@ -36,7 +36,6 @@ import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
-import com.rewindmc.retroemi.ItemStacks;
 import com.rewindmc.retroemi.RetroEMI;
 
 public class EmiRecipeFiller {
@@ -231,7 +230,7 @@ public class EmiRecipeFiller {
 						is.setCount(a);
 						desired.add(is);
 					} else {
-						desired.add(ItemStacks.EMPTY);
+						desired.add(ItemStack.EMPTY);
 					}
 				}
 				return desired;
@@ -246,7 +245,7 @@ public class EmiRecipeFiller {
 		List<EmiIngredient> inputs = recipe.getInputs();
 		List<ItemStack> stacks = Lists.newArrayList();
 		Slot output = handler.getOutputSlot((T)screen.inventorySlots);
-		if (output != null && !ItemStacks.isEmpty(output.getStack()) && recipe.getOutputs().size() > 0
+		if (output != null && !output.getStack().isEmpty() && recipe.getOutputs().size() > 0
 				&& !RetroEMI.canCombine(output.getStack(), recipe.getOutputs().get(0).getItemStack())) {
 			return 0;
 		}
@@ -254,7 +253,7 @@ public class EmiRecipeFiller {
 			if (slot != null) {
 				stacks.add(slot.getStack());
 			} else {
-				stacks.add(ItemStacks.EMPTY);
+				stacks.add(ItemStack.EMPTY);
 			}
 		}
 		long amount = Long.MAX_VALUE;
@@ -262,7 +261,7 @@ public class EmiRecipeFiller {
 		for (int i = 0; i < inputs.size(); i++) {
 			EmiIngredient input = inputs.get(i);
 			if (input.isEmpty()) {
-				if (ItemStacks.isEmpty(stacks.get(i))) {
+				if (stacks.get(i).isEmpty()) {
 					continue;
 				}
 				return 0;
@@ -292,7 +291,7 @@ public class EmiRecipeFiller {
 		GuiContainer screen, List<ItemStack> stacks, EmiCraftContext.Destination destination) {
 		Minecraft client = Minecraft.getMinecraft();
 		T screenHandler = (T) screen.inventorySlots;
-		if (handler != null && client.player.inventory.getItemStack() == null) {
+		if (handler != null && client.player.inventory.getItemStack().isEmpty()) {
 			PlayerControllerMP manager = client.playerController;
 			EntityPlayer player = client.player;
 			List<Slot> clear = handler.getCraftingSlots(screenHandler);
@@ -306,7 +305,7 @@ public class EmiRecipeFiller {
 			outer:
 			for (int i = 0; i < stacks.size(); i++) {
 				ItemStack stack = stacks.get(i);
-				if (ItemStacks.isEmpty(stack)) {
+				if (stack.isEmpty()) {
 					continue;
 				}
 				if (i >= slots.size()) {

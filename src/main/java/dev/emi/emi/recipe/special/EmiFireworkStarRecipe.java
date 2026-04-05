@@ -13,15 +13,16 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
 import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemDye;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import shim.net.minecraft.util.DyeColor;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiFireworkStarRecipe extends EmiPatternCraftingRecipe {
-	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
+	private static final List<DyeItem> DYES = Stream.of(EnumDyeColor.values()).map(DyeItem::byColor).collect(Collectors.toList());
 
 	private static final List<ItemStack> SHAPES =
         shim.java.List.of(new ItemStack(Items.FIREWORK_CHARGE), new ItemStack(Items.FEATHER), new ItemStack(Items.GOLD_NUGGET), new ItemStack(Items.SKULL, 1, 0),
@@ -119,8 +120,8 @@ public class EmiFireworkStarRecipe extends EmiPatternCraftingRecipe {
 				explosion.setByte("Type", creeper);
 				hasShape = true;
 			} else {
-				colors.add(DyeColor.values()[1].getFireworkColor());
-				colors.add(DyeColor.values()[item.getItemDamage()].getFireworkColor());
+				colors.add(ItemDye.DYE_COLORS[EnumDyeColor.values()[1].ordinal()]);
+				colors.add(ItemDye.DYE_COLORS[EnumDyeColor.values()[item.getItemDamage()].ordinal()]);
 			}
 		}
 		if (!hasShape) {

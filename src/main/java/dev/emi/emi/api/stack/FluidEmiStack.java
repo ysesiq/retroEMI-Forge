@@ -3,6 +3,7 @@ package dev.emi.emi.api.stack;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 import com.google.common.collect.Lists;
@@ -17,7 +18,6 @@ import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
 @ApiStatus.Internal
@@ -54,7 +54,7 @@ public class FluidEmiStack extends EmiStack {
 	}
 
 	@Override
-	public NBTTagCompound getNbt() {
+	public NBTTagCompound getComponentChanges() {
 		return componentChanges;
 	}
 

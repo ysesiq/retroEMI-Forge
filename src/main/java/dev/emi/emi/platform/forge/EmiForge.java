@@ -27,7 +27,10 @@ import net.minecraftforge.common.MinecraftForge;
 @Mod(
 	modid = "emi",
 	name = "EMI",
-	guiFactory = "dev.emi.emi.platform.forge.EmiGuiFactory"
+	guiFactory = "dev.emi.emi.platform.forge.EmiGuiFactory",
+	dependencies =
+		"required-after:mixinbooter@[4.2,);" +
+		"after:jei;"
 )
 public class EmiForge {
 
@@ -51,8 +54,8 @@ public class EmiForge {
 	@Mod.EventHandler
 	public void postInit(FMLInitializationEvent event) {
 		if (FMLCommonHandler.instance().getSide().isServer()) {
-            PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
-            PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);
+			PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
+			PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);
 			PacketReader.registerServerPacketReader(EmiNetwork.CHESS, EmiChessPacket.C2S::new);
 		}
 	}
@@ -78,7 +81,7 @@ public class EmiForge {
 
 	public static SPacketCustomPayload toVanilla(EmiPacket packet) {
 		PacketBuffer buf = new PacketBuffer(Unpooled.buffer());
-        packet.write(buf);
+		packet.write(buf);
 		return new SPacketCustomPayload(packet.getId().toString(), buf);
 	}
 }

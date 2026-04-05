@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import shim.net.minecraft.util.Formatting;
 import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -46,7 +47,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.init.SoundEvents;
 import shim.net.minecraft.client.gui.DrawContext;
@@ -598,7 +598,7 @@ public class BoMScreen extends REMIScreen {
 			Text totalText;
 			if (cost instanceof ChanceMaterialCost cmc) {
 				totalText = EmiPort.append(EmiPort.literal("≈"), EmiRenderHelper.getAmountText(cost.ingredient, adjusted))
-					.formatted(TextFormatting.GOLD);
+					.formatted(Formatting.GOLD);
 			} else {
 				totalText = EmiRenderHelper.getAmountText(cost.ingredient, adjusted);
 			}
@@ -606,7 +606,7 @@ public class BoMScreen extends REMIScreen {
 				long amount = alreadyDone;
 				if (amount < adjusted) {
 					Text amountText = amount == 0 ? EmiPort.literal("0") : (EmiRenderHelper.getAmountText(cost.ingredient, amount));
-					MutableText text = EmiPort.append(EmiPort.literal("", TextFormatting.RED), amountText);
+					MutableText text = EmiPort.append(EmiPort.literal("", Formatting.RED), amountText);
 					text = EmiPort.append(text, EmiPort.literal("/"));
 					text = EmiPort.append(text, totalText);
 					return text;
@@ -784,7 +784,7 @@ public class BoMScreen extends REMIScreen {
 				a = Math.max(a, node.amount);
 				return EmiPort.append(EmiPort.literal("≈"),
 						EmiRenderHelper.getAmountText(node.ingredient, a))
-					.formatted(TextFormatting.GOLD);
+					.formatted(Formatting.GOLD);
 			} else {
 				return EmiRenderHelper.getAmountText(node.ingredient, amount);
 			}

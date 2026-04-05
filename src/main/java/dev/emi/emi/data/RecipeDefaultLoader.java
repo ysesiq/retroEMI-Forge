@@ -1,7 +1,6 @@
 package dev.emi.emi.data;
 
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,6 @@ import dev.emi.emi.bom.BoM;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.resource.SinglePreparationResourceReloader;
 import shim.net.minecraft.util.JsonHelper;

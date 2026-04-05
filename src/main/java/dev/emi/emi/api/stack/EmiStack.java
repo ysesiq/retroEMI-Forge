@@ -1,7 +1,6 @@
 package dev.emi.emi.api.stack;
 
 import com.google.common.collect.Lists;
-import com.rewindmc.retroemi.Prototype;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.registry.EmiComparisonDefaults;
 import dev.emi.emi.screen.tooltip.RemainderTooltipComponent;
@@ -12,16 +11,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import com.rewindmc.retroemi.ItemStacks;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.item.DyeItem;
+import shim.net.minecraft.registry.tag.ItemKey;
 import shim.net.minecraft.text.Text;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -37,7 +35,7 @@ public abstract class EmiStack implements EmiIngredient {
 	protected long amount = 1;
 	protected float chance = 1;
 
-    @Override
+	@Override
 	public List<EmiStack> getEmiStacks() {
 		return shim.java.List.of(this);
 	}
@@ -86,10 +84,10 @@ public abstract class EmiStack implements EmiIngredient {
 		return this;
 	}
 
-	public abstract NBTTagCompound getNbt();
+	public abstract NBTTagCompound getComponentChanges();
 
 	public boolean hasNbt() {
-		return getNbt() != null;
+		return getComponentChanges() != null;
 	}
 
 	public abstract Object getKey();
@@ -106,7 +104,7 @@ public abstract class EmiStack implements EmiIngredient {
 	public abstract ResourceLocation getId();
 
 	public ItemStack getItemStack() {
-		return ItemStacks.EMPTY;
+		return ItemStack.EMPTY;
 	}
 
 	public boolean isEqual(EmiStack stack) {
@@ -158,54 +156,54 @@ public abstract class EmiStack implements EmiIngredient {
 	@Override
 	public String toString() {
 		String s = "" + getKey();
-		NBTTagCompound nbt = getNbt();
+		NBTTagCompound nbt = getComponentChanges();
 		if (nbt != null) {
 			s += nbt;
 		}
 		return s + " x" + getAmount();
 	}
 
-	public static EmiStack of(Prototype proto) {
-		return new ItemEmiStack(proto.toStack());
+	public static EmiStack of(ItemKey item) {
+		return new ItemEmiStack(item.toStack());
 	}
 
 	public static EmiStack of(ItemStack stack) {
-		if (ItemStacks.isEmpty(stack)) {
+		if (stack.isEmpty()) {
 			return EmiStack.EMPTY;
 		}
 		return new ItemEmiStack(stack);
 	}
 
 	public static EmiStack of(ItemStack stack, long amount) {
-		if (ItemStacks.isEmpty(stack)) {
+		if (stack.isEmpty()) {
 			return EmiStack.EMPTY;
 		}
 		return new ItemEmiStack(stack, amount);
 	}
 
-    public static EmiIngredient ofPotentialTag(ItemStack stack) {
-        if (stack == null || stack.getItem() == null) {
-            return EmiStack.EMPTY;
-        }
-        return fromPotentialTag(stack, stack.getCount());
-    }
+	public static EmiIngredient ofPotentialTag(ItemStack stack) {
+		if (stack == null || stack.getItem() == null) {
+			return EmiStack.EMPTY;
+		}
+		return fromPotentialTag(stack, stack.getCount());
+	}
 
-    public static EmiIngredient ofPotentialTag(ItemStack stack, long amount) {
-        if (stack == null || stack.getItem() == null) {
-            return EmiStack.EMPTY;
-        }
-        return fromPotentialTag(stack, amount);
-    }
+	public static EmiIngredient ofPotentialTag(ItemStack stack, long amount) {
+		if (stack == null || stack.getItem() == null) {
+			return EmiStack.EMPTY;
+		}
+		return fromPotentialTag(stack, amount);
+	}
 
-    private static EmiIngredient fromPotentialTag(ItemStack stack, long amount) {
-        if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-            NonNullList<ItemStack> stacks = NonNullList.create();
-            stack.getItem().getSubItems(CreativeTabs.MISC, stacks);
-            return EmiIngredient.of(stacks.stream().map(EmiStack::of).collect(Collectors.toList()));
-        } else {
-            return new ItemEmiStack(stack, amount);
-        }
-    }
+	private static EmiIngredient fromPotentialTag(ItemStack stack, long amount) {
+		if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+			NonNullList<ItemStack> stacks = NonNullList.create();
+			stack.getItem().getSubItems(CreativeTabs.SEARCH, stacks);
+			return EmiIngredient.of(stacks.stream().map(EmiStack::of).collect(Collectors.toList()));
+		} else {
+			return new ItemEmiStack(stack, amount);
+		}
+	}
 
 	public static EmiStack of(Item item) {
 		if (item == null) {

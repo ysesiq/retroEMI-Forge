@@ -5,8 +5,8 @@ import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.runtime.EmiDrawContext;
-import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.client.gui.DrawContext;
 
 public class RecipeBackground extends Widget {
 	private static final ResourceLocation TEXTURE = EmiPort.id("emi", "textures/gui/background.png");

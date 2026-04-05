@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.rewindmc.retroemi.RetroEMI;
+import shim.net.minecraft.util.Formatting;
+import shim.net.minecraft.util.math.RotationAxis;
 import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -19,9 +22,6 @@ import dev.emi.emi.search.QueryType;
 import net.minecraft.client.gui.FontRenderer;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.TextFormatting;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.MutableText;
 import shim.net.minecraft.text.Style;
@@ -80,7 +80,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 		});
 		this.setChangedListener(string -> {
 			if (string.isEmpty()) {
-				this.setSuggestion(I18n.format("emi.search"));
+				this.setSuggestion(RetroEMI.translate("emi.search"));
 				EmiScreenManager.focusSearchSidebarType(EmiConfig.emptySearchSidebarFocus);
 			} else {
 				this.setSuggestion("");
@@ -94,11 +94,11 @@ public class EmiSearchWidget extends TextFieldWidget {
 				int start = matcher.start();
 				int end = matcher.end();
 				if (last < start) {
-					styles.add(new Pair<Integer, Style>(start, Style.EMPTY.withFormatting(TextFormatting.WHITE)));
+					styles.add(new Pair<Integer, Style>(start, Style.EMPTY.withFormatting(Formatting.WHITE)));
 				}
 				String group = matcher.group();
 				if (group.startsWith("-")) {
-					styles.add(new Pair<Integer, Style>(start + 1, Style.EMPTY.withFormatting(TextFormatting.RED)));
+					styles.add(new Pair<Integer, Style>(start + 1, Style.EMPTY.withFormatting(Formatting.RED)));
 					start++;
 					group = group.substring(1);
 				}
@@ -129,7 +129,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 				last = end;
 			}
 			if (last < string.length()) {
-				styles.add(new Pair<Integer, Style>(string.length(), Style.EMPTY.withFormatting(TextFormatting.WHITE)));
+				styles.add(new Pair<Integer, Style>(string.length(), Style.EMPTY.withFormatting(Formatting.WHITE)));
 			}
 			this.styles = styles;
 			EmiSearch.search(string);
@@ -245,7 +245,7 @@ public class EmiSearchWidget extends TextFieldWidget {
 		view.pushMatrix();
 		if (deg != 0) {
 			view.translate(this.x + (double) this.width / 2, this.y + (double) this.height / 2, 0);
-			view.multiply(() -> GlStateManager.rotate(deg, 0, 0, -1));
+            view.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(deg));
 			view.translate(-(this.x + (double) this.width / 2), -(this.y + (double) this.height / 2), 0);
 			EmiPort.applyModelViewMatrix();
 		}

@@ -78,7 +78,6 @@ public class EmiScreenshotRecorder {
 		RenderSystem.viewport(0, 0, framebuffer.framebufferWidth, framebuffer.framebufferHeight);
 		EmiPort.applyModelViewMatrix();
 
-
 		renderer.run();
 
 		RenderSystem.setProjectionMatrix(backupProj);

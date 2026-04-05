@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionUtils;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import org.jetbrains.annotations.Nullable;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -28,10 +30,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -40,20 +40,14 @@ import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.client.util.math.Vec2i;
+import shim.net.minecraft.text.MutableText;
+import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 public class RetroEMI {
 	public static final RetroEMI instance = new RetroEMI();
-	public final RenderItem itemRenderer;
 
 	private static final List<Runnable> tickQueue = new ArrayList<>();
-
-	private RetroEMI() {
-		if (!FMLCommonHandler.instance().getSide().isServer()) {
-			itemRenderer = Minecraft.getMinecraft().getRenderItem();
-		} else {
-			itemRenderer = null;
-		}
-	}
 
 	public static void executeOnMainThread(Runnable r) {
 		synchronized (tickQueue) {
@@ -157,7 +151,7 @@ public class RetroEMI {
 		matrix.push();
 		int p = 400;
 		Tessellator tess = Tessellator.getInstance();
-        GlStateManager.disableTexture2D();
+		GlStateManager.disableTexture2D();
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -252,30 +246,6 @@ public class RetroEMI {
 		return false;
 	}
 
-//	public static EmiIngredient wildcardIngredient(ItemStack stack) {
-//		if (stack != null && stack.getItemDamage() == 32767) {
-//			EmiIngredient item = EmiIngredient.of(new WildcardItemTag(stack.getItem()));
-//			if (item.getEmiStacks().size() == 1) {
-//				return item;
-//			} else {
-//				return EmiIngredient.of(com.rewindmc.retroemi.shim.java.List.of(item), 65); // Stack size of 1
-//			}
-//		}
-//		return EmiStack.of(stack, 1);
-//	}
-//
-//	public static EmiIngredient wildcardIngredientWithStackSize(ItemStack stack) {
-//		if (stack != null && stack.getItemDamage() == 32767) {
-//			EmiIngredient item = EmiIngredient.of(new WildcardItemTag(stack.getItem()));
-//			if (item.getEmiStacks().size() == 1) {
-//				return item;
-//			} else {
-//				return EmiIngredient.of(com.rewindmc.retroemi.shim.java.List.of(item), stack.stackSize + 64);
-//			}
-//		}
-//		return EmiStack.of(stack);
-//	}
-
 	public static String translate(String s) {
 		return I18n.format(s);
 	}
@@ -284,44 +254,44 @@ public class RetroEMI {
 		return I18n.format(s, arg);
 	}
 
-    public static String sanitizeNBT(String nbt) {
-        nbt = nbt.replace(" ", "");
-        if (!nbt.startsWith("{")) {
-            nbt = "{" + nbt;
-        }
-        if (!nbt.endsWith("}")) {
-            nbt = nbt + "}";
-        }
-        return nbt;
-    }
+    public static boolean hasTranslation(String s) {
+		return I18n.hasKey(s);
+	}
 
-    public static String replaceCharAt(String s, int index, char c) {
-        return s.substring(0, index) + c + s.substring(index + 1);
-    }
+	public static String replaceCharAt(String s, int index, char c) {
+		return s.substring(0, index) + c + s.substring(index + 1);
+	}
 
-    public static List<Item> getAllItems() {
-        List<Item> items = new ArrayList<>();
-        EmiPort.getItemRegistry().forEach(items::add);
-        return items;
-    }
+	public static List<Item> getAllItems() {
+		List<Item> items = new ArrayList<>();
+		EmiPort.getItemRegistry().forEach(items::add);
+		return items;
+	}
 
-    public static int getScaledHeight(Minecraft client) {
-        return client.displayHeight / EmiPort.getGuiScale(client);
-    }
+	public static int getScaledHeight(Minecraft client) {
+		return client.displayHeight / EmiPort.getGuiScale(client);
+	}
 
-    public static int getScaledWidth(Minecraft client) {
-        return client.displayWidth / EmiPort.getGuiScale(client);
-    }
+	public static int getScaledWidth(Minecraft client) {
+		return client.displayWidth / EmiPort.getGuiScale(client);
+	}
 
-    public static @Nullable String getId(ItemStack stack) {
-        if (ItemStacks.isEmpty(stack)) {
-            return null;
-        }
-        Item item = stack.getItem();
-        if (item instanceof ItemBlock ib) {
-            return EmiPort.getBlockRegistry().getNameForObject(ib.getBlock()).getPath();
-        } else {
-            return EmiPort.getItemRegistry().getNameForObject(item).getPath();
-        }
-    }
+	public static void setBannerPatterns(ItemStack stack, NBTTagList patterns) {
+		NBTTagCompound tag = stack.getSubCompound("BlockEntityTag");
+		if (tag == null) {
+			tag = new NBTTagCompound();
+			stack.setTagInfo("BlockEntityTag", tag);
+		}
+		tag.setTag("Patterns", patterns);
+	}
+
+	public static List<Text> getItemToolTip(ItemStack stack, ITooltipFlag.TooltipFlags type) {
+		List<String> rawTip = stack.getTooltip(Minecraft.getMinecraft().player, type);
+		List<Text> tip = rawTip.stream().map(Text::literal).map(t -> t.formatted(Formatting.GRAY)).collect(Collectors.toList());
+		if (!tip.isEmpty()) {
+			tip.set(0, ((MutableText) tip.getFirst()).formatted(Formatting.byName(stack.getItem().getForgeRarity(stack).getColor().name())));
+		}
+		return tip;
+	}
+
 }

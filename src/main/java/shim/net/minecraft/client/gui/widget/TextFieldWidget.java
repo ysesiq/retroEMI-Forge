@@ -5,6 +5,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import com.cleanroommc.client.IMEHandler;
 import dev.emi.emi.input.EmiInput;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -507,6 +508,7 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 			return;
 		}
 		super.setFocused(focused);
+        IMEHandler.setIME(focused);
 		if (focused) {
 			this.focusedTicks = 0;
 		}

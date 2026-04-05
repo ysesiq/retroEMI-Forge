@@ -1,17 +1,16 @@
 package shim.net.minecraft.client.util;
 
-import com.google.common.collect.Maps;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.Language;
-import shim.net.minecraft.text.Text;
-import shim.org.lwjgl.glfw.GLFW;
-import org.lwjgl.input.Keyboard;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.BiFunction;
+
+import com.google.common.collect.Maps;
+import com.rewindmc.retroemi.RetroEMI;
+import shim.net.minecraft.text.Text;
+import shim.org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 public class InputUtil {
 	public static final Key UNKNOWN_KEY = Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_UNKNOWN);
@@ -22,7 +21,7 @@ public class InputUtil {
 
 	public static Key fromTranslationKey(String translationKey) {
 		if (Key.KEYS_BY_ID.containsKey(translationKey)) {
-			return (Key) Key.KEYS_BY_ID.get(translationKey);
+			return Key.KEYS_BY_ID.get(translationKey);
 		} else {
 			for(Type type : Type.values()) {
 				if (translationKey.startsWith(type.name)) {
@@ -113,7 +112,7 @@ public class InputUtil {
 		}),
 		MOUSE(
 			"key.mouse",
-			(buttonCode, translationKey) -> I18n.hasKey(translationKey)
+			(buttonCode, translationKey) -> RetroEMI.hasTranslation(translationKey)
 					? Text.translatable(translationKey)
 					: Text.translatable("key.mouseButton", buttonCode + 1)
 		);

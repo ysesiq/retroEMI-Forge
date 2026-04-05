@@ -277,7 +277,7 @@ public class EmiStackList {
 		@Override
 		public int hashCode(EmiStack stack) {
 			if (stack != null) {
-                NBTTagCompound changes = stack.getNbt();
+                NBTTagCompound changes = stack.getComponentChanges();
 				int i = 31 + stack.getKey().hashCode();
 				return 31 * i + (changes == null ? 0 : changes.hashCode());
 			}

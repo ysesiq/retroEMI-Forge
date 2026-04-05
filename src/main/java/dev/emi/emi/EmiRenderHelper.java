@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 
@@ -38,7 +39,6 @@ import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.client.util.math.Vec2i;
 import shim.net.minecraft.text.Style;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiRenderHelper {
 	public static final DecimalFormat TEXT_FORMAT = new DecimalFormat("#,###.##");
@@ -94,7 +94,7 @@ public class EmiRenderHelper {
 		float b = (color & 255) / 256f;
 
 		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		float xMin = (float) x;
 		float yMin = (float) y;
 		float xMax = xMin + width;
@@ -181,7 +181,7 @@ public class EmiRenderHelper {
 		for (TooltipComponent comp : components) {
 			if (comp instanceof TextTooltipComponent ottc && ottc.getWidth(CLIENT.fontRenderer) > wrapWidth) {
 				try {
-					for (String line : (List<String>) CLIENT.fontRenderer.listFormattedStringToWidth(ottc.getText(), wrapWidth)) {
+					for (String line : CLIENT.fontRenderer.listFormattedStringToWidth(ottc.getText(), wrapWidth)) {
 						mutable.add(TooltipComponent.of(Text.literal(line)));
 					}
 				} catch (Exception e) {

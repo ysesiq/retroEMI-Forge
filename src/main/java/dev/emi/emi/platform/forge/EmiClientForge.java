@@ -20,6 +20,7 @@ import dev.emi.emi.screen.EmiScreenManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -32,14 +33,14 @@ public class EmiClientForge {
 
 	public static void clientInit() {
 		EmiClient.init();
-		EmiNetwork.initClient(packet -> ((PlayerControllerMPAccessor) Minecraft.getMinecraft().playerController).getNetClientHandler().sendPacket(EmiForge.toVanilla(packet)));
+		EmiNetwork.initClient(packet -> Minecraft.getMinecraft().playerController.connection.sendPacket(EmiForge.toVanilla(packet)));
 		PacketReader.registerClientPacketReader(EmiNetwork.PING, PingS2CPacket::new);
 		PacketReader.registerClientPacketReader(EmiNetwork.COMMAND, CommandS2CPacket::new);
 		PacketReader.registerClientPacketReader(EmiNetwork.CHESS, EmiChessPacket.S2C::new);
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(EmiResourceManager.instance);
 	}
 
-    @SubscribeEvent
+	@SubscribeEvent
 	public void registerAdditionalModels(ModelRegistryEvent event) {
 		Minecraft client = Minecraft.getMinecraft();
 		EmiTags.registerTagModels(client.getResourceManager(), id -> {}, "inventory");
@@ -91,15 +92,19 @@ public class EmiClientForge {
 		}
 	}
 
-    @SubscribeEvent
-    public void onMousePost(GuiScreenEvent.MouseInputEvent.Post event) {
-        RetroEMI.handleMouseInput();
-    }
+	@SubscribeEvent
+	public void onMousePost(GuiScreenEvent.MouseInputEvent.Post event) {
+		if (!(event.getGui() instanceof GuiContainerCreative)) {
+			event.setCanceled(RetroEMI.handleMouseInput());
+		}
+	}
 
-    @SubscribeEvent
-    public void onKeyboardPost(GuiScreenEvent.KeyboardInputEvent.Post event) {
-        RetroEMI.handleKeyboardInput();
-    }
+	@SubscribeEvent
+	public void onKeyboardPost(GuiScreenEvent.KeyboardInputEvent.Post event) {
+		if (!(event.getGui() instanceof GuiContainerCreative)) {
+			event.setCanceled(RetroEMI.handleKeyboardInput());
+		}
+	}
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -114,7 +119,7 @@ public class EmiClientForge {
 			EmiReloadManager.reload();
 			EmiClientForge.recipesReloaded();
 			EmiClientForge.tagsReloaded();
-			EmiClient.onServer = true;
+//			EmiClient.onServer = true;
 		}
 	}
 

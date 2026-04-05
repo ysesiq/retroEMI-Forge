@@ -86,7 +86,7 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 	default JsonElement serialize(T stack) {
 		String nbt = null;
 		if (stack.hasNbt()) {
-			nbt = stack.getNbt().toString();
+			nbt = stack.getComponentChanges().toString();
 		}
 		if (stack.getAmount() == 1 && stack.getChance() == 1 && stack.getSubtype() == 0 && stack.getRemainder().isEmpty()) {
 			String s = getType() + ":" + stack.getId();

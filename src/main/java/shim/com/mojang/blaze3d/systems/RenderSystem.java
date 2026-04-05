@@ -2,8 +2,8 @@ package shim.com.mojang.blaze3d.systems;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import shim.net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;

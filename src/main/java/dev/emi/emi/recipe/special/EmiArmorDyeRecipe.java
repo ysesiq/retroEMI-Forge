@@ -12,15 +12,15 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
 import dev.emi.emi.api.widget.SlotWidget;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.item.DyeItem;
 import shim.net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import shim.net.minecraft.util.DyeColor;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiArmorDyeRecipe extends EmiPatternCraftingRecipe {
-	private static final List<DyeItem> DYES = Stream.of(DyeColor.values()).map(c -> DyeItem.byColor(c)).collect(Collectors.toList());
+	private static final List<DyeItem> DYES = Stream.of(EnumDyeColor.values()).map(c -> DyeItem.byColor(c)).collect(Collectors.toList());
 	private final Item armor;
 
 	public EmiArmorDyeRecipe(Item armor, ResourceLocation id) {

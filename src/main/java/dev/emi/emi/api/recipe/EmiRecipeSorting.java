@@ -2,12 +2,11 @@ package dev.emi.emi.api.recipe;
 
 import java.util.Comparator;
 
+import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 import dev.emi.emi.registry.EmiRecipeSorter;
 import it.unimi.dsi.fastutil.ints.IntList;
-import dev.emi.emi.mixinsupport.inject_interface.EmiResourceLocation;
-import net.minecraft.util.ResourceLocation;
 
 @ApiStatus.Experimental
 public class EmiRecipeSorting {
@@ -17,7 +16,7 @@ public class EmiRecipeSorting {
 		return NONE;
 	}
 
-	public static Comparator<EmiRecipe> identifier() {
+	public static Comparator<EmiRecipe> ResourceLocation() {
 		return (ar, br) -> {
 			ResourceLocation a = ar.getId();
 			ResourceLocation b = br.getId();
@@ -30,7 +29,7 @@ public class EmiRecipeSorting {
 			} else if (b == null) {
 				return -1;
 			}
-			return ((EmiResourceLocation) a).compareTo(b);
+			return a.compareTo(b);
 		};
 	}
 

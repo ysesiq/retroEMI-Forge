@@ -2,7 +2,6 @@ package dev.emi.emi.recipe.special;
 
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import dev.emi.emi.EmiPort;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +16,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ResourceLocation;
 
 public class EmiCommands extends CommandBase {
 	public static final byte VIEW_RECIPE = 0x01;

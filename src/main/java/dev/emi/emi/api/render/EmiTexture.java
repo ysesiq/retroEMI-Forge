@@ -2,8 +2,8 @@ package dev.emi.emi.api.render;
 
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
-import shim.net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.ResourceLocation;
+import shim.net.minecraft.client.gui.DrawContext;
 
 public class EmiTexture implements EmiRenderable {
 	public static final EmiTexture SLOT = new EmiTexture(EmiRenderHelper.WIDGETS, 0, 0, 18, 18);

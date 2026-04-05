@@ -1,6 +1,6 @@
 package shim.net.minecraft.text;
 
-import net.minecraft.util.text.TextFormatting;
+import shim.net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,14 +48,14 @@ public class TextImpl implements OrderedText, Text, MutableText {
 	}
 
 	@Override
-	public MutableText formatted(TextFormatting fmt) {
+	public MutableText formatted(Formatting fmt) {
 		this.style += fmt;
 		return this;
 	}
 
 	@Override
-	public MutableText formatted(TextFormatting... fmt) {
-		StringBuilder sb = new StringBuilder(style.length()+(fmt.length*2));
+	public MutableText formatted(Formatting... fmt) {
+		StringBuilder sb = new StringBuilder(style.length() + (fmt.length * 2));
 		sb.append(style);
 		for (var f : fmt) sb.append(f);
 		style = sb.toString();

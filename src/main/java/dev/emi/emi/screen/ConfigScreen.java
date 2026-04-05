@@ -52,7 +52,6 @@ import dev.emi.emi.screen.widget.config.SidebarSubpanelsWidget;
 import dev.emi.emi.screen.widget.config.SubGroupNameWidget;
 import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.gui.GuiScreen;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -99,7 +98,7 @@ public class ConfigScreen extends REMIScreen {
 		ConfigValue annot = field.getAnnotation(ConfigValue.class);
 		String key = "config.emi.tooltip." + annot.value().replace('-', '_');
 		Comment comment = field.getAnnotation(Comment.class);
-		if (I18n.hasKey(key)) {
+		if (RetroEMI.hasTranslation(key)) {
 			text = Arrays.stream(RetroEMI.translate(key).split("\n"))
 					.map(EmiPort::literal).map(EmiTooltipComponents::of).collect(java.util.stream.Collectors.toList());
 		} else if (comment != null) {

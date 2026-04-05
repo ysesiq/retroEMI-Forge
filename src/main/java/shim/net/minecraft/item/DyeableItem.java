@@ -28,7 +28,7 @@ public class DyeableItem {
 		}
 
 		for (DyeItem dyeItem : colors) {
-			float[] fs = dyeItem.color().getColorComponents();
+			float[] fs = dyeItem.color().getColorComponentValues();
 			int l = (int)(fs[0] * 255.0F);
 			int m = (int)(fs[1] * 255.0F);
 			int n = (int)(fs[2] * 255.0F);

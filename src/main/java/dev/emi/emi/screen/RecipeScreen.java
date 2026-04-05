@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import shim.org.lwjgl.glfw.GLFW;
 
@@ -41,7 +42,6 @@ import net.minecraft.init.SoundEvents;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
 
 public class RecipeScreen extends REMIScreen {
 	private static final ResourceLocation TEXTURE = EmiPort.id("emi", "textures/gui/background.png");

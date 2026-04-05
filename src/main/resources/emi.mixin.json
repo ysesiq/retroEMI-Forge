@@ -1,0 +1,39 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.emi.emi.mixin",
+  "refmap": "mixins.emi.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "dev.emi.emi.mixinsupport.EmiMixinPlugin",
+  "client": [
+    "accessor.FontRendererAccessor",
+    "accessor.GuiContainerAccessor",
+    "accessor.GuiTextFieldAccessor",
+    "accessor.MinecraftAccessor",
+    "FontRendererMixin",
+    "GuiContainerCreativeMixin",
+    "GuiContainerMixin",
+    "GuiRecipeBookMixin",
+    "GuiToastMixin",
+    "InventoryEffectRendererMixin",
+    "LocaleMixin",
+    "SlotCraftingMixin",
+    "NetHandlerPlayClientMixin"
+  ],
+  "mixins": [
+    "accessor.InventoryCraftingAccessor",
+    "accessor.ItemToolAccessor",
+    "accessor.ShapedOreRecipeAccessor",
+    "accessor.ShapedRecipesAccessor",
+    "accessor.ShapelessRecipesAccessor",
+    "accessor.SlotAccessor",
+    "accessor.SlotCraftingAccessor",
+    "conversion.FluidMixin",
+    "conversion.ItemMixin",
+    "conversion.ItemStackMixin",
+    "NetHandlerPlayServerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

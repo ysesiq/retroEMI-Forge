@@ -15,11 +15,12 @@ import dev.emi.emi.registry.EmiRecipeFiller;
 import dev.emi.emi.screen.MicroTextRenderer;
 import dev.emi.emi.screen.StackBatcher.Batchable;
 import dev.emi.emi.screen.tooltip.RecipeTooltipComponent;
-import net.minecraft.util.text.TextFormatting;
 import org.jetbrains.annotations.Nullable;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.render.VertexConsumerProvider;
 import shim.net.minecraft.text.Text;
+import shim.net.minecraft.util.Formatting;
 
 import java.util.List;
 
@@ -129,9 +130,9 @@ public class EmiFavorite implements EmiIngredient, Batchable {
 	}
 
 	@Override
-	public void renderForBatch(DrawContext raw, int x, int y, int z, float delta) {
+	public void renderForBatch(VertexConsumerProvider vcp, DrawContext raw, int x, int y, int z, float delta) {
 		if (stack instanceof Batchable b) {
-			b.renderForBatch(raw, x, y, z, delta);
+			b.renderForBatch(vcp, raw, x, y, z, delta);
 		}
 	}
 
@@ -191,10 +192,10 @@ public class EmiFavorite implements EmiIngredient, Batchable {
 			list.addAll(super.getTooltip());
 
 			long diff = total - amount;
-			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.remaining", EmiRenderHelper.getAmountText(stack, amount)).formatted(TextFormatting.GRAY)));
-			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.obtained", EmiRenderHelper.getAmountText(stack, diff), EmiRenderHelper.getAmountText(stack, total)).formatted(TextFormatting.GRAY)));
+			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.remaining", EmiRenderHelper.getAmountText(stack, amount)).formatted(Formatting.GRAY)));
+			list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.obtained", EmiRenderHelper.getAmountText(stack, diff), EmiRenderHelper.getAmountText(stack, total)).formatted(Formatting.GRAY)));
 			if (batches != amount) {
-				list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.batches_remaining", batches).formatted(TextFormatting.GRAY)));
+				list.add(EmiTooltipComponents.of(EmiPort.translatable("tooltip.emi.synfav.batches_remaining", batches).formatted(Formatting.GRAY)));
 			}
 
 			if (state == -1) {

@@ -1,11 +1,11 @@
 package dev.emi.emi.runtime;
 
+import net.minecraft.util.ResourceLocation;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.stack.EmiIngredient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.OrderedText;

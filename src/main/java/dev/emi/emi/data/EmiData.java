@@ -78,8 +78,8 @@ public class EmiData {
 									case "output_then_input":
 										props.sort = EmiRecipeSorting.compareOutputThenInput();
 										break;
-									case "identifier":
-										props.sort = EmiRecipeSorting.identifier();
+									case "ResourceLocation":
+										props.sort = EmiRecipeSorting.ResourceLocation();
 										break;
 								}
 							}

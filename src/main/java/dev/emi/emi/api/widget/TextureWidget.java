@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import dev.emi.emi.runtime.EmiDrawContext;
+import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.util.ResourceLocation;
 
 public class TextureWidget extends Widget implements WidgetTooltipHolder<TextureWidget> {
 	protected final ResourceLocation texture;

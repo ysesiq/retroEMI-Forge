@@ -1,14 +1,14 @@
 package dev.emi.emi.runtime;
 
 import com.google.common.collect.Maps;
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiUtil;
 import dev.emi.emi.registry.EmiTags;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.RegistryNamespaced;
 import shim.net.minecraft.registry.tag.TagKey;
 import shim.net.minecraft.text.Text;
-import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -104,12 +104,12 @@ public class EmiTagKey<T> {
 
     private static @Nullable String translatePrefix(String prefix, ResourceLocation id) {
         String s = EmiUtil.translateId(prefix, id);
-        if (I18n.hasKey(s)) {
+        if (RetroEMI.hasTranslation(s)) {
             return s;
         }
         if (id.getNamespace().equals("forge")) {
             s = EmiUtil.translateId(prefix, EmiPort.id("c", id.getPath()));
-            if (I18n.hasKey(s)) {
+            if (RetroEMI.hasTranslation(s)) {
                 return s;
             }
         }

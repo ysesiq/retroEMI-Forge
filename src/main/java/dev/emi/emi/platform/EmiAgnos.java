@@ -67,17 +67,17 @@ public abstract class EmiAgnos {
 
 	protected abstract boolean isModLoadedAgnos(String id);
 
-	public static List<String> getAllModNames(String id) {
-		return delegate.getAllModNamesAgnos(id);
+	public static List<String> getAllModNames() {
+		return delegate.getAllModNamesAgnos();
 	}
 
-	protected abstract List<String> getAllModNamesAgnos(String id);
+	protected abstract List<String> getAllModNamesAgnos();
 
-	public static List<String> getAllModAuthors(String id) {
-		return delegate.getAllModAuthorsAgnos(id);
+	public static List<String> getAllModAuthors() {
+		return delegate.getAllModAuthorsAgnos();
 	}
 
-	protected abstract List<String> getAllModAuthorsAgnos(String id);
+	protected abstract List<String> getAllModAuthorsAgnos();
 
 	public static List<String> getModsWithPlugins() {
 		return delegate.getModsWithPluginsAgnos();
