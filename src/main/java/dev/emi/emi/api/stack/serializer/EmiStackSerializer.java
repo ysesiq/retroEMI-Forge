@@ -35,6 +35,7 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 	default EmiIngredient deserialize(JsonElement element) {
 		ResourceLocation id = null;
 		String nbt = null;
+//		JsonObject changesJson = null;
 		long amount = 1;
 		float chance = 1;
 		int subtype = 0;
@@ -50,6 +51,7 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 			JsonObject json = element.getAsJsonObject();
 			id = EmiPort.id(JsonHelper.getString(json, "id"));
 			nbt = JsonHelper.getString(json, "nbt", null);
+//			changesJson = JsonHelper.getObject(json, "componentChanges", null);
 			amount = JsonHelper.getLong(json, "amount", 1);
 			chance = JsonHelper.getFloat(json, "chance", 1);
             subtype = JsonHelper.getInt(json, "subtype", 0);
@@ -63,7 +65,9 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 		if (id != null) {
 			try {
 				NBTTagCompound nbtComp = null;
-				if (nbt != null) {
+				/*if (changesJson != null) {
+					changes = ComponentChanges.CODEC.decode(withRegistryAccess(JsonOps.INSTANCE), changesJson).getOrThrow().getFirst();
+				} else */if (nbt != null) {
 					nbtComp = JsonToNBT.getTagFromJson(nbt);
 				}
 				EmiStack stack = create(id, nbtComp, amount, subtype);
@@ -88,6 +92,9 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 		if (stack.hasNbt()) {
 			nbt = stack.getComponentChanges().toString();
 		}
+//		if (componentChanges != ComponentChanges.EMPTY) {
+//			nbt = ComponentChanges.CODEC.encodeStart(withRegistryAccess(NbtOps.INSTANCE), componentChanges).getOrThrow().asString();
+//		}
 		if (stack.getAmount() == 1 && stack.getChance() == 1 && stack.getSubtype() == 0 && stack.getRemainder().isEmpty()) {
 			String s = getType() + ":" + stack.getId();
 			if (nbt != null) {
