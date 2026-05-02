@@ -1,8 +1,0 @@
-{
-  "parent": "emi:item/third_item",
-  "textures": {
-    "first": "minecraft:item/pink_dye",
-    "second": "minecraft:item/lime_dye",
-    "third": "minecraft:item/light_blue_dye"
-  }
-}

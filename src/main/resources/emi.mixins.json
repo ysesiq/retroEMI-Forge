@@ -6,10 +6,6 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "dev.emi.emi.mixinsupport.EmiMixinPlugin",
   "client": [
-    "accessor.FontRendererAccessor",
-    "accessor.GuiContainerAccessor",
-    "accessor.GuiTextFieldAccessor",
-    "accessor.MinecraftAccessor",
     "FontRendererMixin",
     "GuiContainerCreativeMixin",
     "GuiContainerMixin",
@@ -17,10 +13,15 @@
     "GuiToastMixin",
     "InventoryEffectRendererMixin",
     "LocaleMixin",
+    "NetHandlerPlayClientMixin",
     "SlotCraftingMixin",
-    "NetHandlerPlayClientMixin"
+    "accessor.FontRendererAccessor",
+    "accessor.GuiContainerAccessor",
+    "accessor.GuiTextFieldAccessor",
+    "accessor.RenderItemAccessor"
   ],
   "mixins": [
+    "NetHandlerPlayServerMixin",
     "accessor.InventoryCraftingAccessor",
     "accessor.ItemToolAccessor",
     "accessor.ShapedOreRecipeAccessor",
@@ -30,8 +31,7 @@
     "accessor.SlotCraftingAccessor",
     "conversion.FluidMixin",
     "conversion.ItemMixin",
-    "conversion.ItemStackMixin",
-    "NetHandlerPlayServerMixin"
+    "conversion.ItemStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -72,7 +72,7 @@ unimined.minecraft {
         loader "0.5.7-alpha"
         runs.auth.username = minecraft_username
         runs.all {
-            systemProperty("crl.dev.mixin", "${mod_id}.mixin.json")
+            systemProperty("crl.dev.mixin", "${mod_id}.mixins.json")
             def extraArgs = propertyString('extra_jvm_args')
             if (extraArgs != null && !extraArgs.trim().isEmpty()) {
                 jvmArgs += extraArgs.split { "\\s+" }.toList()
@@ -194,7 +194,7 @@ jar {
         manifest {
             def attribute_map = [:]
             attribute_map['ModType'] = "CRL"
-            attribute_map['MixinConfigs'] = "${mod_id}.mixin.json"
+            attribute_map['MixinConfigs'] = "${mod_id}.mixins.json"
             if (configurations.contain.size() > 0) {
                 attribute_map['ContainedDeps'] = configurations.contain.collect { it.name }.join(' ')
                 attribute_map['NonModDeps'] = true

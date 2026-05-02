@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,6 +41,10 @@ public record TagKey<T>(ResourceLocation tag, Type type) {
 
     public boolean isOf(RegistryNamespaced<ResourceLocation, T> registry) {
         return registry.containsKey(this.tag);
+    }
+
+    public boolean isOf(Map<String, Fluid> registry) {
+        return registry.containsKey(this.tag.toString());
     }
 
     public <E> Optional<TagKey<E>> tryCast(RegistryNamespaced<ResourceLocation, T> registryRef) {

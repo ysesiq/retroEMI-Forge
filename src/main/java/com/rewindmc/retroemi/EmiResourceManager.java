@@ -32,6 +32,7 @@ public class EmiResourceManager implements ISelectiveResourceReloadListener {
 	@Override
 	public void onResourceManagerReload(@NotNull IResourceManager resourceManager, @NotNull Predicate<IResourceType> predicate) {
 		EmiClientForge.registerResourceReloaders();
+        EmiClientForge.registerAdditionalModels();
 	}
 
 	public Map<ResourceLocation, IResource> findResources(IResourceManager manager, String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {

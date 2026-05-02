@@ -1,7 +1,0 @@
-{
-  "parent": "emi:item/half_item",
-  "textures": {
-    "first": "minecraft:item/beetroot",
-    "second": "minecraft:item/wheat"
-  }
-}

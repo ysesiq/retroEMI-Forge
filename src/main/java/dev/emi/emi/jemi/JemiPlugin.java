@@ -36,6 +36,8 @@
 //import dev.emi.emi.runtime.EmiReloadManager;
 //import mezz.jei.api.IJeiRuntime;
 //import mezz.jei.api.IModPlugin;
+//import mezz.jei.api.ISubtypeRegistry;
+//import mezz.jei.api.JEIPlugin;
 //import mezz.jei.api.ingredients.IModIngredientRegistration;
 //import mezz.jei.api.recipe.IIngredientType;
 //import mezz.jei.api.recipe.IRecipeCategory;
@@ -52,19 +54,19 @@
 //import java.util.stream.Collectors;
 //import java.util.stream.Stream;
 //
-//@JeiPlugin
+//@JEIPlugin
 //public class JemiPlugin implements IModPlugin, EmiPlugin {
 //	private static final Map<EmiRecipeCategory, IRecipeCategory<?>> CATEGORY_MAP = Maps.newHashMap();
 //	private static ISubtypeManager subtypeManager;
 //	public static IJeiRuntime runtime;
 //	public static BiPredicate<IIngredientTypeWithSubtypes<? extends Object, ? extends Object>, Object> hasSubtype = (a, b) -> true;
 //
-//	@Override
-//	public ResourceLocation getPluginUid() {
-//		return EmiPort.id("emi:jemi");
-//	}
+////	@Override
+////	public ResourceLocation getPluginUid() {
+////		return EmiPort.id("emi:jemi");
+////	}
 //
-//	public void registerItemSubtypes(ISubtypeRegistration registration) {
+//	public void registerItemSubtypes(ISubtypeRegistry registration) {
 //		hasSubtype = (type, ingredient) -> {
 //			@SuppressWarnings("unchecked")
 //			IIngredientTypeWithSubtypes<Object, Object> castedType = (IIngredientTypeWithSubtypes<Object, Object>) type;

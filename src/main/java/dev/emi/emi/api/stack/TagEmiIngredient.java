@@ -6,6 +6,7 @@ import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.EmiUtil;
 import dev.emi.emi.api.render.EmiRender;
 import dev.emi.emi.config.EmiConfig;
+import dev.emi.emi.mixin.accessor.RenderItemAccessor;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -17,9 +18,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
+import org.joml.Matrix4f;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.registry.tag.TagKey;
@@ -115,35 +118,35 @@ public class TagEmiIngredient implements EmiIngredient {
 					stacks.get(0).render(context.raw(), x, y, delta, -1 ^ RENDER_AMOUNT);
 				}
 			} else {
-			// TODO tag textures
 				IBakedModel model = EmiAgnos.getBakedTagModel(tagKey.getCustomModel());
 
 				context.matrices().push();
+				client.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 				context.matrices().translate(x + 8, y + 8, 150);
-//				context.matrices().multiplyPositionMatrix(new Matrix4f().scale(new Vector3f(1.0f, -1.0f, 1.0f)));
+				context.matrices().multiplyPositionMatrix(new Matrix4f().scaling(1.0f, -1.0f, 1.0f));
 				context.matrices().scale(16.0f, 16.0f, 16.0f);
 
 				model.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GUI).apply(Optional.empty());
 				context.matrices().translate(-0.5f, -0.5f, -0.5f);
 
 				if (!model.isGui3d()) {
-                    RenderHelper.enableGUIStandardItemLighting();
+					RenderHelper.enableGUIStandardItemLighting();
 				}
 //				VertexConsumerProvider.Immediate immediate = context.raw().getVertexConsumers();
 
-				client.getRenderItem()
-                    .renderItem(ItemStack.EMPTY,
-                        model);
+				((RenderItemAccessor) client.getRenderItem())
+					.invokeRenderBakedItemModel(model,
+						ItemStack.EMPTY);
 //				immediate.draw();
 
 				if (!model.isGui3d()) {
-                    RenderHelper.enableGUIStandardItemLighting();
+					RenderHelper.enableGUIStandardItemLighting();
 				}
 
 				context.matrices().pop();
 			}
 		}
-		if ((flags & RENDER_AMOUNT) != 0) {
+		if ((flags & RENDER_AMOUNT) != 0 && !tagKey.raw().isOf(EmiPort.getFluidRegistry())) {
 			String count = "";
 			if (amount != 1) {
 				count += amount;

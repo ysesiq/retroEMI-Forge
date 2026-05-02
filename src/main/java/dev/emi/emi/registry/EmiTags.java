@@ -85,7 +85,7 @@ public class EmiTags {
 		if (adapter == null) {
 			return new ListEmiIngredient(stacks, amount);
 		}
-        TagKey. Type registry = adapter.getRegistry();
+    	TagKey. Type registry = adapter.getRegistry();
 		List<EmiTagKey<T>> keys = (List<EmiTagKey<T>>) (List) CACHED_TAGS.get(map.keySet());
 
 		if (keys != null) {

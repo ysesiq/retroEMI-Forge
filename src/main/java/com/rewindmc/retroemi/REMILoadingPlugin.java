@@ -14,10 +14,9 @@ import zone.rong.mixinbooter.IEarlyMixinLoader;
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 public class REMILoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
-
 	public REMILoadingPlugin() {
 		MixinBootstrap.init();
-		Mixins.addConfiguration("emi.mixin.json");
+		Mixins.addConfiguration("emi.mixins.json");
 	}
 
 	@Override
@@ -47,6 +46,6 @@ public class REMILoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
 	@Override
 	public List<String> getMixinConfigs() {
-		return List.of("emi.mixin.json");
+		return List.of("emi.mixins.json");
 	}
 }

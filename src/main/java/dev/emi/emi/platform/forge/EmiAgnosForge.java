@@ -10,9 +10,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.google.common.collect.Lists;
@@ -28,14 +31,12 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.FluidEmiStack;
-import dev.emi.emi.mixin.accessor.MinecraftAccessor;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.recipe.EmiBrewingRecipe;
 import dev.emi.emi.registry.EmiPluginContainer;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
@@ -205,7 +206,7 @@ public class EmiAgnosForge extends EmiAgnos {
 								EmiIngredient ingredient = EmiIngredient.of((Ingredient) recipe.getIngredient());
 								EmiStack output = EmiStack.of(recipe.getOutput(input.getItemStack(), is));
 								if (output.isEmpty()) continue;
-                                ResourceLocation id = EmiPort.id("emi", "/brewing/forge/"
+								ResourceLocation id = EmiPort.id("emi", "/brewing/forge/"
 									+ EmiUtil.subId(input.getId()) + "_" + ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(input.getItemStack()))+ "/"
 									+ EmiUtil.subId(ingredient.getEmiStacks().get(0).getId()) + "/"
 									+ EmiUtil.subId(output.getId()) + "_" + ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(output.getItemStack())));
@@ -306,7 +307,12 @@ public class EmiAgnosForge extends EmiAgnos {
 
 	@Override
 	protected IBakedModel getBakedTagModelAgnos(ResourceLocation id) {
-		return ((MinecraftAccessor) Minecraft.getMinecraft()).getModelManager().getModel(new ModelResourceLocation(id, "inventory"));
+		try {
+			return ModelLoaderRegistry.getModel(id).bake(ModelLoaderRegistry.getModel(id).getDefaultState(), DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override

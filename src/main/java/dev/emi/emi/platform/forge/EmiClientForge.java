@@ -5,7 +5,6 @@ import com.rewindmc.retroemi.PacketReader;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
-import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
 import dev.emi.emi.network.CommandS2CPacket;
 import dev.emi.emi.network.EmiChessPacket;
 import dev.emi.emi.network.EmiNetwork;
@@ -40,8 +39,7 @@ public class EmiClientForge {
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(EmiResourceManager.instance);
 	}
 
-	@SubscribeEvent
-	public void registerAdditionalModels(ModelRegistryEvent event) {
+	public static void registerAdditionalModels() {
 		Minecraft client = Minecraft.getMinecraft();
 		EmiTags.registerTagModels(client.getResourceManager(), id -> {}, "inventory");
 	}
