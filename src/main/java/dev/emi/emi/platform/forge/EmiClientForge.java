@@ -21,8 +21,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
@@ -31,6 +31,7 @@ import shim.net.minecraft.resource.ResourceReloader;
 public class EmiClientForge {
 
 	public static void clientInit() {
+//		StackBatcher.EXTRA_RENDER_LAYERS.addAll(Arrays.stream(ForgeRenderTypes.values()).map(f -> f.get()).toList());
 		EmiClient.init();
 		EmiNetwork.initClient(packet -> Minecraft.getMinecraft().playerController.connection.sendPacket(EmiForge.toVanilla(packet)));
 		PacketReader.registerClientPacketReader(EmiNetwork.PING, PingS2CPacket::new);
@@ -57,7 +58,7 @@ public class EmiClientForge {
 	}
 
 	@SubscribeEvent
-	public void renderScreenForeground(GuiScreenEvent.DrawScreenEvent.Pre event) {
+	public void renderScreenBackground(GuiScreenEvent.BackgroundDrawnEvent event) {
 		EmiDrawContext context = EmiDrawContext.instance();
 		GuiScreen screen = event.getGui();
 		if (!(screen instanceof GuiContainer)) {
@@ -65,16 +66,28 @@ public class EmiClientForge {
 		}
 		EmiScreenBase base = EmiScreenBase.of(screen);
 		if (base != null) {
+			Minecraft client = Minecraft.getMinecraft();
+			EmiScreenManager.drawBackground(context, event.getMouseX(), event.getMouseY(), client.getRenderPartialTicks());
+		}
+	}
+
+	@SubscribeEvent
+	public void renderScreenForeground(GuiContainerEvent.DrawForeground event) {
+		EmiDrawContext context = EmiDrawContext.instance();
+		GuiContainer screen = event.getGuiContainer();
+		EmiScreenBase base = EmiScreenBase.of(screen);
+		if (base != null) {
+			Minecraft client = Minecraft.getMinecraft();
 			context.push();
-			context.matrices().translate(-((GuiContainer) screen).getGuiLeft(), -((GuiContainer) screen).getGuiTop(), 0.0);
+			context.matrices().translate(-screen.getGuiLeft(), -screen.getGuiTop(), 0.0);
 			EmiPort.setPositionTexShader();
-			EmiScreenManager.drawBackground(context, event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
+			EmiScreenManager.render(context, event.getMouseX(), event.getMouseY(), client.getRenderPartialTicks());
 			context.pop();
 		}
 	}
 
 	@SubscribeEvent
-	public void postRenderScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
+	public void postRenderScreen(GuiScreenEvent.DrawScreenEvent.Pre event) {
 		EmiDrawContext context = EmiDrawContext.instance();
 		GuiScreen screen = event.getGui();
 		if (!(screen instanceof GuiContainer)) {
@@ -82,24 +95,24 @@ public class EmiClientForge {
 		}
 		EmiScreenBase base = EmiScreenBase.of(screen);
 		if (base != null) {
+			Minecraft client = Minecraft.getMinecraft();
 			context.push();
 			EmiPort.setPositionTexShader();
-			EmiScreenManager.render(context, event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
-			EmiScreenManager.drawForeground(context, event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
+			EmiScreenManager.drawForeground(context, event.getMouseX(), event.getMouseY(), client.getRenderPartialTicks());
 			context.pop();
 		}
 	}
 
 	@SubscribeEvent
 	public void onMousePost(GuiScreenEvent.MouseInputEvent.Post event) {
-		if (!(event.getGui() instanceof GuiContainerCreative)) {
+		if (!(event.getGui() instanceof GuiContainerCreative) && !RetroEMI.hasFocusedTextReflectField(event.getGui())) {
 			event.setCanceled(RetroEMI.handleMouseInput());
 		}
 	}
 
 	@SubscribeEvent
 	public void onKeyboardPost(GuiScreenEvent.KeyboardInputEvent.Post event) {
-		if (!(event.getGui() instanceof GuiContainerCreative)) {
+		if (!(event.getGui() instanceof GuiContainerCreative) && !RetroEMI.hasFocusedTextReflectField(event.getGui())) {
 			event.setCanceled(RetroEMI.handleKeyboardInput());
 		}
 	}

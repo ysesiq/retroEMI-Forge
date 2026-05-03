@@ -234,8 +234,21 @@ public class DrawContext extends Gui {
 		this.drawTexture(texture, x, y, width, height, u, v, width, height, textureWidth, textureHeight);
 	}
 
-	void drawTexture(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight) {
-		this.drawTexturedQuad(texture, x1, x2, y1, y2, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight);
+	void drawTexture(
+		ResourceLocation texture, int x1, int x2, int y1, int y2, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight
+	) {
+		this.drawTexturedQuad(
+			texture,
+			x1,
+			x2,
+			y1,
+			y2,
+			z,
+			(u + 0.0F) / (float)textureWidth,
+			(u + (float)regionWidth) / (float)textureWidth,
+			(v + 0.0F) / (float)textureHeight,
+			(v + (float)regionHeight) / (float)textureHeight
+		);
 	}
 
 	void drawTexturedQuad(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2) {
@@ -243,14 +256,14 @@ public class DrawContext extends Gui {
 		EmiPort.setPositionTexShader();
 		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 		bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex();
 		bufferBuilder.pos(x1, y2, z).tex(u1, v2).endVertex();
 		bufferBuilder.pos(x2, y2, z).tex(u2, v2).endVertex();
 		bufferBuilder.pos(x2, y1, z).tex(u2, v1).endVertex();
-		bufferBuilder.pos(x1, y1, z).tex(u1, v1).endVertex();
 		EmiPort.draw(bufferBuilder);
 	}
 
-	public void drawTexturedQuad(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2, float red, float green, float blue, float alpha) {
+	void drawTexturedQuad(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, float u1, float u2, float v1, float v2, float red, float green, float blue, float alpha) {
 		RenderSystem.setShaderTexture(0, texture);
 		EmiPort.setPositionTexShader();
 		RenderSystem.enableBlend();

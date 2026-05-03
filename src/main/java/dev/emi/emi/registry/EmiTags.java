@@ -85,7 +85,7 @@ public class EmiTags {
 		if (adapter == null) {
 			return new ListEmiIngredient(stacks, amount);
 		}
-    	TagKey. Type registry = adapter.getRegistry();
+		TagKey. Type registry = adapter.getRegistry();
 		List<EmiTagKey<T>> keys = (List<EmiTagKey<T>>) (List) CACHED_TAGS.get(map.keySet());
 
 		if (keys != null) {
@@ -153,6 +153,12 @@ public class EmiTags {
 				TagKey<?> key = TagKey.of(TagKey.Type.of(EmiPort.id("minecraft", parts[0])), EmiPort.id(id.getNamespace(), path.substring(1 + parts[0].length())));
 				ResourceLocation mid = EmiPort.id(id.getNamespace(), "tag/" + path);
 				EmiTags.MODELED_TAGS.put(key, mid);
+				/* '/' is illegal character in path, so we need to replace */
+                String replacement = path.replace('_', '/');
+				if (!replacement.equals(path)) {
+					TagKey<?> k = TagKey.of(TagKey.Type.of(EmiPort.id("minecraft", parts[0])), EmiPort.id(id.getNamespace(), replacement.substring(1 + parts[0].length())));
+					EmiTags.MODELED_TAGS.put(k, mid);
+				}
 				consumer.accept(new ModelResourceLocation(mid, variant));
 			}
 		}

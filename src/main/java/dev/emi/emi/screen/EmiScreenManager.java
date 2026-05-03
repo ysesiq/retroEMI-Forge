@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.EmiUtil;
@@ -33,6 +34,7 @@ import dev.emi.emi.config.HeaderType;
 import dev.emi.emi.config.HelpLevel;
 import dev.emi.emi.config.Margins;
 import dev.emi.emi.config.ScreenAlign;
+import dev.emi.emi.config.ScreenAlign.Horizontal;
 import dev.emi.emi.config.SidebarPages;
 import dev.emi.emi.config.SidebarSettings;
 import dev.emi.emi.config.SidebarSide;
@@ -65,10 +67,10 @@ import dev.emi.emi.screen.widget.EmiSearchWidget;
 import dev.emi.emi.screen.widget.SidebarButtonWidget;
 import dev.emi.emi.screen.widget.SizedButtonWidget;
 import dev.emi.emi.search.EmiSearch;
+import dev.emi.emi.search.EmiSearch.CompiledQuery;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -78,7 +80,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.jetbrains.annotations.Nullable;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.Element;
@@ -98,7 +99,7 @@ public class EmiScreenManager {
 	private static List<? extends EmiIngredient> searchedStacks = shim.java.List.of();
 	private static int lastWidth, lastHeight;
 	private static List<Bounds> lastExclusion;
-	//	private static StackBatcher.ClaimedCollection batchers = new StackBatcher.ClaimedCollection();
+//	private static StackBatcher.ClaimedCollection batchers = new StackBatcher.ClaimedCollection();
 	private static List<SidebarPanel> panels =  shim.java.List.of(
 			new SidebarPanel(SidebarSide.LEFT, EmiConfig.leftSidebarPages),
 			new SidebarPanel(SidebarSide.RIGHT, EmiConfig.rightSidebarPages),
@@ -201,25 +202,25 @@ public class EmiScreenManager {
 		}
 		spaceExclusion.addAll(exclusion);
 
-		int topCenter = EmiConfig.topSidebarSize.values.get(0) * ENTRY_SIZE / 2 + EmiConfig.topSidebarTheme.horizontalPadding;
+		int topCenter = EmiConfig.topSidebarSize.values.getInt(0) * ENTRY_SIZE / 2 + EmiConfig.topSidebarTheme.horizontalPadding;
 		int topSpaceBottom = switch (EmiConfig.topSidebarAlign.horizontal) {
 			case LEFT -> getVerticalConstraint(panels.get(0), EmiConfig.topSidebarMargins.left() + topCenter, top, screen.height, true);
 			case CENTER -> top;
 			case RIGHT -> getVerticalConstraint(panels.get(1), right - EmiConfig.topSidebarMargins.right() + topCenter, top, screen.height, true);
 		};
-		boolean topRtl = EmiConfig.topSidebarAlign.horizontal == ScreenAlign.Horizontal.RIGHT;
+		boolean topRtl = EmiConfig.topSidebarAlign.horizontal == Horizontal.RIGHT;
 
 		createScreenSpace(panels.get(2), screen, spaceExclusion, topRtl,
 				new Bounds(0, 0, screen.width, topSpaceBottom),
 				SidebarSettings.TOP);
 
-		int bottomCenter = EmiConfig.bottomSidebarSize.values.get(0) * ENTRY_SIZE / 2 + EmiConfig.bottomSidebarTheme.horizontalPadding;
+		int bottomCenter = EmiConfig.bottomSidebarSize.values.getInt(0) * ENTRY_SIZE / 2 + EmiConfig.bottomSidebarTheme.horizontalPadding;
 		int bottomSpaceTop = switch (EmiConfig.bottomSidebarAlign.horizontal) {
 			case LEFT -> getVerticalConstraint(panels.get(0), EmiConfig.bottomSidebarMargins.left() + bottomCenter, bottom, 0, false);
 			case CENTER -> bottom;
 			case RIGHT -> getVerticalConstraint(panels.get(1), EmiConfig.bottomSidebarMargins.right() + bottomCenter, bottom, 0, false);
 		};
-		boolean bottomRtl = EmiConfig.bottomSidebarAlign.horizontal == ScreenAlign.Horizontal.RIGHT;
+		boolean bottomRtl = EmiConfig.bottomSidebarAlign.horizontal == Horizontal.RIGHT;
 
 		createScreenSpace(panels.get(3), screen, spaceExclusion, bottomRtl,
 				new Bounds(0, bottomSpaceTop, screen.width, screen.height - bottomSpaceTop),
@@ -284,8 +285,8 @@ public class EmiScreenManager {
 		SidebarSubpanels subpanels = settings.subpanels();
 		boolean header = settings.header() == HeaderType.VISIBLE;
 
-		int maxWidth = settings.size().values.get(0);
-		int maxHeight = settings.size().values.get(1);
+		int maxWidth = settings.size().values.getInt(0);
+		int maxHeight = settings.size().values.getInt(1);
 
 		int subpanelHeight = 0;
 		for (SidebarSubpanels.Subpanel subpanel : subpanels.subpanels) {
@@ -695,7 +696,7 @@ public class EmiScreenManager {
 			if (cur.getRecipeContext() != lastHoveredCraftable.getRecipeContext()) {
 				ScreenSpace space = getHoveredSpace(mouseX, mouseY);
 				if (space != null && (space.getType() == SidebarType.CRAFTABLES || space.getType() == SidebarType.CRAFT_HISTORY)) {
-					MatrixStack view = MatrixStack.INSTANCE;
+					MatrixStack view = RenderSystem.getModelViewStack();
 					view.pushMatrix();
 					view.translate(0, 0, 200);
 					EmiPort.applyModelViewMatrix();
@@ -746,9 +747,9 @@ public class EmiScreenManager {
 
 	private static void renderCurrentTooltip(EmiDrawContext context, int mouseX, int mouseY, float delta, EmiScreenBase base) {
 		try {
-			ItemStack cursor = null;
-			if (client.currentScreen instanceof GuiContainer) {
-				cursor = client.player.inventory.getItemStack();;
+			ItemStack cursor = ItemStack.EMPTY;
+			if (client.currentScreen instanceof GuiContainer handled) {
+				cursor = client.player.inventory.getItemStack();
 			}
 			ScreenSpace space = getHoveredSpace(mouseX, mouseY);
 			if (EmiApi.isCheatMode() && cursor != null && !cursor.isEmpty() && space != null && space.getType() == SidebarType.INDEX && EmiConfig.deleteCursorStack.isBound()) {
@@ -762,7 +763,7 @@ public class EmiScreenManager {
 					EmiRenderHelper.drawTooltip(base.screen(), context, list, mouseX, mouseY);
 				}
 			}
-			if ((cursor == null || cursor.getCount() == 0) && draggedStack.isEmpty()) {
+			if ((cursor == null || cursor.isEmpty()) && draggedStack.isEmpty()) {
 				EmiProfiler.swap("hover");
 				try {
 					EmiIngredient hov = EmiStack.EMPTY;
@@ -858,7 +859,7 @@ public class EmiScreenManager {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static void renderSlotOverlays(EmiDrawContext context, int mouseX, int mouseY, float delta, EmiScreenBase base) {
-		EmiSearch.CompiledQuery query = null;
+		CompiledQuery query = null;
 		if (EmiScreenManager.search.highlight) {
 			query = EmiSearch.compiledQuery;
 		}
@@ -1097,7 +1098,7 @@ public class EmiScreenManager {
 		}
 		if (draggedStack.isEmpty() && button == 0) {
 			if (client.currentScreen instanceof GuiContainer handled) {
-				if (client.player.inventory.getItemStack() != null) {
+				if (!client.player.inventory.getItemStack().isEmpty()) {
 					return false;
 				}
 			}
@@ -1162,21 +1163,7 @@ public class EmiScreenManager {
 				}
 			}
 		} else {
-			// Haha, I'm in danger
-			for (java.lang.reflect.Field f : parent.getClass().getDeclaredFields()) {
-				f.setAccessible(true);
-				if (!GuiTextField.class.isAssignableFrom(f.getType())) {
-					continue;
-				}
-				try {
-					if (f.get(parent) instanceof GuiTextField wtf) {
-						if (((GuiTextFieldAccessor) wtf).isEnabled() && wtf.isFocused()) {
-							return true;
-						}
-					}
-				} catch (Throwable e) {
-				}
-			}
+			return RetroEMI.hasFocusedTextReflectField(parent);
 		}
 		return false;
 	}
@@ -1362,6 +1349,9 @@ public class EmiScreenManager {
 		if (notify && !EmiConfig.enabled && EmiConfig.helpLevel.has(HelpLevel.VERBOSE)) {
 			client.getToastGui().add(new DisabledToast());
 		}
+		if (EmiConfig.enabled) {
+			forceRecalculate();
+		}
 	}
 
 	private static boolean give(EmiStack stack, int amount, int mode) {
@@ -1400,10 +1390,8 @@ public class EmiScreenManager {
 			ItemStack cursor = client.player.inventory.getItemStack();
 			ScreenSpace space = getHoveredSpace(mx, my);
 			if (!cursor.isEmpty() && space != null && space.getType() == SidebarType.INDEX) {
-				client.player.inventory.setItemStack(null);
-				if (FMLCommonHandler.instance().getSide().isServer()) {
-					EmiNetwork.sendToServer(new CreateItemC2SPacket(1, null));
-				}
+				client.player.inventory.setItemStack(ItemStack.EMPTY);
+				EmiNetwork.sendToServer(new CreateItemC2SPacket(1, ItemStack.EMPTY));
 				return true;
 			}
 		}
@@ -1570,13 +1558,13 @@ public class EmiScreenManager {
 					} else if (theme == SidebarTheme.MODERN) {
 						int offset = 2;
 						for (ScreenSpace space : getSpaces()) {
-							RenderSystem.enableBlend();
+							context.enableBlend();
 							context.drawTexture(EmiRenderHelper.GRID, space.tx, space.ty, space.tw * ENTRY_SIZE,
 								space.th * ENTRY_SIZE, 0, 0, space.tw, space.th, 2, offset);
 							if (space.th % 2 == 1) {
 								offset *= -1;
 							}
-							RenderSystem.disableBlend();
+							context.disableBlend();
 						}
 					}
 					for (ScreenSpace space : getSpaces()) {

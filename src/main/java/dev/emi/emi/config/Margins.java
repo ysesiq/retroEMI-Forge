@@ -2,25 +2,27 @@ package dev.emi.emi.config;
 
 import shim.java.List;
 
+import it.unimi.dsi.fastutil.ints.IntList;
+
 public class Margins extends IntGroup {
 
 	public Margins(int top, int right, int bottom, int left) {
-		super("emi.sidebar.margins.", List.of("top", "right", "bottom", "left"), List.of(top, right, bottom, left));
+		super("emi.sidebar.margins.", List.of("top", "right", "bottom", "left"), IntList.of(top, right, bottom, left));
 	}
 
 	public int top() {
-		return values.get(0);
+		return values.getInt(0);
 	}
 
 	public int right() {
-		return values.get(1);
+		return values.getInt(1);
 	}
 
 	public int bottom() {
-		return values.get(2);
+		return values.getInt(2);
 	}
 
 	public int left() {
-		return values.get(3);
+		return values.getInt(3);
 	}
 }

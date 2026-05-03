@@ -1,11 +1,14 @@
 package com.rewindmc.retroemi;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dev.emi.emi.mixin.accessor.GuiTextFieldAccessor;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -35,6 +38,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import shim.net.minecraft.client.gui.ParentElement;
 import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
@@ -254,7 +258,7 @@ public class RetroEMI {
 		return I18n.format(s, arg);
 	}
 
-    public static boolean hasTranslation(String s) {
+	public static boolean hasTranslation(String s) {
 		return I18n.hasKey(s);
 	}
 
@@ -294,4 +298,25 @@ public class RetroEMI {
 		return tip;
 	}
 
+	public static boolean hasFocusedTextReflectField(Object parent) {
+		// Haha, I'm in danger
+        if (parent instanceof ParentElement) {
+            return false;
+        }
+		for (Field f : parent.getClass().getDeclaredFields()) {
+			f.setAccessible(true);
+			if (!GuiTextField.class.isAssignableFrom(f.getType())) {
+				continue;
+			}
+			try {
+				if (f.get(parent) instanceof GuiTextField wtf) {
+					if (((GuiTextFieldAccessor) wtf).isEnabled() && wtf.isFocused()) {
+						return true;
+					}
+				}
+			} catch (Throwable e) {
+			}
+		}
+		return false;
+	}
 }

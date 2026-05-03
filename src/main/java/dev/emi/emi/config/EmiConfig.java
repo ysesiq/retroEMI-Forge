@@ -7,8 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -211,7 +210,7 @@ public class EmiConfig {
 	public static IntGroup leftSidebarSize = new IntGroup(
 		"emi.sidebar.size.",
 		shim.java.List.of("columns", "rows"),
-        new ArrayList<>(Arrays.asList(12, 100))
+		IntList.of(12, 100)
 	);
 
 	@Comment("How much space to maintain between the left sidebar and obstructions, in pixels")
@@ -250,9 +249,9 @@ public class EmiConfig {
 	@Comment("How many columns and rows of ingredients to limit the right sidebar to")
 	@ConfigValue("ui.right-sidebar-size")
 	public static IntGroup rightSidebarSize = new IntGroup(
-	    "emi.sidebar.size.",
-	    shim.java.List.of("columns", "rows"),
-	    new ArrayList<>(Arrays.asList(12, 100))
+		"emi.sidebar.size.",
+		shim.java.List.of("columns", "rows"),
+		IntList.of(12, 100)
 	);
 
 	@Comment("How much space to maintain between the right sidebar and obstructions, in pixels")
@@ -290,7 +289,7 @@ public class EmiConfig {
 	public static IntGroup topSidebarSize = new IntGroup(
 		"emi.sidebar.size.",
 		shim.java.List.of("columns", "rows"),
-		new ArrayList<>(Arrays.asList(9, 9))
+		IntList.of(9, 9)
 	);
 
 	@Comment("How much space to maintain between the top sidebar and obstructions, in pixels")
@@ -328,7 +327,7 @@ public class EmiConfig {
 	public static IntGroup bottomSidebarSize = new IntGroup(
 		"emi.sidebar.size.",
 		shim.java.List.of("columns", "rows"),
-		new ArrayList<>(Arrays.asList(9, 9))
+		IntList.of(9, 9)
 	);
 
 	@Comment("How much space to maintain between the bottom sidebar and obstructions, in pixels")

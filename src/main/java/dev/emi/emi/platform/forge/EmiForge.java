@@ -14,9 +14,10 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -35,13 +36,13 @@ import net.minecraftforge.common.MinecraftForge;
 public class EmiForge {
 
 	@Mod.EventHandler
-	public void preInit(FMLInitializationEvent event) {
+	public void preInit(FMLPreInitializationEvent event) {
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
 		EmiMain.init();
-		if (FMLCommonHandler.instance().getSide().isClient()) {
+		if (event.getSide().isClient()) {
 			EmiClientForge.clientInit();
 			MinecraftForge.EVENT_BUS.register(new EmiClientForge());
 		}
@@ -52,8 +53,8 @@ public class EmiForge {
 	}
 
 	@Mod.EventHandler
-	public void postInit(FMLInitializationEvent event) {
-		if (FMLCommonHandler.instance().getSide().isServer()) {
+	public void postInit(FMLPostInitializationEvent event) {
+		if (event.getSide().isServer()) {
 			PacketReader.registerServerPacketReader(EmiNetwork.FILL_RECIPE, FillRecipeC2SPacket::new);
 			PacketReader.registerServerPacketReader(EmiNetwork.CREATE_ITEM, CreateItemC2SPacket::new);
 			PacketReader.registerServerPacketReader(EmiNetwork.CHESS, EmiChessPacket.C2S::new);
