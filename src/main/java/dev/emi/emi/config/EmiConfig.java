@@ -109,7 +109,7 @@ public class EmiConfig {
 	@Comment("Whether to use the batched render system. Batching is faster, but may have incompatibilities"
 		+ " with shaders or other mods.")
 	@ConfigValue("ui.use-batched-renderer")
-	public static boolean useBatchedRenderer = true;
+	public static boolean useBatchedRenderer = false;// The Batched Renderer renders so badly that it defaults to false
 
 	@Comment("Whether to have the search bar in the center of the screen, instead of to the side.")
 	@ConfigValue("ui.center-search-bar")

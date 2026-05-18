@@ -33,6 +33,7 @@ import dev.emi.emi.bom.FlatMaterialCost;
 import dev.emi.emi.bom.FoldState;
 import dev.emi.emi.bom.MaterialNode;
 import dev.emi.emi.bom.ProgressState;
+import dev.emi.emi.bom.TreeCost;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.data.EmiRecipeCategoryProperties;
 import dev.emi.emi.input.EmiBind;
@@ -41,6 +42,7 @@ import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.runtime.EmiFavorites;
 import dev.emi.emi.runtime.EmiHistory;
+import dev.emi.emi.screen.StackBatcher.Batchable;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import dev.emi.emi.screen.tooltip.RecipeTooltipComponent;
 import net.minecraft.client.Minecraft;
@@ -748,7 +750,7 @@ public class BoMScreen extends REMIScreen {
 				drawLine(context, lx, ly, hx, ly, color);
 				drawLine(context, lx, hy, hx, hy, color);
 				EmiRecipeCategory cat = node.recipe.getCategory();
-				if (EmiRecipeCategoryProperties.getSimplifiedIcon(cat) instanceof StackBatcher.Batchable b) {
+				if (StackBatcher.isEnabled() && EmiRecipeCategoryProperties.getSimplifiedIcon(cat) instanceof Batchable b) {
 					batcher.render(b, context.raw(), x - 18 + midOffset, y - 8, delta);
 				} else {
 					cat.renderSimplified(context.raw(), x - 18 + midOffset, y - 8, delta);

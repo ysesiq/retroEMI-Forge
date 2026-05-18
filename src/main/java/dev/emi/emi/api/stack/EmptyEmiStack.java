@@ -51,7 +51,7 @@ public class EmptyEmiStack extends EmiStack {
 	}
 
 	@Override
-	public NBTTagCompound getComponentChanges() {
+	public NBTTagCompound getNbt() {
 		return null;
 	}
 

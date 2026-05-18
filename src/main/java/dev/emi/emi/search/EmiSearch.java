@@ -86,8 +86,8 @@ public class EmiSearch {
 					names.add(searchStack, id.getPath().toLowerCase());
 				}
 				if (stack instanceof ItemEmiStack && stack.getItemStack().getItem() == Items.ENCHANTED_BOOK) {
-					NBTTagList enchantments = stack.getComponentChanges() != null ?
-						stack.getComponentChanges().getTagList("StoredEnchantments", 10) : null;
+					NBTTagList enchantments = stack.getNbt() != null ?
+						stack.getNbt().getTagList("StoredEnchantments", 10) : null;
 
 					if (enchantments != null) {
 						for (int i = 0; i < enchantments.tagCount(); i++) {

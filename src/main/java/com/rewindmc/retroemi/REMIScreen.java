@@ -3,15 +3,17 @@ package com.rewindmc.retroemi;
 import java.io.IOException;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-import dev.emi.emi.runtime.EmiDrawContext;
-import net.minecraft.client.renderer.GlStateManager;
 import org.jetbrains.annotations.Nullable;
 import shim.org.lwjgl.glfw.GLFW;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.google.common.collect.Lists;
+
+import net.minecraft.client.renderer.GlStateManager;
+
 import dev.emi.emi.input.EmiInput;
+import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import shim.net.minecraft.client.gui.DrawContext;
@@ -48,7 +50,7 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 
 	@Override
 	public final void drawScreen(int var1, int var2, float var3) {
-        GlStateManager.enableRescaleNormal();
+		GlStateManager.enableRescaleNormal();
 		render(DrawContext.INSTANCE, var1, var2, var3);
 		super.drawScreen(var1, var2, var3);
 		if (mouseDown != -1) {
@@ -56,7 +58,7 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 		}
 		lastMouseX = var1;
 		lastMouseY = var2;
-        GlStateManager.disableRescaleNormal();
+		GlStateManager.disableRescaleNormal();
 	}
 
 	@Override
@@ -137,10 +139,10 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 	protected void render(DrawContext raw, int mouseX, int mouseY, float delta) {
 		EmiDrawContext context = EmiDrawContext.wrap(raw);
 		for (Drawable drawable : this.drawables) {
-            context.push();
-            context.resetColor();
-            drawable.render(raw, mouseX, mouseY, delta);
-            context.pop();
+			context.push();
+			context.resetColor();
+			drawable.render(raw, mouseX, mouseY, delta);
+			context.pop();
 		}
 	}
 

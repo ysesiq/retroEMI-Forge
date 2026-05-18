@@ -234,20 +234,14 @@ public class DrawContext extends Gui {
 		this.drawTexture(texture, x, y, width, height, u, v, width, height, textureWidth, textureHeight);
 	}
 
-	void drawTexture(
-		ResourceLocation texture, int x1, int x2, int y1, int y2, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight
-	) {
+	void drawTexture(ResourceLocation texture, int x1, int x2, int y1, int y2, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight) {
 		this.drawTexturedQuad(
 			texture,
-			x1,
-			x2,
-			y1,
-			y2,
-			z,
-			(u + 0.0F) / (float)textureWidth,
-			(u + (float)regionWidth) / (float)textureWidth,
-			(v + 0.0F) / (float)textureHeight,
-			(v + (float)regionHeight) / (float)textureHeight
+			x1, x2, y1, y2, z,
+			(u + 0.0F) / (float) textureWidth,
+			(u + (float) regionWidth) / (float) textureWidth,
+			(v + 0.0F) / (float) textureHeight,
+			(v + (float) regionHeight) / (float) textureHeight
 		);
 	}
 

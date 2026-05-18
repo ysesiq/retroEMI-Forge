@@ -62,7 +62,7 @@ public class EmiFireworkRocketRecipe extends EmiPatternCraftingRecipe {
 		int gunpowder = 0;
 		for (EmiStack item : items) {
 			if (item.getId() == EmiStack.of(Items.FIREWORK_CHARGE).getId()) {
-				explosions.appendTag(item.getComponentChanges().getTagList("Explosion", 0));
+				explosions.appendTag(item.getNbt().getTagList("Explosion", 0));
 			} else if (item.isEqual(EmiStack.of(Items.GUNPOWDER))) {
 				gunpowder++;
 			}

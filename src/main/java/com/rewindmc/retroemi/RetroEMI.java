@@ -1,6 +1,5 @@
 package com.rewindmc.retroemi;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -303,7 +302,7 @@ public class RetroEMI {
         if (parent instanceof ParentElement) {
             return false;
         }
-		for (Field f : parent.getClass().getDeclaredFields()) {
+		for (java.lang.reflect.Field f : parent.getClass().getDeclaredFields()) {
 			f.setAccessible(true);
 			if (!GuiTextField.class.isAssignableFrom(f.getType())) {
 				continue;

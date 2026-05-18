@@ -13,6 +13,7 @@ import java.util.zip.ZipFile;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.platform.forge.EmiClientForge;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.FileResourcePack;
 import net.minecraft.client.resources.IResource;
@@ -24,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.fml.client.FMLFolderResourcePack;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 public class EmiResourceManager implements ISelectiveResourceReloadListener {
@@ -32,7 +34,11 @@ public class EmiResourceManager implements ISelectiveResourceReloadListener {
 	@Override
 	public void onResourceManagerReload(@NotNull IResourceManager resourceManager, @NotNull Predicate<IResourceType> predicate) {
 		EmiClientForge.registerResourceReloaders();
-        EmiClientForge.registerAdditionalModels();
+		EmiClientForge.registerAdditionalModels();
+		if (Minecraft.getMinecraft().world != null) {
+			EmiClientForge.tagsReloaded();
+			EmiClientForge.recipesReloaded();
+		}
 	}
 
 	public Map<ResourceLocation, IResource> findResources(IResourceManager manager, String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {

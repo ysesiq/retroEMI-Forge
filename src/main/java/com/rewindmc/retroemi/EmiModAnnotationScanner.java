@@ -8,10 +8,8 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
@@ -23,111 +21,71 @@ import java.util.jar.JarFile;
 
 public class EmiModAnnotationScanner {
 
-	public EmiModAnnotationScanner() {
-	}
-
-	public static List<Class<?>> scanForAnnotatedClasses(ModContainer modContainer, ClassLoader classLoader, Class<? extends Annotation> annotationClass) {
-        List<Class<?>> annotatedClasses = Lists.newArrayList();
-        String annotationName = "L" + annotationClass.getName().replace('.', '/') + ";";
-
-        try {
-            String modClassName = modContainer.getMod().getClass().getName();
-            String modClassPath = modClassName.replace('.', '/') + ".class";
-            URL classUrl = classLoader.getResource(modClassPath);
-
-            if (classUrl != null) {
-                String protocol = classUrl.getProtocol();
-
-                if ("jar".equals(protocol)) {
-                    JarURLConnection jarConn = (JarURLConnection) classUrl.openConnection();
-                    JarFile jarFile = jarConn.getJarFile();
-
-                    Enumeration<JarEntry> entries = jarFile.entries();
-                    while (entries.hasMoreElements()) {
-                        JarEntry entry = entries.nextElement();
-                        if (entry.getName().endsWith(".class") && !entry.isDirectory()) {
-                            try (InputStream is = jarFile.getInputStream(entry)) {
-                                byte[] classBytes = readAllBytes(is);
-                                if (classBytes.length > 0 && hasAnnotation(classBytes, annotationName)) {
-                                    String className = entry.getName().replace('/', '.').replace(".class", "");
-                                    Class<?> clazz = classLoader.loadClass(className);
-                                    annotatedClasses.add(clazz);
-                                }
-                            } catch (Exception e) {
-                                EmiLog.warn("Failed to process class " + entry.getName() + ": " + e.getMessage());
-                            }
-                        }
-                    }
-                } else if ("file".equals(protocol)) {
-                    String classPath = classUrl.getPath();
-                    File rootDir = new File(classPath.substring(0, classPath.length() - modClassPath.length()));
-                    scanDirectory(rootDir, rootDir, classLoader, annotationName, annotatedClasses);
-                }
-            }
-        } catch (Exception e) {
-            EmiLog.error("Error scanning for annotated classes", e);
-        }
-
-        return annotatedClasses;
-    }
-
-	private static void scanDirectory(File rootDir, File currentDir, ClassLoader classLoader, String annotationName, List<Class<?>> annotatedClasses) {
-		File[] files = currentDir.listFiles();
-		if (files == null) return;
-
-		for (File file : files) {
-			if (file.isDirectory()) {
-				scanDirectory(rootDir, file, classLoader, annotationName, annotatedClasses);
-			} else if (file.getName().endsWith(".class")) {
-				try {
-					String relativePath = file.getAbsolutePath().substring(rootDir.getAbsolutePath().length() + 1);
-					String className = relativePath.replace(File.separatorChar, '.').replace(".class", "");
-
-					try (InputStream is = new FileInputStream(file)) {
-						byte[] classBytes = readAllBytes(is);
-						if (classBytes.length > 0 && hasAnnotation(classBytes, annotationName)) {
-							Class<?> clazz = classLoader.loadClass(className);
-							annotatedClasses.add(clazz);
+	public static List<Class<?>> scanForAnnotatedClasses(ModContainer container, ClassLoader loader, Class<? extends Annotation> aClass) {
+		List<Class<?>> aClasses = Lists.newArrayList();
+		String aName = "L" + aClass.getName().replace('.', '/') + ";";
+		try {
+			URL url = loader.getResource(container.getMod().getClass().getName().replace('.', '/') + ".class");
+			if (url == null) return aClasses;
+			if ("jar".equals(url.getProtocol())) {
+				try (JarFile jarFile = ((JarURLConnection) url.openConnection()).getJarFile()) {
+					Enumeration<JarEntry> entries = jarFile.entries();
+					while (entries.hasMoreElements()) {
+						JarEntry entry = entries.nextElement();
+						if (entry.getName().endsWith(".class")) {
+							processClassBytes(jarFile.getInputStream(entry).readAllBytes(), aName, loader, aClasses);
 						}
 					}
-				} catch (Exception e) {
-					EmiLog.warn("Failed to process class file " + file.getName() + ": " + e.getMessage());
 				}
+			} else if ("file".equals(url.getProtocol())) {
+				File rootDir = new File(url.getPath().replace(container.getMod().getClass().getName().replace('.', '/') + ".class", ""));
+				scanDir(rootDir, rootDir, loader, aName, aClasses);
+			}
+		} catch (Exception e) {
+			EmiLog.error("Error scanning for annotated classes", e);
+		}
+		return aClasses;
+	}
+
+	private static void scanDir(File root, File dir, ClassLoader loader, String aName, List<Class<?>> out) {
+		File[] files = dir.listFiles();
+		if (files == null) return;
+		for (File f : files) {
+			if (f.isDirectory()) {
+				scanDir(root, f, loader, aName, out);
+			} else if (f.getName().endsWith(".class")) {
+				try (InputStream is = new FileInputStream(f)) {
+					processClassBytes(is.readAllBytes(), aName, loader, out);
+				} catch (Exception ignored) {}
 			}
 		}
 	}
 
-	private static byte[] readAllBytes(InputStream inputStream) throws IOException {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		int nRead;
-		byte[] data = new byte[1024];
-		while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
-			buffer.write(data, 0, nRead);
+	private static void processClassBytes(byte[] bytes, String aName, ClassLoader loader, List<Class<?>> out) {
+		try {
+			if (hasAnnotation(bytes, aName)) {
+				String className = new ClassReader(bytes).getClassName().replace('/', '.');
+				out.add(loader.loadClass(className));
+			}
+		} catch (Exception e) {
+			EmiLog.warn("Failed to process class: " + e.getMessage());
 		}
-		return buffer.toByteArray();
 	}
 
-	private static boolean hasAnnotation(byte[] classBytes, final String annotationName) {
+	private static boolean hasAnnotation(byte[] bytes, String aName) {
 		try {
-			final boolean[] hasAnnotation = {false};
-
-			ClassReader classReader = new ClassReader(classBytes);
-			classReader.accept(new ClassVisitor(Opcodes.ASM5) {
+			boolean[] found = {false};
+			new ClassReader(bytes).accept(new ClassVisitor(Opcodes.ASM5) {
 				@Override
 				public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-					if (annotationName.equals(desc)) {
-						hasAnnotation[0] = true;
+					if (aName.equals(desc)) {
+						found[0] = true;
 					}
-					return super.visitAnnotation(desc, visible);
+					return null;
 				}
 			}, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-
-			return hasAnnotation[0];
-		} catch (IllegalArgumentException e) {
-			EmiLog.warn("Skipping incompatible class file: " + e.getMessage());
-			return false;
+			return found[0];
 		} catch (Exception e) {
-			EmiLog.warn("Error processing class with ASM: " + e.getMessage());
 			return false;
 		}
 	}

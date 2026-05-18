@@ -21,7 +21,6 @@
     "accessor.RenderItemAccessor"
   ],
   "mixins": [
-    "NetHandlerPlayServerMixin",
     "accessor.InventoryCraftingAccessor",
     "accessor.ItemToolAccessor",
     "accessor.ShapedOreRecipeAccessor",

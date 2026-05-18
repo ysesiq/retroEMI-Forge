@@ -37,7 +37,7 @@ public class ConfigPresetScreen extends REMIScreen {
 	public void init() {
 		super.init();
 		this.addDrawable(new EmiNameWidget(width / 2, 16));
-		int w = Math.min(400, width - 40);
+		int w = Math.min(400, width - 40) / 4 * 4;
 		int x = (width - w) / 2;
 		this.resetButton = EmiPort.newButton(x + 2, height - 30, w / 2 - 2, 20, EmiPort.translatable("gui.done"), button -> {
 			EmiConfig.loadConfig(QDCSS.load("revert", last.originalConfig));

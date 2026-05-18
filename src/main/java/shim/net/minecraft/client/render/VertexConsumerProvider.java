@@ -1,5 +1,5 @@
 package shim.net.minecraft.client.render;
 
-public class VertexConsumerProvider {
-
+public interface VertexConsumerProvider {
+    VertexConsumer getBuffer(RenderLayer layer);
 }

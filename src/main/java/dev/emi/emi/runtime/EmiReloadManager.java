@@ -1,11 +1,17 @@
 package dev.emi.emi.runtime;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.google.common.collect.Lists;
+
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiInitRegistry;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.bom.BoM;
+import dev.emi.emi.mixinsupport.EmiMixinTransformation;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.registry.EmiComparisonDefaults;
 import dev.emi.emi.registry.EmiDragDropHandlers;
@@ -26,10 +32,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import shim.net.minecraft.text.Text;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
-
 public class EmiReloadManager {
 	private static int loadedResourcesMask = 0;
 	private static volatile boolean clear = false, restart = false;
@@ -38,6 +40,10 @@ public class EmiReloadManager {
 	private static Thread thread;
 	public static volatile Text reloadStep = EmiPort.literal("");
 	public static volatile long reloadWorry = Long.MAX_VALUE;
+
+	static {
+		//EmiMixinTransformation.preach();
+	}
 
 	public static void reloadTags() {
 		loadedResourcesMask |= 1;
@@ -147,6 +153,7 @@ public class EmiReloadManager {
 						EmiReloadLog.warn("Recipe Manager is null");
 						break;
 					}
+					// No entrypoint, this step takes a long time
 					step(EmiPort.literal("Finding plugins"));
 					List<EmiPluginContainer> plugins = Lists.newArrayList();
 					plugins.addAll(EmiAgnos.getPlugins().stream()

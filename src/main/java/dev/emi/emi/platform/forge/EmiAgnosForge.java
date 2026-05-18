@@ -255,13 +255,13 @@ public class EmiAgnosForge extends EmiAgnos {
 
 	@Override
 	protected boolean isFloatyFluidAgnos(FluidEmiStack stack) {
-		FluidStack fs = new FluidStack(stack.getKeyOfType(Fluid.class), 1000, stack.getComponentChanges());
+		FluidStack fs = new FluidStack(stack.getKeyOfType(Fluid.class), 1000, stack.getNbt());
 		return fs.getFluid().getDensity() <= 0;
 	}
 
 	@Override
 	protected void renderFluidAgnos(FluidEmiStack stack, MatrixStack matrices, int x, int y, float delta, int xOff, int yOff, int width, int height) {
-		FluidStack fs = new FluidStack(stack.getKeyOfType(Fluid.class), 1000, stack.getComponentChanges());
+		FluidStack fs = new FluidStack(stack.getKeyOfType(Fluid.class), 1000, stack.getNbt());
 		Fluid ext = fs.getFluid();
 		ResourceLocation texture = ext.getStill();
 		if (texture == null) {

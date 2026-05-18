@@ -22,8 +22,8 @@ import net.minecraft.entity.player.EntityPlayer;
 public class EmiChess {
 	public static final List<EmiStack> SIDEBAR;
 	private static final EmiChess chess = new EmiChess();
-	public String opponent = null;
-	public String pending = null;
+	public UUID opponent = null;
+	public UUID pending = null;
 	public boolean started = false;
 	public ChessBoard board = ChessBoard.setupBoard();
 	public MoveGenerator generator = new StandardMoveGenerator(PieceColor.BLACK);
@@ -178,19 +178,19 @@ public class EmiChess {
 		String name = EmiScreenManager.search.getText();
 		for (EntityPlayer player : (List<EntityPlayer>) client.world.playerEntities) {
 			if (player.getName().equals(name)) {
-				get().opponent = player.getName();
-				sendNetwork(player.getName(), -1, 0, 0);
+				get().opponent = player.getUniqueID();
+				sendNetwork(player.getUniqueID(), -1, 0, 0);
 			}
 		}
 	}
 
-	private static void sendNetwork(String uuid, int type, int start, int end) {
+	private static void sendNetwork(UUID uuid, int type, int start, int end) {
 		EmiNetwork.sendToServer(new EmiChessPacket.C2S(uuid, (byte) type, (byte) start, (byte) end));
 	}
 
-	public static void receiveNetwork(String uuid, int type, int start, int end) {
+	public static void receiveNetwork(UUID uuid, int type, int start, int end) {
 		Minecraft client = Minecraft.getMinecraft();
-		EntityPlayer player = client.world.getPlayerEntityByName(uuid);
+		EntityPlayer player = client.world.getPlayerEntityByUUID(uuid);
 		if (player == null) {
 			return;
 		}

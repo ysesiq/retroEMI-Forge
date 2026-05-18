@@ -90,7 +90,7 @@ public interface EmiStackSerializer<T extends EmiStack> extends EmiIngredientSer
 	default JsonElement serialize(T stack) {
 		String nbt = null;
 		if (stack.hasNbt()) {
-			nbt = stack.getComponentChanges().toString();
+			nbt = stack.getNbt().toString();
 		}
 //		if (componentChanges != ComponentChanges.EMPTY) {
 //			nbt = ComponentChanges.CODEC.encodeStart(withRegistryAccess(NbtOps.INSTANCE), componentChanges).getOrThrow().asString();

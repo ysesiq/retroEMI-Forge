@@ -99,7 +99,7 @@ public class EmiScreenManager {
 	private static List<? extends EmiIngredient> searchedStacks = shim.java.List.of();
 	private static int lastWidth, lastHeight;
 	private static List<Bounds> lastExclusion;
-//	private static StackBatcher.ClaimedCollection batchers = new StackBatcher.ClaimedCollection();
+	private static StackBatcher.ClaimedCollection batchers = new StackBatcher.ClaimedCollection();
 	private static List<SidebarPanel> panels =  shim.java.List.of(
 			new SidebarPanel(SidebarSide.LEFT, EmiConfig.leftSidebarPages),
 			new SidebarPanel(SidebarSide.RIGHT, EmiConfig.rightSidebarPages),
@@ -180,7 +180,7 @@ public class EmiScreenManager {
 		int top = bounds.left();
 		int bottom = bounds.bottom();
 
-//		batchers.unclaimAll();
+		batchers.unclaimAll();
 
 		List<Bounds> spaceExclusion = Lists.newArrayList();
 		spaceExclusion.addAll(exclusion);
@@ -1512,6 +1512,7 @@ public class EmiScreenManager {
 					EmiProfiler.swap(side.getName());
 					context.push();
 					context.matrices().translate(0, 0, 100);
+					context.resetColor();
 					pageLeft.render(context.raw(), mouseX, mouseY, delta);
 					cycle.render(context.raw(), mouseX, mouseY, delta);
 					pageRight.render(context.raw(), mouseX, mouseY, delta);
@@ -1703,7 +1704,7 @@ public class EmiScreenManager {
 	}
 
 	public static class ScreenSpace {
-		public final StackBatcher batcher = new StackBatcher();
+		public final StackBatcher batcher = batchers.claim();
 		private final Supplier<SidebarType> typeSupplier;
 		public final int tx, ty, tw, th;
 		public final int pageSize;

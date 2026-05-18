@@ -7,24 +7,20 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 public class PingS2CPacket implements EmiPacket {
-	private int isServer;
 
-	public PingS2CPacket(boolean isServer) {
-		this.isServer = isServer ? 1 : 0;
+	public PingS2CPacket() {
 	}
 
-	public PingS2CPacket(PacketBuffer buf) {
-		isServer = buf.readByte();
+	public void read(PacketBuffer buf) {
 	}
 
 	@Override
 	public void write(PacketBuffer buf) {
-		buf.writeByte(isServer);
 	}
 
 	@Override
 	public void apply(EntityPlayer player) {
-		EmiClient.onServer = isServer == 1;
+		EmiClient.onServer = true;
 		EmiReloadManager.reload();
 	}
 

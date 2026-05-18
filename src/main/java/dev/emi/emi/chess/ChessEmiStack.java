@@ -85,7 +85,7 @@ class ChessEmiStack extends EmiStack {
     }
 
     @Override
-    public NBTTagCompound getComponentChanges() {
+    public NBTTagCompound getNbt() {
         return null;
     }
 
@@ -117,7 +117,7 @@ class ChessEmiStack extends EmiStack {
                     list.add(new ChessTooltipComponent(ChessPiece.of(PieceType.PAWN, PieceColor.BLACK), ChessPiece.of(PieceType.KING, PieceColor.BLACK),
                         EmiPort.translatable("emi.chess.tooltip.invite")));
                     if (EmiChess.get().pending != null) {
-                        EntityPlayer player = client.world.getPlayerEntityByName(EmiChess.get().pending);
+                        EntityPlayer player = client.world.getPlayerEntityByUUID(EmiChess.get().pending);
                         if (player != null) {
                             list.add(new ChessTooltipComponent(ChessPiece.of(PieceType.KING, PieceColor.WHITE), ChessPiece.of(PieceType.KING, PieceColor.BLACK),
                                 EmiPort.translatable("emi.chess.tooltip.accept", player.getName())));

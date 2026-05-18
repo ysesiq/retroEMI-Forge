@@ -1,6 +1,5 @@
 package dev.emi.emi.network;
 
-import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
@@ -11,20 +10,21 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
 public class CommandS2CPacket implements EmiPacket {
-	private final byte type;
-	private final ResourceLocation id;
+	private byte type;
+	private ResourceLocation id;
+
+	public CommandS2CPacket() {
+	}
 
 	public CommandS2CPacket(byte type, ResourceLocation id) {
 		this.type = type;
 		this.id = id;
 	}
 
-	public CommandS2CPacket(PacketBuffer buf) {
+	public void read(PacketBuffer buf) {
 		type = buf.readByte();
 		if (type == EmiCommands.VIEW_RECIPE || type == EmiCommands.TREE_GOAL || type == EmiCommands.TREE_RESOLUTION) {
-			String path = buf.readString(255);
-			String domain = buf.readString(255);
-			id = EmiPort.id(domain, path);
+			id = buf.readResourceLocation();
 		} else {
 			id = null;
 		}
@@ -34,8 +34,7 @@ public class CommandS2CPacket implements EmiPacket {
 	public void write(PacketBuffer buf) {
 		buf.writeByte(type);
 		if (type == EmiCommands.VIEW_RECIPE || type == EmiCommands.TREE_GOAL || type == EmiCommands.TREE_RESOLUTION) {
-			buf.writeString(id.getPath());
-			buf.writeString(id.getNamespace());
+			buf.writeResourceLocation(id);
 		}
 	}
 

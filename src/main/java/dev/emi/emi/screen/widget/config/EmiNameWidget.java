@@ -49,7 +49,15 @@ public class EmiNameWidget implements Drawable {
 		this.y = y;
 
 		// retroEMI names (put here for no merge conflicts (hopefully))
-		String[] memes = {"Etho Made Islands", "Exploding Machines: IC2", "Employing Many Insects", "Elp Mtrapped Inanamefactory",};
+		String[] memes = {
+			"Etho Made Islands",
+			"Exploding Machines: IC2",
+			"Employing Many Insects",
+			"Elp Mtrapped Inanamefactory",
+			// retroEMI-Forge names ? or memes ?
+			"Extended Mouse Interface", // mysterious full name that AI wrote for EMI
+			"Ei Mah Iah" // “哎妈呀”
+		};
 		for (String m : memes) {
 			if (m != null) {
 				NAMES.add(m.split(" "));

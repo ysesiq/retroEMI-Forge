@@ -29,54 +29,46 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Locale.class)
 public abstract class LocaleMixin {
-    @Shadow Map<String, String> properties;
+	@Shadow Map<String, String> properties;
 
-    @Inject(method = "translateKeyPrivate", at = @At(value = "HEAD"), cancellable = true)
-    private void betterTranslation(String registerName, CallbackInfoReturnable<String> cir) {
-        String localeTranslation = this.properties.get(registerName);
-        if (localeTranslation != null) {
-            cir.setReturnValue(localeTranslation);
-        } else {
-            String statTranslation = I18n.translateToLocal(registerName);
-            cir.setReturnValue((statTranslation != null ? statTranslation : registerName));
-        }
-    }
+	@Inject(method = "translateKeyPrivate", at = @At(value = "HEAD"), cancellable = true)
+	private void betterTranslation(String translateKey, CallbackInfoReturnable<String> cir) {
+		String localeTranslation = this.properties.get(translateKey);
+		if (localeTranslation != null) {
+			cir.setReturnValue(localeTranslation);
+		} else {
+			String translation = I18n.translateToLocal(translateKey);
+			cir.setReturnValue((!translation.isEmpty() ? translation : translateKey));
+		}
+	}
 
-    @Inject(method = "loadLocaleDataFiles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/Locale;checkUnicode()V"))
-    private void readJsonFile(IResourceManager resourceManager, List<String> langList, CallbackInfo ci) {
-        for (String localeName : langList) {
-            String filePath = String.format("lang/%s.json", localeName);
-            try {
-                ResourceLocation resourceLocation = EmiPort.id("emi", filePath);
-                List<IResource> resources = resourceManager.getAllResources(resourceLocation);
-                if (!resources.isEmpty()) {
-                    this.loadJsonFile(resourceManager, filePath);
-                }
-            } catch (Exception ignore) {
-            }
-        }
-    }
+	@Inject(method = "loadLocaleDataFiles", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/Locale;checkUnicode()V"))
+	private void readJsonFile(IResourceManager resourceManager, List<String> langList, CallbackInfo ci) {
+		for (String localeName : langList) {
+			String filePath = String.format("lang/%s.json", localeName);
+			try {
+				List<IResource> resources = resourceManager.getAllResources(EmiPort.id("emi", filePath));
+				if (!resources.isEmpty()) {
+					this.loadJsonFile(resourceManager, filePath);
+				}
+			} catch (Exception ignore) {
+			}
+		}
+	}
 
-    @Unique
-    private void loadJsonFile(IResourceManager resourceManager, String fileName) {
-        for (String resourceDomain : resourceManager.getResourceDomains()) {
-            try {
-                this.loadJsonData(resourceManager.getAllResources(EmiPort.id(resourceDomain, fileName)), fileName);
-            } catch (Exception ignore) {
-            }
-        }
-    }
-
-    @Unique
-    private void loadJsonData(List<IResource> resources, String fileName) {
-        Gson gson = new Gson();
-        for (IResource resource : resources) {
-            try (InputStream stream = resource.getInputStream(); InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-                jsonObject.entrySet().forEach(x -> this.properties.put(x.getKey(), (x.getValue()).getAsString()));
-            } catch (JsonIOException | JsonSyntaxException | IOException e) {
-                EmiLog.error("Exception when reading lang file: '" + fileName + "'", e);
-            }
-        }
-    }
+	@Unique
+	private void loadJsonFile(IResourceManager resourceManager, String fileName) {
+		try {
+			Gson gson = new Gson();
+			for (IResource resource : resourceManager.getAllResources(EmiPort.id("emi", fileName))) {
+				try (InputStream stream = resource.getInputStream(); InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+					JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+					jsonObject.entrySet().forEach(x -> this.properties.put(x.getKey(), (x.getValue()).getAsString()));
+				} catch (JsonIOException | JsonSyntaxException | IOException e) {
+					EmiLog.error("Exception when reading lang file: '" + fileName + "'", e);
+				}
+			}
+		} catch (Exception ignore) {
+		}
+	}
 }

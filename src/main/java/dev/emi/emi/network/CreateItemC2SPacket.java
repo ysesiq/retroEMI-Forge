@@ -12,21 +12,24 @@ import net.minecraft.util.ResourceLocation;
 import java.io.IOException;
 
 public class CreateItemC2SPacket implements EmiPacket {
-	private final int mode;
-	private final ItemStack stack;
+	private int mode;
+	private ItemStack stack;
+
+	public CreateItemC2SPacket() {
+	}
 
 	public CreateItemC2SPacket(int mode, ItemStack stack) {
 		this.mode = mode;
 		this.stack = stack;
 	}
 
-	public CreateItemC2SPacket(PacketBuffer buf) {
+	public void read(PacketBuffer buf) {
+		this.mode = buf.readByte();
 		ItemStack stack = ItemStack.EMPTY;
 		try {
 			stack = buf.readItemStack();
 		} catch (IOException ignored) {
 		}
-		this.mode = buf.readByte();
 		this.stack = stack;
 	}
 
@@ -38,20 +41,18 @@ public class CreateItemC2SPacket implements EmiPacket {
 
 	@Override
 	public void apply(EntityPlayer player) {
-		if (player instanceof EntityPlayerMP esp &&
-				((esp.server.getPlayerList().getOppedPlayers().getEntry(esp.getGameProfile()).getPermissionLevel() >= 2) || player.capabilities.isCreativeMode) && //isPlayerOpped
-				player.openContainer != null) {
+		if ((player.canUseCommand(2, "give") || player.capabilities.isCreativeMode) && player.openContainer != null) {
 			if (stack.isEmpty()) {
-				if (mode == 1) {
-					player.inventory.setItemStack(null);
+				if (mode == 1 && !player.inventory.getItemStack().isEmpty()) {
+					EmiLog.info(player.getName() + " deleted " + player.inventory.getItemStack());
+					player.inventory.setItemStack(stack);
 				}
 			} else {
-				EmiLog.info(player.getDisplayName() + " cheated in " + stack);
+				EmiLog.info(player.getName() + " cheated in " + stack);
 				if (mode == 0) {
 					RetroEMI.offerOrDrop(player, stack);
 				} else if (mode == 1) {
 					player.inventory.setItemStack(stack);
-					esp.connection.sendPacket(new SPacketSetSlot(-1, 0, stack));
 				}
 			}
 		}

@@ -20,11 +20,14 @@ import net.minecraft.item.ItemStack;
 import com.rewindmc.retroemi.RetroEMI;
 
 public class FillRecipeC2SPacket implements EmiPacket {
-	private final int syncId;
-	private final int action;
-	private final List<Integer> slots, crafting;
-	private final int output;
-	private final List<ItemStack> stacks;
+	private int syncId;
+	private int action;
+	private List<Integer> slots, crafting;
+	private int output;
+	private List<ItemStack> stacks;
+
+	public FillRecipeC2SPacket() {
+	}
 
 	public FillRecipeC2SPacket(Container handler, int action, List<Slot> slots, List<Slot> crafting, @Nullable Slot output, List<ItemStack> stacks) {
 		this.syncId = handler.windowId;
@@ -35,7 +38,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 		this.stacks = stacks;
 	}
 
-	public FillRecipeC2SPacket(PacketBuffer buf) {
+	public void read(PacketBuffer buf) {
 		syncId = buf.readInt();
 		action = buf.readByte();
 		slots = parseCompressedSlots(buf);

@@ -2,10 +2,7 @@ package dev.emi.emi.api.stack;
 
 import java.util.List;
 
-import dev.emi.emi.EmiUtil;
-import dev.emi.emi.screen.tooltip.EmiTextTooltipWrapper;
-import dev.emi.emi.search.EmiSearch;
-import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -13,12 +10,15 @@ import com.google.common.collect.Lists;
 
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
+import dev.emi.emi.EmiUtil;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.render.EmiRender;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.runtime.EmiDrawContext;
-import dev.emi.emi.screen.StackBatcher;
+import dev.emi.emi.screen.StackBatcher.Batchable;
+import dev.emi.emi.screen.tooltip.EmiTextTooltipWrapper;
+import dev.emi.emi.search.EmiSearch;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -38,12 +39,12 @@ import shim.net.minecraft.util.Formatting;
 
 
 @ApiStatus.Internal
-public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
+public class ItemEmiStack extends EmiStack implements Batchable {
 	private static final Minecraft client = Minecraft.getMinecraft();
 
 	private final Item item;
 	private final int subtype;
-	private final NBTTagCompound componentChanges;
+	private final NBTTagCompound nbt;
 
 	private boolean unbatchable;
 
@@ -57,7 +58,7 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 
 	public ItemEmiStack(Item item, NBTTagCompound components, long amount, int subtype) {
 		this.item = item;
-		this.componentChanges = components;
+		this.nbt = components;
 		this.subtype = subtype;
 		this.amount = amount;
 	}
@@ -65,15 +66,15 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 	@Override
 	public ItemStack getItemStack() {
 		ItemStack stack = new ItemStack(this.item, (int) this.amount, this.subtype);
-		if (this.componentChanges != null) {
-			stack.setTagCompound(this.componentChanges);
+		if (this.nbt != null) {
+			stack.setTagCompound(this.nbt);
 		}
 		return stack;
 	}
 
 	@Override
 	public EmiStack copy() {
-		EmiStack e = new ItemEmiStack(item, componentChanges, amount, subtype);
+		EmiStack e = new ItemEmiStack(item, nbt, amount, subtype);
 		e.setChance(chance);
 		e.setRemainder(getRemainder().copy());
 		e.comparison = comparison;
@@ -86,8 +87,8 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 	}
 
 	@Override
-	public NBTTagCompound getComponentChanges() {
-		return componentChanges;
+	public NBTTagCompound getNbt() {
+		return nbt;
 	}
 
 //	@Override
@@ -175,9 +176,13 @@ public class ItemEmiStack extends EmiStack implements StackBatcher.Batchable {
 		IBakedModel model = ir.getItemModelWithOverrides(stack, null, null);
 		context.push();
 		try {
+			client.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			GlStateManager.enableRescaleNormal();
+			RenderSystem.enableBlend();
+			RenderHelper.enableGUIStandardItemLighting();
 			context.matrices().translate(x, y, 100.0f + z + 0);
 			context.matrices().translate(8.0, 8.0, 0.0);
-			context.matrices().scale(16.0f, 16.0f, 16.0f);
+			context.matrices().scale(16.0f, -16.0f, 16.0f);
 			ir.renderItem(stack, model);
 		} finally {
 			context.pop();

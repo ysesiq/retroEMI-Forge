@@ -54,7 +54,7 @@ public class FluidEmiStack extends EmiStack {
 	}
 
 	@Override
-	public NBTTagCompound getComponentChanges() {
+	public NBTTagCompound getNbt() {
 		return componentChanges;
 	}
 

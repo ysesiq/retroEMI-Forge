@@ -5,17 +5,15 @@ import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import shim.net.minecraft.client.gui.DrawContext;
 
 public class REMIMixinHooks {
-	private static Minecraft client = Minecraft.getMinecraft();
+	private static final Minecraft client = Minecraft.getMinecraft();
 
-	//FontRenderer
-	private static final char SECTION = '\u00a7';
+	// FontRenderer
+	private static final char SECTION = '\u00a7';// §
 
 	public static int applyCustomFormatCodes(FontRenderer subject, String str, boolean shadow, int i) {
 		EmiDrawContext context = EmiDrawContext.instance();
@@ -34,8 +32,7 @@ public class REMIMixinHooks {
 		return i;
 	}
 
-	//InventoryEffectRender
-
+	// InventoryEffectRender
 	public static final int EFFECT_WIDTH = 124;
 
 	public static String getPotionAmplifier(PotionEffect effect) {
@@ -51,7 +48,7 @@ public class REMIMixinHooks {
         if (wide) {
             context.drawTexture(GuiContainer.INVENTORY_BACKGROUND, x, y, 0, 166, 120, 32);
 		} else {
-			//split so it renders the edge properly
+			// split so it renders the edge properly
             context.drawTexture(GuiContainer.INVENTORY_BACKGROUND, x, y, 0, 166, 28, 32);
             context.drawTexture(GuiContainer.INVENTORY_BACKGROUND, x + 28, y, 116, 166, 4, 32);
 		}

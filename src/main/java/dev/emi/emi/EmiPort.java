@@ -3,6 +3,7 @@ package dev.emi.emi;
 import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
@@ -16,6 +17,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.enchantment.Enchantment;
@@ -29,6 +32,7 @@ import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -116,10 +120,10 @@ public final class EmiPort {
 //		buf.bind();
 //		buf.draw(mat, RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
 //	}
-//
-//	public static List<BakedQuad> getQuads(IBakedModel model) {
-//		return model.getQuads(null, null, MathHelper.getPositionRandom(null));
-//	}
+
+	public static List<BakedQuad> getQuads(IBakedModel model) {
+		return model.getQuads(null, null, 0L);
+	}
 
 	public static void draw(BufferBuilder bufferBuilder) {
 		Tessellator.getInstance().draw();

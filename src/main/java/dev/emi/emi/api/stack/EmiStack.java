@@ -84,10 +84,10 @@ public abstract class EmiStack implements EmiIngredient {
 		return this;
 	}
 
-	public abstract NBTTagCompound getComponentChanges();
+	public abstract NBTTagCompound getNbt();
 
 	public boolean hasNbt() {
-		return getComponentChanges() != null;
+		return getNbt() != null;
 	}
 
 	public abstract Object getKey();
@@ -156,7 +156,7 @@ public abstract class EmiStack implements EmiIngredient {
 	@Override
 	public String toString() {
 		String s = "" + getKey();
-		NBTTagCompound nbt = getComponentChanges();
+		NBTTagCompound nbt = getNbt();
 		if (nbt != null) {
 			s += nbt;
 		}

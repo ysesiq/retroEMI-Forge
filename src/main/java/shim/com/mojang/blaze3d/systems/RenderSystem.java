@@ -14,12 +14,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class RenderSystem {
 
-    public static void enableDepthTest() {
-        GlStateManager.enableDepth();
+	public static void enableDepthTest() {
+		GlStateManager.enableDepth();
 	}
 
 	public static void disableDepthTest() {
-        GlStateManager.disableDepth();
+		GlStateManager.disableDepth();
 	}
 
 	public static void enableScissor(int x, int y, int width, int height) {
@@ -32,57 +32,69 @@ public class RenderSystem {
 	}
 
 	public static void enableLighting() {
-        GlStateManager.enableLighting();
+		GlStateManager.enableLighting();
 	}
 
 	public static void disableLighting() {
-        GlStateManager.disableLighting();
+		GlStateManager.disableLighting();
 	}
 
 	public static void enableBlend() {
-        GlStateManager.enableBlend();
+		GlStateManager.enableBlend();
 	}
 
 	public static void disableBlend() {
-        GlStateManager.disableBlend();
+		GlStateManager.disableBlend();
 	}
 
 	public static void defaultBlendFunc() {
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 	}
 
-	public static void blendFunc(int sfactor, int dfactor) {
-        GlStateManager.blendFunc(sfactor, dfactor);
+	public static void blendFunc(GlStateManager.SourceFactor srcFactor, GlStateManager.DestFactor dstFactor) {
+		GlStateManager.blendFunc(srcFactor.factor, dstFactor.factor);
+	}
+
+	public static void blendFunc(int srcFactorRGB, int dstFactorRGB) {
+		GlStateManager.blendFunc(srcFactorRGB, dstFactorRGB);
+	}
+
+	public static void blendFuncSeparate(GlStateManager.SourceFactor srcFactor, GlStateManager.DestFactor dstFactor, GlStateManager.SourceFactor srcAlpha, GlStateManager.DestFactor dstAlpha) {
+		GlStateManager.tryBlendFuncSeparate(srcFactor.factor, dstFactor.factor, srcAlpha.factor, dstAlpha.factor);
+	}
+
+	public static void blendFuncSeparate(int srcFactorRGB, int dstFactorRGB, int srcFactorAlpha, int dstFactorAlpha) {
+		GlStateManager.tryBlendFuncSeparate(srcFactorRGB, dstFactorRGB, srcFactorAlpha, dstFactorAlpha);
 	}
 
 	public static MatrixStack getModelViewStack() {
-        GlStateManager.matrixMode(GL_MODELVIEW);
+		GlStateManager.matrixMode(GL_MODELVIEW);
 		return MatrixStack.INSTANCE;
 	}
 
 	public static void applyModelViewMatrix() {
 		FloatBuffer currentMatrix = BufferUtils.createFloatBuffer(16);
-        GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, currentMatrix);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, currentMatrix);
 		Matrix4f matrix4f = new Matrix4f();
 		matrix4f.load(currentMatrix);
-        GlStateManager.matrixMode(GL_MODELVIEW);
+		GlStateManager.matrixMode(GL_MODELVIEW);
 		GL11.glLoadMatrix(matrixToFloatBuffer(matrix4f));
 	}
 
-    public static MatrixStack getProjectionMatrix() {
-        GlStateManager.matrixMode(GL_PROJECTION);
-        return MatrixStack.INSTANCE;
-    }
+	public static MatrixStack getProjectionMatrix() {
+		GlStateManager.matrixMode(GL_PROJECTION);
+		return MatrixStack.INSTANCE;
+	}
 
-    public static void setProjectionMatrix(MatrixStack projection) {
-        GlStateManager.matrixMode(GL_PROJECTION);
-        projection.pushMatrix();
-        projection.identity();
-    }
+	public static void setProjectionMatrix(MatrixStack projection) {
+		GlStateManager.matrixMode(GL_PROJECTION);
+		projection.pushMatrix();
+		projection.identity();
+	}
 
-    public static void viewport(int x, int y, int width, int height) {
-        GlStateManager.viewport(x, y, width, height);
-    }
+	public static void viewport(int x, int y, int width, int height) {
+		GlStateManager.viewport(x, y, width, height);
+	}
 
 	public static FloatBuffer matrixToFloatBuffer(Matrix4f matrix) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
@@ -95,18 +107,18 @@ public class RenderSystem {
 	}
 
 	public static void setShaderColor(float r, float g, float b, float a) {
-        GlStateManager.color(r, g, b, a);
+		GlStateManager.color(r, g, b, a);
 	}
 
 	public static void setShaderTexture(int i, ResourceLocation id) {
-        GlStateManager.bindTexture(i);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(id);
+		GlStateManager.bindTexture(i);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(id);
 //		glBindTexture(GL_TEXTURE_2D + i, Minecraft.getMinecraft().getTextureManager().getTexture(id).getGlTextureId());
 	}
 
 	public static void colorMask(boolean r, boolean g, boolean b, boolean a) {
-        GlStateManager.colorMask(r, g, b, a);
-        GlStateManager.depthMask(a);
+		GlStateManager.colorMask(r, g, b, a);
+		GlStateManager.depthMask(a);
 	}
 
 }
