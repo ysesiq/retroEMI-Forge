@@ -13,9 +13,8 @@ public class REMIMixinHooks {
 	private static final Minecraft client = Minecraft.getMinecraft();
 
 	// FontRenderer
-	private static final char SECTION = '\u00a7';// §
-
 	public static int applyCustomFormatCodes(FontRenderer subject, String str, boolean shadow, int i) {
+        final char SECTION = '\u00a7';// §
 		EmiDrawContext context = EmiDrawContext.instance();
 		if (i + 14 <= str.length() && str.charAt(i) == SECTION && str.startsWith(SECTION + "x", i + 12)) {
 			int color = 0;

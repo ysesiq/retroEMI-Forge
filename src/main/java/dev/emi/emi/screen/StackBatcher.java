@@ -192,7 +192,7 @@ public class StackBatcher {
 		RenderSystem.enableDepthTest();
 		RenderHelper.enableGUIStandardItemLighting();
 		Matrix4f mat = new Matrix4f();
-        Matrix4f.mul(mat, new Matrix4f().translate(new Vector3f(x, y, 0)), mat);
+		Matrix4f.mul(mat, new Matrix4f().translate(new Vector3f(x, y, 0)), mat);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		for (Map.Entry<RenderLayer, ByteBuffer> en : buffers.entrySet()) {
 			en.getKey().startDrawing();
