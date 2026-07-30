@@ -3,6 +3,7 @@ package dev.emi.emi.mixin.nemi;
 import codechicken.nei.recipe.GuiRecipeButton;
 import codechicken.nei.recipe.NEIRecipeWidget;
 import codechicken.nei.recipe.RecipeHandlerRef;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.emi.emi.nemi.GuiTreeButton;
 import org.spongepowered.asm.mixin.Final;
@@ -20,7 +21,9 @@ public class NEIRecipeWidgetMixin {
 
 	@Inject(method = "getDefaultButtons", at = @At("TAIL"))
 	private void addTreeButton(CallbackInfoReturnable<List<GuiRecipeButton>> cir, @Local(name = "x") int x, @Local(name = "y") int y) {
-		List<GuiRecipeButton> buttons = cir.getReturnValue();
-		buttons.add(new GuiTreeButton(this.handlerRef, x, y - GuiRecipeButton.BUTTON_HEIGHT - 1));
+		if (this.handlerRef.handler instanceof TemplateRecipeHandler) {
+			List<GuiRecipeButton> buttons = cir.getReturnValue();
+			buttons.add(new GuiTreeButton(this.handlerRef, x, y - GuiRecipeButton.BUTTON_HEIGHT - 1));
+		}
 	}
 }
