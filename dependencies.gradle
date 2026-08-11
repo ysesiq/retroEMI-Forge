@@ -39,6 +39,6 @@ dependencies {
     // Compatibility test
 //    runtimeOnly("org.lwjgl:lwjgl-glfw:3.3.6")
 //    runtimeOnly("com.github.GTNewHorizons:lwjgl3ify:3.0.27:dev")
-//    runtimeOnly("com.github.GTNewHorizons:Hodgepodge:2.7.59-pre:dev") { transitive = false }
+    runtimeOnly("com.github.GTNewHorizons:Hodgepodge:2.7.185:dev") { transitive = false }
 //    runtimeOnly("com.github.GTNewHorizons:twilightforest:2.7.5:dev") { transitive = false }
 }

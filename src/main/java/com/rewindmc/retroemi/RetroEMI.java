@@ -241,7 +241,7 @@ public class RetroEMI {
 		if (parent instanceof ParentElement) {
 			return false;
 		}
-		for (java.lang.reflect.Field f : parent.getClass().getDeclaredFields()) {
+		for (Field f : parent.getClass().getDeclaredFields()) {
 			f.setAccessible(true);
 			if (!GuiTextField.class.isAssignableFrom(f.getType())) {
 				continue;
@@ -256,16 +256,5 @@ public class RetroEMI {
 			}
 		}
 		return false;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static List<ModelDeserializer.ModelElement> getModelElements(JSONModel model) {
-		try {
-			Field f = JSONModel.class.getDeclaredField("elements");
-			f.setAccessible(true);
-			return (List<ModelDeserializer.ModelElement>) f.get(model);
-		} catch (Exception e) {
-			return Collections.emptyList();
-		}
 	}
 }
