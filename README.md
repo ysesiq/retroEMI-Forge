@@ -1,7 +1,9 @@
 # retroEMI Forge
 EMI is a featureful and accessible item and recipe viewer for Minecraft.
 
-* Fork form [Rewind/retroEMI](https://git.sleeping.town/Rewind/retroEMI)
+This [fork](https://github.com/dilepton/emi_1.12.2) heavily uses code from this project, thereby violating this project's MIT license (by replacing the project developer Xy_Luce (Xy_Lose) with dilepton) and falsely claims that retroEMI is a compatibility layer. Please do not use it.
+
+Fork form [Rewind/retroEMI](https://git.sleeping.town/Rewind/retroEMI)
 
 exaptations accidentally ported it to 1.4.7 because NEI is a trash heap! Oopsie daisy!
 
@@ -18,8 +20,6 @@ Mixin is provided by [UniMixins](https://github.com/LegacyModdingMC/UniMixins).
 
 Part of the code refers to [Bommels05's EMI 1.7.10 port](https://github.com/Bommels05/emi), such as tag, data, etc
 
-### Note about NEI-Unofficial/HEI compatibility
+### Note about NEI-Unofficial/HEI(JEI) compatibility
 
-Stay tuned, it's not something that will happen for a while, and I've been under a lot of pressure to study lately.
-
-Now, only UI compatibility is supported
+Coming soon
