@@ -13,6 +13,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.recipe.EmiShapedRecipe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class EmiShapedOreRecipe extends EmiCraftingRecipe {
@@ -50,6 +51,8 @@ public class EmiShapedOreRecipe extends EmiCraftingRecipe {
 					return EmiIngredient.of(streamForgeList(list).map(stack -> (ItemStack) stack).map(EmiStack::ofPotentialTag).collect(Collectors.toList()));
 				}
 			}
+		} else if (input instanceof Ingredient ingredient) {
+			return EmiIngredient.of(ingredient);
 		} else if (input == null) {
 			return EmiStack.EMPTY;
 		}

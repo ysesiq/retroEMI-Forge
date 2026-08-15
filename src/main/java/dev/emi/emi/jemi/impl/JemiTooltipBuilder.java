@@ -1,16 +1,16 @@
 //package dev.emi.emi.jemi.impl;
 //
-//import com.google.common.collect.Lists;
-//import dev.emi.emi.runtime.EmiLog;
-//import mezz.jei.api.gui.builder.ITooltipBuilder;
-//import mezz.jei.api.ingredients.ITypedIngredient;
-//import net.minecraft.client.gui.tooltip.TooltipComponent;
-//import net.minecraft.item.tooltip.TooltipData;
-//import net.minecraft.text.StringVisitable;
-//import net.minecraft.text.Text;
-//
 //import java.util.Collection;
 //import java.util.List;
+//
+//import com.google.common.collect.Lists;
+//
+//import dev.emi.emi.runtime.EmiLog;
+//import mezz.jei.api.gui.builder.ITooltipBuilder;
+//import shim.mezz.jei.api.ingredients.ITypedIngredient;
+//import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+//import net.minecraft.item.tooltip.TooltipData;
+//import shim.net.minecraft.text.Text;
 //
 //public class JemiTooltipBuilder implements ITooltipBuilder {
 //	public final List<TooltipComponent> tooltip = Lists.newArrayList();

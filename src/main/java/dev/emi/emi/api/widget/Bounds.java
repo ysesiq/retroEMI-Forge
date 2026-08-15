@@ -1,5 +1,7 @@
 package dev.emi.emi.api.widget;
 
+import java.awt.Rectangle;
+
 import com.github.bsideup.jabel.Desugar;
 
 @Desugar
@@ -39,5 +41,9 @@ public record Bounds(int x, int y, int width, int height) {
 			Math.min(bottom(), another.bottom()) - top
 		);
 		return b;
+	}
+
+	public static Bounds ofRectangle(Rectangle rec) {
+		return new Bounds(rec.x,  rec.y, rec.width, rec.height);
 	}
 }

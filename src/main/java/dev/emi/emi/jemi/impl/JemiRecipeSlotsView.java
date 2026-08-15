@@ -1,13 +1,15 @@
 //package dev.emi.emi.jemi.impl;
 //
-//import com.google.common.collect.Lists;
-//import mezz.jei.api.gui.ingredient.IRecipeSlotView;
-//import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-//import mezz.jei.api.recipe.RecipeIngredientRole;
-//
 //import java.util.List;
 //import java.util.Objects;
 //import java.util.Optional;
+//import java.util.stream.Collectors;
+//
+//import com.google.common.collect.Lists;
+//
+//import mezz.jei.api.gui.ingredient.IRecipeSlotView;
+//import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+//import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 //
 //public class JemiRecipeSlotsView implements IRecipeSlotsView {
 //	private List<IRecipeSlotView> slots = Lists.newArrayList();
@@ -23,7 +25,7 @@
 //
 //	@Override
 //	public List<IRecipeSlotView> getSlotViews(RecipeIngredientRole role) {
-//		return slots.stream().filter(s -> Objects.equals(s.getRole(), role)).toList();
+//		return slots.stream().filter(s -> Objects.equals(s.getRole(), role)).collect(Collectors.toList());
 //	}
 //
 //	@Override

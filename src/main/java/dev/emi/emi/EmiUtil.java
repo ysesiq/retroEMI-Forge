@@ -61,6 +61,13 @@ public class EmiUtil {
 		return subId(stack.getItem().getRegistryName());
 	}
 
+	public static String subId(EmiStack stack) {
+		if (stack.getItemStack().getHasSubtypes()) {
+			return String.format("%s#%d", subId(stack.getId()), stack.getSubtype());
+		}
+		return subId(stack.getId());
+	}
+
 	public static boolean showAdvancedTooltips() {
 		Minecraft client = Minecraft.getMinecraft();
 		return client.gameSettings.advancedItemTooltips;
