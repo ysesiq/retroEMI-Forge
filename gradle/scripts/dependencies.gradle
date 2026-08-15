@@ -6,8 +6,8 @@ repositories {
     exclusiveContent {
         forRepository {
             maven {
-                name 'CurseMaven'
-                url 'https://cursemaven.com'
+                name 'CleanroomMC CurseMaven'
+                url 'https://curse.cleanroommc.com'
             }
         }
         filter {
@@ -32,7 +32,17 @@ repositories {
     mavenLocal() // Must be last for caching to work
 }
 
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
+
 dependencies {
+    // Include StripLatestForgeRequirements by default for the dev env, saves everyone a hassle
+    runtimeOnly 'com.cleanroommc:strip-latest-forge-requirements:1.0'
+    // Include OSXNarratorBlocker by default for the dev env, for M1+ Macs
+    runtimeOnly 'com.cleanroommc:osxnarratorblocker:1.0'
+
     // Example - Dependency descriptor:
     // 'com.google.code.gson:gson:2.8.6' << group: com.google.code.gson, name:gson, version:2.8.6
     // 'group:name:version:classifier' where classifier is optional
@@ -67,6 +77,25 @@ dependencies {
     compileOnly('org.jspecify:jspecify:1.0.0')
 //    implementation('org.joml:joml:1.10.8')
 //    implementation('it.unimi.dsi:fastutil:8.5.18')
-    implementation 'mezz:jei:4.33.0:dev'
+//    implementation 'mezz:jei:4.34.3:dev'//hei
+	implementation 'maven.modrinth:jei:4.16.5.1027'//jei
 	runtimeOnly'maven.modrinth:mekanism:9.8.3.390'// just test jemi
+}
+
+// Need reobfJar to use uber jars, so dependencies that are shaded in are present
+// Only redirect reobfJar through shadowJar when there's actually something to shade
+if (!configurations.shade.dependencies.empty) {
+    tasks.named('reobfJar').configure {
+        inputJar.set(tasks.named('shadowJar').flatMap({ it.archiveFile }))
+    }
+}
+
+// By default, it will use a "uberdev" suffix, and only pack shade configuration dependencies
+// Uberdev: dev jar w/ dependencies, NOT a reobfuscated artifact!
+// The end result (reobfJar) will have a non-suffixed name, as unlike normal shading envs, reobfJar is the end task
+tasks.shadowJar {
+    // Shadow wires shadowJar into the assemble task, so it runs even when nothing is shaded
+    enabled = !project.configurations.shade.dependencies.empty
+    archiveClassifier = 'uberdev'
+    configurations = [ project.configurations.shade ]
 }
