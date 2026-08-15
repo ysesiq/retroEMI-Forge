@@ -1,5 +1,7 @@
 package dev.emi.emi.mixin;
 
+import dev.emi.emi.EmiPort;
+import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.EmiScreenManager;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -17,5 +19,14 @@ public class GuiContainerMixin extends GuiScreen {
 	@Inject(method = "initGui", at = @At("TAIL"))
 	private void addEMIWidgets(CallbackInfo ci) {
 		EmiScreenManager.addWidgets(this);
+	}
+
+	@Inject(method = "drawScreen", at = @At("TAIL"))
+	private void emiRender(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+		EmiDrawContext context = EmiDrawContext.instance();
+		context.push();
+		EmiPort.setPositionTexShader();
+		EmiScreenManager.render(context, mouseX, mouseY, partialTicks);
+		context.pop();
 	}
 }
