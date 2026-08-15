@@ -284,7 +284,7 @@ public class VanillaPlugin implements EmiPlugin {
 			} else if (recipe instanceof ShapelessRecipes shapeless && recipe.canFit(3, 3)) {
 				addRecipeSafe(registry, () -> new EmiShapelessRecipe(shapeless), recipe);
 			} else if (recipe instanceof ShapelessOreRecipe shapeless && recipe.canFit(3, 3)) {
-				addRecipeSafe(registry, () -> new EmiShapelessOreRecipe(shapeless));
+				addRecipeSafe(registry, () -> new EmiShapelessOreRecipe(shapeless), recipe);
 			} else if (recipe instanceof RecipesArmorDyes dye) {
 				for (Item i : dyeableItems) {
 					if (!hiddenItems.contains(i)) {
