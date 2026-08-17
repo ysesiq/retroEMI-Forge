@@ -17,12 +17,12 @@ public interface ResourcePackRepositoryEntryAccessor {
 		return null;
 	}
 
-	@Accessor(value="reResourcePack")
-	void setResourcePack(IResourcePack var1);
+	@Accessor("reResourcePack")
+	void setResourcePack(IResourcePack pack);
 
-	@Accessor(value="rePackMetadataSection")
-	void setMetadata(PackMetadataSection var1);
+	@Accessor("rePackMetadataSection")
+	void setMetadata(PackMetadataSection meta);
 
-	@Accessor(value="texturePackIcon")
-	void setIcon(BufferedImage var1);
+	@Accessor("texturePackIcon")
+	void setIcon(BufferedImage icon);
 }

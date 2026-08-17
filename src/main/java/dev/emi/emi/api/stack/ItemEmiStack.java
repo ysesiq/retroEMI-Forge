@@ -28,7 +28,7 @@ import org.lwjgl.opengl.GL12;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
-import shim.net.minecraft.client.item.TooltipContext;
+import shim.net.minecraft.client.item.TooltipType;
 import shim.net.minecraft.client.render.VertexConsumerProvider;
 import shim.net.minecraft.item.ItemStacks;
 import shim.net.minecraft.registry.tag.ItemKey;
@@ -187,7 +187,7 @@ public class ItemEmiStack extends EmiStack implements Batchable {
 
 	@Override
 	public List<Text> getTooltipText() {
-		return RetroEMI.getItemToolTip(getItemStack(), TooltipContext.BASIC);
+		return RetroEMI.getItemToolTip(getItemStack(), TooltipType.BASIC);
 	}
 
 	@Override

@@ -62,7 +62,7 @@ public class EmiClientForge {
 		if (base != null) {
 			context.push();
 			EmiPort.setPositionTexShader();
-			EmiScreenManager.drawForeground(context, event.mouseX, event.mouseY, event.renderPartialTicks);
+			EmiScreenManager.drawBackground(context, event.mouseX, event.mouseY, event.renderPartialTicks);
 			context.pop();
 		}
 	}
@@ -78,7 +78,7 @@ public class EmiClientForge {
 		if (base != null) {
 			context.push();
 			EmiPort.setPositionTexShader();
-			EmiScreenManager.render(context, event.mouseX, event.mouseY, event.renderPartialTicks);
+			EmiScreenManager.drawForeground(context, event.mouseX, event.mouseY, event.renderPartialTicks);
 			context.pop();
 		}
 	}

@@ -6,16 +6,12 @@ import java.util.Set;
 
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
 
 @IFMLLoadingPlugin.Name("RetroEMI")
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 public class REMILoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
 	public REMILoadingPlugin() {
-		MixinBootstrap.init();
-		Mixins.addConfiguration("emi.mixins.json");
 	}
 
 	@Override
