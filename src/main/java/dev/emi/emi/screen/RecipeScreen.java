@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import dev.emi.emi.jemi.JemiScreenSwitch;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import shim.org.lwjgl.glfw.GLFW;
@@ -536,6 +537,8 @@ public class RecipeScreen extends REMIScreen {
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
 			this.close();
 			return true;
+		} else if (EmiConfig.toggleVisibility.matchesKey(keyCode, scanCode) && JemiScreenSwitch.handle()) {
+			return true;
 		} else if (EmiScreenManager.keyPressed(keyCode, scanCode, modifiers)) {
 			return true;
 		} else if (this.client.gameSettings.keyBindInventory.getKeyCode() == (keyCode)) {
@@ -602,5 +605,9 @@ public class RecipeScreen extends REMIScreen {
 			right += 22;
 		}
 		return new Bounds(left, top, right - left, bottom - top);
+	}
+
+	public List<WidgetGroup> getPage() {
+		return currentPage;
 	}
 }

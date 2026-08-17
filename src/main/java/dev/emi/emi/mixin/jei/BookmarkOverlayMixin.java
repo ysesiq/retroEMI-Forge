@@ -3,6 +3,7 @@ package dev.emi.emi.mixin.jei;
 import java.awt.Rectangle;
 import java.util.Set;
 
+import dev.emi.emi.mixin.jei.accessor.GuiIconToggleButtonAccessor;
 import dev.emi.emi.screen.EmiScreenManager;
 import dev.emi.emi.screen.widget.SizedButtonWidget;
 import mezz.jei.gui.elements.GuiIconToggleButton;
@@ -23,6 +24,6 @@ public class BookmarkOverlayMixin {
 
 	@Inject(method = "updateBounds(Ljava/awt/Rectangle;Ljava/util/Set;)V", at = @At("TAIL"))
 	private void moveBookmarkButton(Rectangle area, Set<Rectangle> guiExclusionAreas, CallbackInfo ci) {
-		this.bookmarkButton.getInternalButton().y -= emiButton.visible ? emiButton.getHeight() + 2 : 0;
+		((GuiIconToggleButtonAccessor) this.bookmarkButton).getInternalButton().y -= emiButton.visible ? emiButton.getHeight() : 0;
 	}
 }

@@ -1,0 +1,20 @@
+{
+	"required": false,
+	"minVersion": "0.8",
+	"package": "dev.emi.emi.mixin",
+	"refmap": "mixins.emi.refmap.json",
+	"compatibilityLevel": "JAVA_8",
+	"client": [
+		"jei.BookmarkOverlayMixin",
+		"jei.InputHandlerMixin",
+		"jei.JemiConfigMixin",
+		"jei.accessor.BookmarkOverlayAccessor",
+		"jei.accessor.GuiIconToggleButtonAccessor",
+		"jei.accessor.IngredientFilterAccessor",
+		"jei.accessor.IngredientListOverlayAccessor",
+		"jei.accessor.RecipesGuiAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

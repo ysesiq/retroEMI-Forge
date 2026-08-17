@@ -25,7 +25,11 @@ public class JemiIngredients implements IIngredients {
 
 	@Override
 	public <T> void setInputs(IIngredientType<T> ingredientType, List<T> ingredients) {
-		setInputLists(ingredientType, Collections.singletonList(ingredients));
+		List<List<T>> slots = Lists.newArrayList();
+		for (T ingredient : ingredients) {
+			slots.add(Collections.singletonList(ingredient));
+		}
+		setInputLists(ingredientType, slots);
 	}
 
 	@Override
@@ -46,7 +50,11 @@ public class JemiIngredients implements IIngredients {
 
 	@Override
 	public <T> void setOutputs(IIngredientType<T> ingredientType, List<T> ingredients) {
-		setOutputLists(ingredientType, Collections.singletonList(ingredients));
+		List<List<T>> slots = Lists.newArrayList();
+		for (T ingredient : ingredients) {
+			slots.add(Collections.singletonList(ingredient));
+		}
+		setOutputLists(ingredientType, slots);
 	}
 
 	@Override

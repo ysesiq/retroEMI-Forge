@@ -84,14 +84,13 @@ public class EmiRenderHelper {
 		if (sprite == null) {
 			return;
 		}
-		EmiPort.setPositionColorTexShader();
-		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-//		RenderSystem.setShaderTexture(0, EmiPort.id(sprite.getIconName()));
-		RenderSystem.enableBlend();
-
 		float r = ((color >> 16) & 255) / 256f;
 		float g = ((color >> 8) & 255) / 256f;
 		float b = (color & 255) / 256f;
+		EmiPort.setPositionColorTexShader();
+		RenderSystem.setShaderColor(r, g, b, 1.0f);
+//		RenderSystem.setShaderTexture(0, EmiPort.id(sprite.getIconName()));
+		RenderSystem.enableBlend();
 
 		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 		bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -110,6 +109,7 @@ public class EmiRenderHelper {
 		bufferBuilder.pos(xMax, yMin, 1).tex(uMax, vMin).endVertex();
 		bufferBuilder.pos(xMin, yMin, 1).tex(uMin, vMin).endVertex();
 		EmiPort.draw(bufferBuilder);
+		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	public static void drawScroll(EmiDrawContext context, int x, int y, int width, int height, int progress, int total, int color) {

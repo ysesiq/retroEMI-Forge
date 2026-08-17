@@ -25,11 +25,7 @@
 		"accessor.LegacyV2AdapterAccessor",
 		"accessor.RenderItemAccessor",
 		"accessor.ResourcePackRepositoryEntryAccessor",
-		"accessor.SimpleReloadableResourceManagerAccessor",
-		"jei.BookmarkOverlayMixin",
-		"jei.accessor.BookmarkOverlayAccessor",
-		"jei.accessor.IngredientFilterAccessor",
-		"jei.accessor.IngredientListOverlayAccessor"
+		"accessor.SimpleReloadableResourceManagerAccessor"
 	],
 	"mixins": [
 		"accessor.InventoryCraftingAccessor",

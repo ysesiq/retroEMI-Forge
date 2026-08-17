@@ -9,5 +9,4 @@ import mezz.jei.gui.overlay.bookmarks.BookmarkOverlay;
 @Mixin(value = BookmarkOverlay.class, remap = false)
 public interface BookmarkOverlayAccessor {
 	@Accessor("bookmarkButton") GuiIconToggleButton getBookmarkButton();
-	@Accessor("bookmarkList") BookmarkList getBookmarkList();
 }

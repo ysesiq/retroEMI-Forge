@@ -16,11 +16,12 @@ import dev.emi.emi.jemi.impl.JemiIngredients;
 import dev.emi.emi.jemi.impl.JemiRecipeLayoutBuilder;
 import dev.emi.emi.jemi.impl.JemiRecipeSlot;
 import dev.emi.emi.jemi.impl.JemiRecipeSlotBuilder;
+import dev.emi.emi.runtime.EmiLog;
+import mezz.jei.api.gui.IDrawable;
 import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 import dev.emi.emi.jemi.widget.JemiSlotWidget;
 import dev.emi.emi.jemi.widget.JemiTankWidget;
 import dev.emi.emi.runtime.EmiDrawContext;
-import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayoutDrawable;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -35,7 +36,6 @@ import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,7 +58,11 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 		recipe.getIngredients(ingredients);
 		JemiRecipeLayoutBuilder builder = new JemiRecipeLayoutBuilder();
 		builder.category = category;
-		category.setRecipe(builder, recipe, ingredients);
+		try {
+			category.setRecipe(builder, recipe, ingredients);
+		} catch (Throwable t) {
+			EmiLog.error("Exception adding JEI recipe", t);
+		}
 		for (JemiRecipeSlotBuilder jrsb : builder.slots) {
 			jrsb.acceptor.coerceStacks(jrsb.tooltipCallback, jrsb.renderers);
 		}
@@ -88,9 +92,8 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 			for (EmiIngredient ingredient : ingredients) {
 				sb.append('/');
 				String ids = ingredient.getEmiStacks().stream()
-					.filter(s -> !s.isEmpty())
+					.filter(s -> !s.isEmpty() && s.getId() != null)
 					.map(EmiUtil::subId)
-					.filter(Objects::nonNull)
 					.map(rl -> rl.replace(':', '.').replaceAll("[^a-z0-9/._-]", "_"))
 					.distinct()
 					.collect(Collectors.joining("+"));
@@ -153,7 +156,11 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 		recipe.getIngredients(ingredients);
 		JemiRecipeLayoutBuilder builder = new JemiRecipeLayoutBuilder();
 		builder.category = category;
-		category.setRecipe(builder, recipe, ingredients);
+		try {
+			category.setRecipe(builder, recipe, ingredients);
+		} catch (Throwable t) {
+			EmiLog.error("Exception adding JEI recipe", t);
+		}
 		for (JemiRecipeSlotBuilder jrsb : builder.slots) {
 			jrsb.acceptor.coerceStacks(jrsb.tooltipCallback, jrsb.renderers);
 		}
@@ -216,11 +223,17 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 		@Override
 		public List<TooltipComponent> getTooltip(int mouseX, int mouseY) {
 			List<TooltipComponent> list = Lists.newArrayList();
-			for (String s : category.getTooltipStrings(mouseX, mouseY)) {
-				list.add(TooltipComponent.of(EmiPort.literal(s)));
+			List<String> categoryTooltips = category.getTooltipStrings(mouseX, mouseY);
+			if (categoryTooltips != null) {
+				for (String s : categoryTooltips) {
+					list.add(TooltipComponent.of(EmiPort.literal(s)));
+				}
 			}
-			for (String s : recipe.getTooltipStrings(mouseX, mouseY)) {
-				list.add(TooltipComponent.of(EmiPort.literal(s)));
+			List<String> recipeTooltips = recipe.getTooltipStrings(mouseX, mouseY);
+			if (recipeTooltips != null) {
+				for (String s : recipeTooltips) {
+					list.add(TooltipComponent.of(EmiPort.literal(s)));
+				}
 			}
 			return list;
 		}

@@ -5,18 +5,11 @@ import java.util.Map;
 
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
 import zone.rong.mixinbooter.IEarlyMixinLoader;
 
 @IFMLLoadingPlugin.Name("RetroEMI")
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 public class REMILoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
-
-	public REMILoadingPlugin() {
-		MixinBootstrap.init();
-		Mixins.addConfiguration("emi.mixins.json");
-	}
 
 	@Override
 	public String[] getASMTransformerClass() {

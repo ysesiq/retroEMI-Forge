@@ -9,6 +9,11 @@ import com.google.common.collect.Sets;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.mixin.jei.accessor.BookmarkOverlayAccessor;
+import dev.emi.emi.mixin.jei.accessor.GuiIconToggleButtonAccessor;
+import dev.emi.emi.mixin.jei.accessor.IngredientListOverlayAccessor;
+import mezz.jei.api.IJeiRuntime;
+import mezz.jei.gui.elements.GuiIconButton;
 import shim.mezz.jei.api.ingredients.ITypedIngredient;
 import dev.emi.emi.platform.EmiAgnos;
 import mezz.jei.api.ingredients.IIngredientHelper;
@@ -47,9 +52,9 @@ public class JemiUtil {
 	}
 
 	public static EmiStack getStack(IIngredientType<?> type, Object ingredient) {
-		if (type == VanillaTypes.ITEM) {
+		if (type == VanillaTypes.ITEM && ingredient instanceof ItemStack) {
 			return EmiStack.of((ItemStack) ingredient);
-		} else if (type == getFluidType()) {
+		} else if (type == getFluidType() || ingredient instanceof FluidStack) {
 			return EmiAgnos.createFluidStack(ingredient);
 		} else {
 			IIngredientRegistry im = JemiPlugin.ingredientRegistry;
@@ -93,5 +98,13 @@ public class JemiUtil {
 			return t.type() != VanillaTypes.ITEM;
 		}
 		return t.type() == ingredientType;
+	}
+
+	public static GuiIconButton getConfigButton(IJeiRuntime runtime) {
+		return ((GuiIconToggleButtonAccessor) ((IngredientListOverlayAccessor) runtime.getIngredientListOverlay()).getConfigButton()).getInternalButton();
+	}
+
+	public static GuiIconButton getBookmarkButton(IJeiRuntime runtime) {
+		return ((GuiIconToggleButtonAccessor) ((BookmarkOverlayAccessor) runtime.getBookmarkOverlay()).getBookmarkButton()).getInternalButton();
 	}
 }

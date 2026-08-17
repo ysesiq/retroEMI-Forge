@@ -93,7 +93,13 @@ public class JemiIngredientAcceptor {
 	}
 
 	public <I> void addIngredient(IIngredientType<I> ingredientType, I ingredient) {
-		addStack(JemiUtil.getStack(ingredientType, ingredient));
+		if (ingredient instanceof List<?> li) {
+			for (Object o : li) {
+				addStack(JemiUtil.getStack(ingredientType, o));
+			}
+		} else {
+			addStack(JemiUtil.getStack(ingredientType, ingredient));
+		}
 	}
 
 	public void addIngredientsUnsafe(List<?> ingredients) {

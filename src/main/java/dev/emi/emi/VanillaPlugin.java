@@ -368,8 +368,11 @@ public class VanillaPlugin implements EmiPlugin {
 		Map<ItemKey, ItemKey> smeltingRecipes = new HashMap<>();
 		FurnaceRecipes.instance().getSmeltingList().forEach((in, out) -> {
 			for (ItemStack stack : EmiStack.ofPotentialTag(in).getEmiStacks().stream().map(EmiStack::getItemStack).collect(Collectors.toList())) {
-				if (smeltingRecipes.put(ItemKey.of(stack), ItemKey.of(out)) != null) {
-					throw new IllegalArgumentException("Duplicate smelting recipe: " + in + "=" + out);
+				ItemKey key = ItemKey.of(stack);
+				if (!smeltingRecipes.containsKey(key)) {
+					smeltingRecipes.put(key, ItemKey.of(out));
+				} else {
+					EmiReloadLog.warn("Duplicate smelting recipe: " + in + "=" + out);
 				}
 			}
 		});

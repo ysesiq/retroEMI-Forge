@@ -11,10 +11,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import dev.emi.emi.EmiPort;
-import dev.emi.emi.api.EmiApi;
+import dev.emi.emi.EmiUtil;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
+import dev.emi.emi.api.recipe.EmiInfoRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
@@ -24,10 +25,8 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.api.widget.Bounds;
-import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.jemi.impl.JemiIngredients;
 import dev.emi.emi.jemi.runtime.JemiDragDropHandler;
-import dev.emi.emi.mixin.jei.accessor.BookmarkOverlayAccessor;
 import dev.emi.emi.mixin.jei.accessor.IngredientFilterAccessor;
 import dev.emi.emi.mixin.jei.accessor.IngredientListOverlayAccessor;
 import dev.emi.emi.platform.EmiAgnos;
@@ -37,12 +36,7 @@ import dev.emi.emi.registry.EmiRecipes;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadLog;
 import dev.emi.emi.runtime.EmiReloadManager;
-import dev.emi.emi.screen.EmiScreenManager;
-import dev.emi.emi.screen.RecipeScreen;
 import mezz.jei.Internal;
-import mezz.jei.api.IIngredientListOverlay;
-import mezz.jei.bookmarks.BookmarkList;
-import mezz.jei.api.IRecipesGui;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
@@ -51,20 +45,15 @@ import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.ingredients.VanillaTypes;
-import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IIngredientType;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
-import mezz.jei.config.Config;
 import mezz.jei.gui.GuiScreenHelper;
 import mezz.jei.gui.elements.GuiIconButton;
-import mezz.jei.gui.elements.GuiIconToggleButton;
 import mezz.jei.input.IClickedIngredient;
-import mezz.jei.ingredients.IngredientBlacklistInternal;
-import mezz.jei.ingredients.IngredientFilter;
-import net.minecraft.client.gui.GuiScreen;
+import mezz.jei.plugins.jei.info.IngredientInfoRecipe;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
@@ -73,11 +62,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import shim.mezz.jei.api.ingredients.ITypedIngredient;
+import shim.net.minecraft.text.Text;
 
 @JEIPlugin
 @EmiEntrypoint
 public class JemiPlugin implements IModPlugin, EmiPlugin {
-	private static final Map<EmiRecipeCategory, IRecipeCategory<?>> CATEGORY_MAP = Maps.newHashMap();
+	static final Map<EmiRecipeCategory, IRecipeCategory<?>> CATEGORY_MAP = Maps.newHashMap();
 	private static ISubtypeRegistry subtypeRegistry;
 	public static IJeiRuntime runtime;
 //	public static BiPredicate<IIngredientTypeWithSubtypes<? extends Object, ? extends Object>, Object> hasSubtype = (a, b) -> true;
@@ -158,11 +148,11 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 				}
 			}
 			if (screen instanceof GuiContainer) {
-				GuiIconButton configButton = ((IngredientListOverlayAccessor) runtime.getIngredientListOverlay()).getConfigButton().getInternalButton();
+				GuiIconButton configButton = JemiUtil.getConfigButton(runtime);
 				if (configButton.visible) {
 					consumer.accept(new Bounds(configButton.x, configButton.y, configButton.width, configButton.height));
 				}
-				GuiIconButton bookmarkButton = ((BookmarkOverlayAccessor) runtime.getBookmarkOverlay()).getBookmarkButton().getInternalButton();
+				GuiIconButton bookmarkButton = JemiUtil.getBookmarkButton(runtime);
 				if (bookmarkButton.visible) {
 					consumer.accept(new Bounds(bookmarkButton.x, bookmarkButton.y, bookmarkButton.width, bookmarkButton.height));
 				}
@@ -241,11 +231,11 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 							registry.addWorkstation(category, catalyst);
 						}
 					}
-//					if (type == RecipeTypes.INFORMATION) {
-//						addInfoRecipes(registry, (IRecipeCategory<IJeiIngredientInfoRecipe>) c);
+					if (category == VanillaEmiRecipeCategories.INFO) {
+						addInfoRecipes(registry, c);
 //					} else if (type == RecipeTypes.CRAFTING) {
 //						addCraftingRecipes(registry, (IRecipeCategory<RecipeEntry<CraftingRecipe>>) c);
-//					}
+					}
 					continue;
 				}
 				if (handledNamespaces.contains(id.getNamespace())) {
@@ -278,38 +268,39 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 		}
 	}
 
-//	private void addInfoRecipes(EmiRegistry registry, IRecipeCategory<IJeiIngredientInfoRecipe> category) {
-//		List<IJeiIngredientInfoRecipe> recipes = runtime.getRecipeManager().createRecipeLookup(RecipeTypes.INFORMATION).includeHidden().get().toList();
-//		Map<List<EmiStack>, List<IJeiIngredientInfoRecipe>> grouped = Maps.newHashMap();
-//		for (IJeiIngredientInfoRecipe recipe : recipes) {
-//			grouped.computeIfAbsent(recipe.getIngredients().stream().map(JemiUtil::getStack).toList(), k -> Lists.newArrayList()).add(recipe);
-//		}
-//		Map<Text, List<EmiStack>> identical = Maps.newHashMap();
-//		for (Map.Entry<List<EmiStack>, List<IJeiIngredientInfoRecipe>> group : grouped.entrySet()) {
-//			MutableText text = EmiPort.literal("");
-//			for (IJeiIngredientInfoRecipe recipe : group.getValue()) {
-//				for (StringVisitable sv : recipe.getDescription()) {
-//					MutableText current = EmiPort.literal("");
-//					sv.visit((style, string) -> {
-//						current.append(EmiPort.literal(string, style));
-//						return Optional.empty();
-//					}, Style.EMPTY);
-//					if (!current.getString().isBlank()) {
-//						if (!text.getString().isEmpty()) {
-//							text.append(" ");
-//						}
-//						text.append(current);
-//					}
-//				}
-//			}
-//			identical.computeIfAbsent(text, k -> Lists.newArrayList()).addAll(group.getKey());
-//		}
-//
-//		for (Text text : identical.keySet()) {
-//			registry.addRecipe(new EmiInfoRecipe(identical.get(text).stream().map(s -> (EmiIngredient) s).toList(), List.of(text), null));
-//		}
-//	}
-//
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private void addInfoRecipes(EmiRegistry registry, IRecipeCategory category) {
+		Map<List<EmiStack>, List<Text>> grouped = Maps.newHashMap();
+		for (IRecipeWrapper recipe : (List<IRecipeWrapper>) (List<?>) runtime.getRecipeRegistry().getRecipeWrappers(category)) {
+			JemiIngredients ingredients = new JemiIngredients();
+			recipe.getIngredients(ingredients);
+			List<EmiStack> stacks = Lists.newArrayList();
+			for (IIngredientType<?> type : ingredientRegistry.getRegisteredIngredientTypes()) {
+				for (List<?> slot : ingredients.getInputs(type)) {
+					for (Object o : slot) {
+						EmiStack stack = JemiUtil.getStack(type, o);
+						if (!stack.isEmpty()) {
+							stacks.add(stack);
+						}
+					}
+				}
+			}
+			if (stacks.isEmpty() || !(recipe instanceof IngredientInfoRecipe<?> info)) {
+				continue;
+			}
+			List<Text> lines = grouped.computeIfAbsent(stacks, k -> Lists.newArrayList());
+			for (String line : info.getDescription()) {
+				if (!line.isEmpty()) {
+					lines.add(EmiPort.literal(line));
+				}
+			}
+		}
+		for (Map.Entry<List<EmiStack>, List<Text>> group : grouped.entrySet()) {
+			List<EmiStack> stacks = group.getKey();
+			registry.addRecipe(new EmiInfoRecipe(stacks.stream().map(s -> (EmiIngredient) s).collect(Collectors.toList()), group.getValue(), EmiPort.id("jemi", "/info/" + EmiUtil.subId(stacks.get(0)))));
+		}
+	}
+
 //	private void addCraftingRecipes(EmiRegistry registry, IRecipeCategory<RecipeEntry<CraftingRecipe>> category) {
 //		Set<Identifier> replaced = Sets.newHashSet();
 //		Set<EmiRecipe> replacements = Sets.newHashSet();

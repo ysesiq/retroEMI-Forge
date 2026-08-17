@@ -91,11 +91,14 @@ public class JemiRecipeSlot implements IGuiIngredient<Object> {
 
 	@Override
 	public Object getDisplayedIngredient() {
+		if (stack.getEmiStacks().isEmpty()) {
+			return null;
+		}
 		Optional<ITypedIngredient<?>> ing = JemiUtil.getTyped(stack.getEmiStacks().get(0));
 		if (ing.isPresent()/* && ing.get().type() == ingredientType*/) {
-			return Optional.of(ing.get().ingredient());
+			return ing.get().ingredient();
 		}
-		return Optional.empty();
+		return null;
 	}
 //
 //	@Override

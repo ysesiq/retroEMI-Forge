@@ -198,30 +198,14 @@ if (propertyBool('use_access_transformer')) {
 }
 
 processResources {
-
-    inputs.property 'mod_id', propertyString('mod_id')
-    inputs.property 'mod_name', propertyString('mod_name')
-    inputs.property 'mod_version', propertyString('mod_version')
-    inputs.property 'mod_description', propertyString('mod_description')
-    inputs.property 'mod_authors', "${propertyStringList('mod_authors', ',').join(', ')}"
-    inputs.property 'mod_credits', propertyString('mod_credits')
-    inputs.property 'mod_url', propertyString('mod_url')
-    inputs.property 'mod_update_json', propertyString('mod_update_json')
-    inputs.property 'mod_logo_path', propertyString('mod_logo_path')
-    inputs.property 'mixin_refmap', propertyString('mixin_refmap')
-    inputs.property 'mixin_package', propertyString('mixin_package')
-    inputs.property 'mixin_configs', propertyStringList('mixin_configs').join(' ')
-
-    def filterList = ['mcmod.info', 'pack.mcmeta']
-    filterList.addAll(propertyStringList('mixin_configs'))
-
-    filesMatching(filterList) { fcd ->
-        fcd.expand(
+    filesMatching(['mcmod.info', 'pack.mcmeta', 'mixins.*(?!refmap).*\\.json']) {
+        def authors = propertyString('mod_authors').split(',').collect { """\"${ it.trim() }\"""" }.join(', ')
+        expand(
                 'mod_id': propertyString('mod_id'),
                 'mod_name': propertyString('mod_name'),
                 'mod_version': propertyString('mod_version'),
                 'mod_description': propertyString('mod_description'),
-                'mod_authors': "${propertyStringList('mod_authors', ',').join(', ')}",
+	            'mod_authors': "[${authors}]",
                 'mod_credits': propertyString('mod_credits'),
                 'mod_url': propertyString('mod_url'),
                 'mod_update_json': propertyString('mod_update_json'),
@@ -252,14 +236,6 @@ jar {
         }
         if (propertyBool('use_access_transformer')) {
             attribute_map['FMLAT'] = propertyString('access_transformer_locations')
-        }
-        def mixinConfigs = propertyStringList('mixin_configs')
-        if (!mixinConfigs.isEmpty()) {
-            attribute_map['MixinConfigs'] = mixinConfigs.join(',')
-        }
-        def mixinConnectorClass = propertyString('mixin_connector_class')
-        if (!mixinConnectorClass.isEmpty()) {
-            attribute_map['MixinConnector'] = mixinConnectorClass
         }
         attributes(attribute_map)
     }
@@ -331,19 +307,16 @@ String parserChangelog() {
 
 tasks.register('generateMixinJson') {
     group 'cleanroom helpers'
-    def missingConfig = propertyStringList('mixin_configs').findAll(config -> !file("src/main/resources/${config}").exists())
-    onlyIf {
-        if (propertyBool('use_mixins') && propertyBool('generate_mixins_json')) {
-            return !missingConfig.empty
-        }
-        return false
-    }
-    doLast {
-        for (String mixinConfig : missingConfig) {
-            def file = file("src/main/resources/${mixinConfig}")
-            file << """{\n\t"package": "",\n\t"required": true,\n\t"refmap": "${propertyString('mixin_refmap')}",\n\t"target": "@env(DEFAULT)",\n\t"minVersion": "0.8.5",\n\t"compatibilityLevel": "JAVA_8",\n\t"mixins": [],\n\t"server": [],\n\t"client": []\n}"""
-        }
-    }
+	onlyIf {
+		if (propertyBool('use_mixins') && propertyBool('generate_mixins_json')) {
+			return !file("src/main/resources/mixins.${propertyString('mod_id')}.json").exists()
+		}
+		return false
+	}
+	doLast {
+		def file = file("src/main/resources/mixins.${propertyString('mod_id')}.json")
+		file << """{\n\t"package": "\${mixin_package}",\n\t"required": true,\n\t"refmap": "\${mixin_refmap}",\n\t"target": "@env(DEFAULT)",\n\t"minVersion": "0.8.5",\n\t"compatibilityLevel": "JAVA_8",\n\t"mixins": [],\n\t"server": [],\n\t"client": []\n}"""
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
