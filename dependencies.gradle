@@ -35,10 +35,12 @@ dependencies {
     // Compatible mods
     implementation("com.github.GTNewHorizons:waila:1.19.30:dev") { transitive = false }
     implementation("com.github.GTNewHorizons:NotEnoughItems:2.8.114-GTNH:dev")
+    compileOnly("com.github.GTNewHorizons:Mobs-Info:0.5.3-GTNH:dev") { transitive = false }
 
     // Compatibility test
 //    runtimeOnly("org.lwjgl:lwjgl-glfw:3.3.6")
-//    runtimeOnly("com.github.GTNewHorizons:lwjgl3ify:3.0.27:dev")
+    runtimeOnly("com.github.GTNewHorizons:lwjgl3ify:3.0.31:dev")
     runtimeOnly("com.github.GTNewHorizons:Hodgepodge:2.7.185:dev") { transitive = false }
 //    runtimeOnly("com.github.GTNewHorizons:twilightforest:2.7.5:dev") { transitive = false }
+	compileOnly("com.github.GTNewHorizons:Mobs-Info:0.5.3-GTNH:dev") { transitive = false }
 }

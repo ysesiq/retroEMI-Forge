@@ -3,10 +3,13 @@ package dev.emi.emi.nemi;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import codechicken.lib.vec.Rectangle4i;
+import codechicken.nei.ItemsGrid;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.LayoutStyleMinecraft;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiCraftingRecipe;
+import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.ICraftingHandler;
 import codechicken.nei.recipe.RecipeCatalysts;
 import codechicken.nei.recipe.TemplateRecipeHandler;
@@ -19,6 +22,7 @@ import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.RecipeScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
 
 import static dev.emi.emi.nemi.NemiScreenHandler.emiButton;
 import static dev.emi.emi.nemi.NemiScreenHandler.treeButton;
@@ -51,12 +55,11 @@ public class NemiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
+		if (!(isNEILoaded)) return;
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             registerExclusionArea(registry);
 
-            if (isNEILoaded) {
-                registerNeiRecipes(registry);
-            }
+			registerNeiRecipes(registry);
         }
 	}
 
@@ -77,12 +80,29 @@ public class NemiPlugin implements EmiPlugin {
 				consumer.accept(new Bounds(treeButton.x, treeButton.y - treeButtonVerticalOffset, treeButton.getWidth(), treeButton.getHeight()));
 			}
 		});
+
+		registry.addGenericExclusionArea((screen, consumer) -> {
+			if (!(screen instanceof GuiContainer) || screen instanceof GuiRecipe<?> || screen instanceof RecipeScreen || LayoutManager.itemPanel == null) {
+				return;
+			}
+			ItemsGrid<?, ?> grid = LayoutManager.itemPanel.getGrid();
+			int columns = grid.getColumns();
+			for (int r = 0; r < grid.getRows(); r++) {
+				for (int c = 0; c < columns; c++) {
+					int index = columns * r + c;
+					if (grid.isInvalidSlot(index)) {
+						Rectangle4i rect = grid.getSlotRect(r, c);
+						consumer.accept(new Bounds(rect.x, rect.y, rect.w, rect.h));
+					}
+				}
+			}
+		});
 	}
 
 	private void registerNeiRecipes(EmiRegistry registry) {
 		for (ICraftingHandler baseHandler : GuiCraftingRecipe.craftinghandlers) {
 			if (baseHandler instanceof TemplateRecipeHandler templateHandler) {
-				RecipeHarvester harvester = new RecipeHarvester(registry, templateHandler);
+				NemiRecipeHarvester harvester = new NemiRecipeHarvester(registry, templateHandler);
 				harvester.harvest();
 
 				for (NemiRecipeCategory category : harvester.getCategories().values()) {

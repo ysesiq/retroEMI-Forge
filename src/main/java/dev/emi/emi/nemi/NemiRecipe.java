@@ -3,6 +3,7 @@ package dev.emi.emi.nemi;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipeTab;
 import codechicken.nei.recipe.HandlerInfo;
+import codechicken.nei.recipe.Recipe.RecipeId;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -23,6 +24,9 @@ public class NemiRecipe implements EmiRecipe {
     private final ResourceLocation id;
     private final TemplateRecipeHandler neiHandler;
     private final int recipeIndex;
+    private final List<PositionedStack> ingredientStacks;
+    private final PositionedStack resultStack;
+    private final List<PositionedStack> otherStacks;
 
     private final List<EmiIngredient> inputs;
     private final List<EmiStack> outputs;
@@ -33,20 +37,23 @@ public class NemiRecipe implements EmiRecipe {
         this.recipeIndex = recipeIndex;
         this.id = id;
 
+        this.ingredientStacks = safeList(neiHandler.getIngredientStacks(recipeIndex));
+        this.resultStack = neiHandler.getResultStack(recipeIndex);
+        this.otherStacks = safeList(neiHandler.getOtherStacks(recipeIndex));
+
         this.inputs = parseInputs();
         this.outputs = parseOutputs();
     }
 
+    private static List<PositionedStack> safeList(List<PositionedStack> stacks) {
+        return stacks == null ? new ArrayList<>() : stacks;
+    }
+
     private List<EmiIngredient> parseInputs() {
         List<EmiIngredient> parsedInputs = new ArrayList<>();
-        List<PositionedStack> ingredients = neiHandler.getIngredientStacks(recipeIndex);
-
-        if (ingredients != null) {
-            for (PositionedStack stack : ingredients) {
-                parsedInputs.add(parseIngredient(stack));
-            }
+        for (PositionedStack stack : ingredientStacks) {
+            parsedInputs.add(parseIngredient(stack));
         }
-
         return parsedInputs;
     }
 
@@ -60,19 +67,15 @@ public class NemiRecipe implements EmiRecipe {
     }
 
     private void addMainOutput(List<EmiStack> parsedOutputs) {
-        PositionedStack mainResult = neiHandler.getResultStack(recipeIndex);
-        if (mainResult != null && mainResult.item != null) {
-            parsedOutputs.add(EmiStack.of(mainResult.item));
+        if (resultStack != null && resultStack.item != null) {
+            parsedOutputs.add(EmiStack.of(resultStack.item));
         }
     }
 
     private void addSecondaryOutputs(List<EmiStack> parsedOutputs) {
-        List<PositionedStack> secondaryResults = neiHandler.getOtherStacks(recipeIndex);
-        if (secondaryResults != null) {
-            for (PositionedStack stack : secondaryResults) {
-                if (stack != null && stack.item != null) {
-                    parsedOutputs.add(EmiStack.of(stack.item));
-                }
+        for (PositionedStack stack : otherStacks) {
+            if (stack != null && stack.item != null) {
+                parsedOutputs.add(EmiStack.of(stack.item));
             }
         }
     }
@@ -102,6 +105,10 @@ public class NemiRecipe implements EmiRecipe {
         return EmiIngredient.of(ingredients);
     }
 
+    public RecipeId getNeiRecipeId() {
+        return RecipeId.of(neiHandler, recipeIndex);
+    }
+
     @Override
     public EmiRecipeCategory getCategory() {
         return category;
@@ -122,18 +129,18 @@ public class NemiRecipe implements EmiRecipe {
         return outputs;
     }
 
-    @Override
-    public int getDisplayWidth() {
-        return Math.max(HandlerInfo.DEFAULT_WIDTH, GuiRecipeTab.getHandlerInfo(neiHandler).getWidth());
-    }
+	@Override
+	public int getDisplayWidth() {
+		return Math.max(HandlerInfo.DEFAULT_WIDTH, GuiRecipeTab.getHandlerInfo(neiHandler).getWidth());
+	}
 
-    @Override
-    public int getDisplayHeight() {
-        HandlerInfo info = GuiRecipeTab.getHandlerInfo(neiHandler);
-        int recipeHeight = neiHandler.getRecipeHeight(recipeIndex);
-        int h = recipeHeight > 0 ? recipeHeight : info.getHeight();
-        return h + info.getYShift() + 4;
-    }
+	@Override
+	public int getDisplayHeight() {
+		HandlerInfo info = GuiRecipeTab.getHandlerInfo(neiHandler);
+		int recipeHeight = info.getHeight();
+		int h = recipeHeight > 0 ? recipeHeight : info.getHeight();
+		return h + info.getYShift() + 4;
+	}
 
     @Override
     public boolean supportsRecipeTree() {
@@ -170,28 +177,21 @@ public class NemiRecipe implements EmiRecipe {
     }
 
     private void addInputWidgets(WidgetHolder widgets) {
-        List<PositionedStack> ingredients = neiHandler.getIngredientStacks(recipeIndex);
-        if (ingredients != null) {
-            for (PositionedStack stack : ingredients) {
-                widgets.addSlot(parseIngredient(stack), stack.relx - 1, stack.rely - 1).drawBack(false);
-            }
+        for (PositionedStack stack : ingredientStacks) {
+            widgets.addSlot(parseIngredient(stack), stack.relx - 1, stack.rely - 1).drawBack(false);
         }
     }
 
     private void addMainOutputWidget(WidgetHolder widgets) {
-        PositionedStack result = neiHandler.getResultStack(recipeIndex);
-        if (result != null && result.item != null) {
-            widgets.addSlot(parseIngredient(result), result.relx - 1, result.rely - 1).drawBack(false).recipeContext(this);
+        if (resultStack != null && resultStack.item != null) {
+            widgets.addSlot(parseIngredient(resultStack), resultStack.relx - 1, resultStack.rely - 1).drawBack(false).recipeContext(this);
         }
     }
 
     private void addSecondaryOutputWidgets(WidgetHolder widgets) {
-        List<PositionedStack> secondaryResults = neiHandler.getOtherStacks(recipeIndex);
-        if (secondaryResults != null) {
-            for (PositionedStack stack : secondaryResults) {
-                if (stack != null && stack.item != null) {
-                    widgets.addSlot(parseIngredient(stack), stack.relx - 1, stack.rely - 1).drawBack(false).recipeContext(this);
-                }
+        for (PositionedStack stack : otherStacks) {
+            if (stack != null && stack.item != null) {
+                widgets.addSlot(parseIngredient(stack), stack.relx - 1, stack.rely - 1).drawBack(false).recipeContext(this);
             }
         }
     }

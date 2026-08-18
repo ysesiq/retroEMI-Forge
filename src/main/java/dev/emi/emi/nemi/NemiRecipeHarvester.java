@@ -5,7 +5,9 @@ import codechicken.nei.recipe.HandlerInfo;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiRegistry;
+import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class RecipeHarvester {
+public class NemiRecipeHarvester {
     // These are handlers that EMI natively covers better (e.g., standard crafting/smelting)
     private static final List<String> BLACKLISTED_CLASSES = shim.java.List.of(
         "codechicken.nei.recipe.ShapedRecipeHandler",
@@ -31,7 +33,7 @@ public class RecipeHarvester {
     private final TemplateRecipeHandler baseHandler;
     private final Map<String, NemiRecipeCategory> categories = new HashMap<>();
 
-    public RecipeHarvester(EmiRegistry registry, TemplateRecipeHandler baseHandler) {
+    public NemiRecipeHarvester(EmiRegistry registry, TemplateRecipeHandler baseHandler) {
         this.registry = registry;
         this.baseHandler = baseHandler;
     }
@@ -104,8 +106,8 @@ public class RecipeHarvester {
         if (categories.containsKey(recipeId)) {
             return categories.get(recipeId);
         }
-        ResourceLocation categoryId = EmiPort.id(NemiPlugin.DOMAIN, recipeId);
-        EmiStack icon = determineCategoryIcon(handler);
+        ResourceLocation categoryId = EmiPort.id(getModId(handler), recipeId);
+        EmiRenderable icon = determineCategoryIcon(handler);
 
         NemiRecipeCategory category = new NemiRecipeCategory(categoryId, icon, handler.getRecipeName());
         registry.addCategory(category);
@@ -120,20 +122,29 @@ public class RecipeHarvester {
     private void registerAllRecipes(NemiRecipeCategory category, TemplateRecipeHandler handler, int numRecipes, String recipeId) {
         for (int i = 0; i < numRecipes; i++) {
             ResourceLocation emiRecipeId = EmiPort.id(NemiPlugin.DOMAIN, recipeId + "/" + i);
-            NemiRecipe recipe = new NemiRecipe(category, handler, i, emiRecipeId);
-            registry.addRecipe(recipe);
+            try {
+                NemiRecipe recipe = new NemiRecipe(category, handler, i, emiRecipeId);
+                registry.addRecipe(recipe);
+            } catch (Throwable t) {
+				EmiLog.warn("Skipping unparseable NEI recipe " + emiRecipeId + " (" + handler.getClass().getName() + "): " + t);
+            }
         }
     }
 
-    private EmiStack determineCategoryIcon(TemplateRecipeHandler handler) {
-		HandlerInfo info = GuiRecipeTab.getHandlerInfo(handler);
-		if (info != null && info.getItemStack() != null) {
-			// TODO Couldn't make Image to Stack
-			EmiStack icon = EmiStack.of(info.getItemStack());
-			if (!icon.isEmpty()) {
-				return icon;
-			}
-		}
-        return DEFAULT_ICON;
+    private EmiRenderable determineCategoryIcon(TemplateRecipeHandler handler) {
+	    HandlerInfo info = GuiRecipeTab.getHandlerInfo(handler);
+	    if (info == null) return DEFAULT_ICON;
+	    if (info.getItemStack() != null) {
+		    return EmiStack.of(info.getItemStack());
+	    } else if (info.getImage() != null) {
+		    return new NemiRenderable(info.getImage());
+	    }
+		return DEFAULT_ICON;
+    }
+
+    private static String getModId(TemplateRecipeHandler handler) {
+        HandlerInfo info = GuiRecipeTab.getHandlerInfo(handler);
+		if (info == null || info.getModId() == null) return NemiPlugin.DOMAIN;
+        return info.getModId();
     }
 }

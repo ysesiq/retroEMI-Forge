@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.bsideup.jabel.Desugar;
+import dev.emi.emi.platform.EmiAgnos;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -45,6 +46,9 @@ public class EmiMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+		if (mixinClassName.contains("MobInfoScrollbarMixin")) {
+			return EmiAgnos.isModLoaded("mobsinfo");
+		}
 		return true;
 	}
 

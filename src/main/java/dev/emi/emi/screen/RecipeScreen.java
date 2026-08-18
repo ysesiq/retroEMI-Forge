@@ -28,6 +28,7 @@ import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.config.SidebarSide;
 import dev.emi.emi.input.EmiInput;
+import dev.emi.emi.nemi.NemiScreenSwitch;
 import dev.emi.emi.registry.EmiRecipeFiller;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.runtime.EmiFavorite;
@@ -535,6 +536,8 @@ public class RecipeScreen extends REMIScreen {
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
 			this.close();
 			return true;
+		} else if (EmiConfig.toggleVisibility.matchesKey(keyCode, scanCode) && NemiScreenSwitch.handle()) {
+			return true;
 		} else if (EmiScreenManager.keyPressed(keyCode, scanCode, modifiers)) {
 			return true;
 		} else if (this.client.gameSettings.keyBindInventory.getKeyCode() == (keyCode)) {
@@ -569,6 +572,14 @@ public class RecipeScreen extends REMIScreen {
 			setPage(tabPage, tab + 1, 0);
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Nullable
+	public EmiRecipe getCurrentRecipe() {
+		if (tab < tabs.size() && page < tabs.get(tab).getPageCount() && tabs.get(tab).getPage(page).size() > 0) {
+			return tabs.get(tab).getPage(page).get(0).recipe;
+		}
+		return null;
 	}
 
 	public WidgetGroup getGroup(Widget widget) {

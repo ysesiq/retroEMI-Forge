@@ -431,10 +431,15 @@ public class VanillaPlugin implements EmiPlugin {
 							&& !ItemStacks.isEmpty(ai.getArmorMaterial().func_151685_b())) {
 						ResourceLocation id = synthetic("anvil/repairing/material", EmiUtil.subId(i) + "/" + EmiUtil.subId(ai.getArmorMaterial().func_151685_b()));
 						addRecipeSafe(registry, () -> new EmiAnvilRecipe(EmiStack.of(i), EmiStack.of(ai.getArmorMaterial().func_151685_b()), id));
-					} else if (i instanceof ItemToolAccessor ti && ti.getToolMaterial().getRepairItemStack() != null
-							&& !ItemStacks.isEmpty(ti.getToolMaterial().getRepairItemStack())) {
-						ResourceLocation id = synthetic("anvil/repairing/material", EmiUtil.subId(i) + "/" + EmiUtil.subId(ti.getToolMaterial().getRepairItemStack().getItem()));
-						addRecipeSafe(registry, () -> new EmiAnvilRecipe(EmiStack.of(i), EmiStack.of(ti.getToolMaterial().getRepairItemStack()), id));
+					} else if (i instanceof ItemToolAccessor ti && ti.getToolMaterial() != null) {
+						try {
+							ItemStack repair = ti.getToolMaterial().getRepairItemStack();
+							if (repair != null && !ItemStacks.isEmpty(repair)) {
+								ResourceLocation id = synthetic("anvil/repairing/material", EmiUtil.subId(i) + "/" + EmiUtil.subId(repair.getItem()));
+								addRecipeSafe(registry, () -> new EmiAnvilRecipe(EmiStack.of(i), EmiStack.of(repair), id));
+							}
+						} catch (Throwable t) {
+						}
 					}
 				}
 				if (i.isDamageable()) {

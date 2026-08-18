@@ -6,7 +6,6 @@
 	"compatibilityLevel": "JAVA_8",
 	"plugin": "dev.emi.emi.mixinsupport.EmiMixinPlugin",
 	"client": [
-		"FontRendererMixin",
 		"GuiContainerCreativeMixin",
 		"GuiContainerMixin",
 		"GuiScreenMixin",
@@ -23,7 +22,9 @@
 		"accessor.PlayerControllerMPAccessor",
 		"accessor.ResourcePackRepositoryEntryAccessor",
 		"accessor.SimpleReloadableResourceManagerAccessor",
+		"nemi.GuiRecipeMixin",
 		"nemi.LayoutStyleMinecraftMixin",
+		"nemi.mobinfo.ScrollbarMixin",
 		"nemi.NEIRecipeWidgetMixin"
 	],
 	"mixins": [
