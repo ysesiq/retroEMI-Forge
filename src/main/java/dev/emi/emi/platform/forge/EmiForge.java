@@ -21,7 +21,8 @@ import net.minecraftforge.common.MinecraftForge;
 	name = "EMI",
 	guiFactory = "dev.emi.emi.platform.forge.EmiGuiFactory",
 	dependencies =
-		"required-after:mixinbooter@[4.2,);" +
+		"after:mixinbooter;" +
+		"after:fermiumbooter;" +
 		"after:jei;"
 )
 public class EmiForge {

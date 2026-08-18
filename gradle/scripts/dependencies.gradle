@@ -80,7 +80,7 @@ dependencies {
     implementation 'mezz:jei:4.34.3:dev'//hei
 //	implementation 'maven.modrinth:jei:4.16.5.1027'//jei
 	runtimeOnly'maven.modrinth:mekanism:9.8.3.390'// just test jemi
-//	compileOnly'maven.modrinth:fermiumbooter:1.4.1'
+	compileOnly('maven.modrinth:fermiumbooter:1.4.1')
 }
 
 // Need reobfJar to use uber jars, so dependencies that are shaded in are present
