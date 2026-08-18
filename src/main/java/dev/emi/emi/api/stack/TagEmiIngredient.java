@@ -122,38 +122,38 @@ public class TagEmiIngredient implements EmiIngredient {
 					stacks.get(0).render(context.raw(), x, y, delta, -1 ^ RENDER_AMOUNT);
 				}
 			} else {
-//				BakedModel model = EmiAgnos.getBakedTagModel(tagKey.getCustomModel());
-//
-//				boolean useItemsMap = "missingno".equals(client.getTextureMapBlocks().getAtlasSprite(stacks.get(0).getItemStack().getItem()
-//					.getIcon(stacks.get(0).getItemStack(), 0).getIconName()).getIconName());
-//
-//				context.matrices().push();
-//				client.getTextureManager().bindTexture(useItemsMap ? TextureMap.locationItemsTexture : TextureMap.locationBlocksTexture);
-//				context.matrices().translate(x + 8, y + 8, 150);
-//				context.matrices().multiplyPositionMatrix(new Matrix4f().scaling(1.0f, -1.0f, 1.0f));
-//				context.matrices().scale(16.0f, 16.0f, 16.0f);
-//				context.matrices().translate(-0.5f, -0.5f, -0.5f);
-//
-//				RenderHelper.enableGUIStandardItemLighting();
-//				context.enableBlend();
-//
-//				ItemContext ictx = new ItemContext();
-//				Tessellator tess = Tessellator.instance;
-//				tess.startDrawingQuads();
-//
-//				for (ModelQuadFacing dir : ModelQuadFacing.VALUES) {
-//					ictx.quadFacing = dir;
-//					for (ModelQuadView quad : model.getQuads(ictx)) {
-//						for (int i = 0; i < 4; i++) {
-//							tess.addVertexWithUV(quad.getX(i), quad.getY(i), quad.getZ(i), quad.getTexU(i), quad.getTexV(i));
-//						}
-//					}
-//				}
-//
-//				EmiPort.draw(tess);
-//				context.disableBlend();
-//				RenderHelper.disableStandardItemLighting();
-//				context.matrices().pop();
+				BakedModel model = EmiAgnos.getBakedTagModel(tagKey.getCustomModel());
+
+				boolean useItemsMap = "missingno".equals(client.getTextureMapBlocks().getAtlasSprite(stacks.get(0).getItemStack().getItem()
+					.getIcon(stacks.get(0).getItemStack(), 0).getIconName()).getIconName());
+
+				context.matrices().push();
+				client.getTextureManager().bindTexture(useItemsMap ? TextureMap.locationItemsTexture : TextureMap.locationBlocksTexture);
+				context.matrices().translate(x + 8, y + 8, 150);
+				context.matrices().multiplyPositionMatrix(new Matrix4f().scaling(1.0f, -1.0f, 1.0f));
+				context.matrices().scale(16.0f, 16.0f, 16.0f);
+				context.matrices().translate(-0.5f, -0.5f, -0.5f);
+
+				RenderHelper.enableGUIStandardItemLighting();
+				context.enableBlend();
+
+				ItemContext ictx = new ItemContext();
+				Tessellator tess = Tessellator.instance;
+				tess.startDrawingQuads();
+
+				for (ModelQuadFacing dir : ModelQuadFacing.VALUES) {
+					ictx.quadFacing = dir;
+					for (ModelQuadView quad : model.getQuads(ictx)) {
+						for (int i = 0; i < 4; i++) {
+							tess.addVertexWithUV(quad.getX(i), quad.getY(i), quad.getZ(i), quad.getTexU(i), quad.getTexV(i));
+						}
+					}
+				}
+
+				EmiPort.draw(tess);
+				context.disableBlend();
+				RenderHelper.disableStandardItemLighting();
+				context.matrices().pop();
 			}
 		}
 		if ((flags & RENDER_AMOUNT) != 0 && !tagKey.raw().isOf(EmiPort.getFluidRegistry())) {

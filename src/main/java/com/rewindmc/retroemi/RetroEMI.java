@@ -228,12 +228,17 @@ public class RetroEMI {
 	}
 
 	public static List<Text> getItemToolTip(ItemStack stack, ITooltipFlag.TooltipFlags type) {
-		List<String> rawTip = stack.getTooltip(Minecraft.getMinecraft().thePlayer, type.isAdvanced());
-		List<Text> tip = rawTip.stream().map(Text::literal).map(t -> t.formatted(Formatting.GRAY)).collect(Collectors.toList());
-		if (!tip.isEmpty()) {
-			tip.set(0, ((MutableText) tip.get(0)).formatted(Formatting.byName(stack.getItem().getRarity(stack).rarityColor.name())));
+		try {
+			List<String> rawTip = stack.getTooltip(Minecraft.getMinecraft().thePlayer, type.isAdvanced());
+			List<Text> tip = rawTip.stream().map(Text::literal).map(t -> t.formatted(Formatting.GRAY)).collect(Collectors.toList());
+			if (!tip.isEmpty()) {
+				tip.set(0, ((MutableText) tip.get(0)).formatted(Formatting.byName(stack.getItem().getRarity(stack).rarityColor.name())));
+			}
+			return tip;
+		} catch (Throwable e) {
+			EmiLog.error("Error getting tooltip for " + stack, e);
+			return shim.java.List.of(Text.literal(stack.getDisplayName()));
 		}
-		return tip;
 	}
 
 	public static boolean hasFocusedTextReflectField(Object parent) {

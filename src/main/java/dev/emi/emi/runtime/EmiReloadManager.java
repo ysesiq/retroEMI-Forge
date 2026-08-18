@@ -155,7 +155,7 @@ public class EmiReloadManager {
 						break;
 					}
 					// No entrypoint, this step takes a long time
-					step(EmiPort.literal("Finding plugins"));
+					step(EmiPort.literal("Scanning plugins"));
 					long t = System.currentTimeMillis();
 					List<EmiPluginContainer> plugins = Lists.newArrayList();
 					plugins.addAll(EmiAgnos.getPlugins().stream()
