@@ -150,7 +150,7 @@ public class EmiReloadManager {
 					if (client.theWorld == null) {
 						EmiReloadLog.warn("World is null");
 						break;
-					} else if (CraftingManager.getInstance() == null) {
+					} else if (!ProxyRecipeManager.isAvailable()) {
 						EmiReloadLog.warn("Recipe Manager is null");
 						break;
 					}

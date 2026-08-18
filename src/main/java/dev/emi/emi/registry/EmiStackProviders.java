@@ -14,7 +14,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.mixin.accessor.SlotCraftingAccessor;
-import net.minecraft.client.Minecraft;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
@@ -59,14 +59,12 @@ public class EmiStackProviders {
 						// Emi be making assumptions
 						try {
 							InventoryCrafting inv = (InventoryCrafting) ((SlotCraftingAccessor) craf).getCraftMatrix();
-							Minecraft client = Minecraft.getMinecraft();
-							for (IRecipe r : (List<IRecipe>) CraftingManager.getInstance().getRecipeList()) {
-								if (r.matches(inv, client.theWorld)) {
-									ResourceLocation id = EmiPort.getId(r);
-									EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
-									if (recipe != null) {
-										return new EmiStackInteraction(EmiStack.of(stack), recipe, false);
-									}
+							IRecipe crafting = ProxyRecipeManager.getFirst(inv);
+							if (crafting != null) {
+								ResourceLocation id = ProxyRecipeManager.getId(crafting);
+								EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
+								if (recipe != null) {
+									return new EmiStackInteraction(EmiStack.of(stack), recipe, false);
 								}
 							}
 						} catch (Exception e) {

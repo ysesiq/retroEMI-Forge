@@ -3,6 +3,7 @@ package dev.emi.emi.api.recipe;
 import java.util.Collections;
 import java.util.List;
 
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -100,6 +101,6 @@ public interface EmiRecipe {
 	 *  By default, uses the result of {@link EmiRecipe#getId()} to look up in the RecipeManager.
 	 */
 	default @Nullable IRecipe getBackingRecipe() {
-		return EmiPort.getRecipe(getId());
+		return ProxyRecipeManager.getRecipeEntry(getId());
 	}
 }

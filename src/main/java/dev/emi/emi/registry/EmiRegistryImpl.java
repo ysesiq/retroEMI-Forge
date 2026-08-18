@@ -16,6 +16,7 @@ import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import dev.emi.emi.data.EmiAlias;
 import dev.emi.emi.runtime.EmiHidden;
 import dev.emi.emi.runtime.EmiReloadLog;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import dev.emi.emi.screen.EmiScreenBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,7 +31,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class EmiRegistryImpl implements EmiRegistry {
-	private static final Minecraft client = Minecraft.getMinecraft();
 
 	@Override
 	public <T extends GuiScreen> void addScreenBoundsProvider(Class<T> clazz, EmiScreenBoundsProvider<T> provider) {
@@ -49,7 +49,7 @@ public class EmiRegistryImpl implements EmiRegistry {
 
 	@Override
 	public CraftingManager getRecipeManager() {
-		return CraftingManager.getInstance();
+		return ProxyRecipeManager.getRaw();
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package shim.net.minecraft.util;
 
-import com.rewindmc.retroemi.RetroEMI;
 import com.rewindmc.retroemi.RetroEMICommonUtils;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;

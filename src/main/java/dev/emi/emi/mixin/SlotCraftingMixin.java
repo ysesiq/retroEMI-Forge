@@ -1,16 +1,14 @@
 package dev.emi.emi.mixin;
 
-import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import dev.emi.emi.mixin.accessor.CraftingManagerAccessor;
 import dev.emi.emi.runtime.EmiSidebars;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
@@ -31,14 +29,11 @@ public class SlotCraftingMixin {
 	private void onCrafted(ItemStack stack, CallbackInfo info) {
 		World world = thePlayer.getEntityWorld();
 		if (world.isRemote) {
-			InventoryCrafting inv = (InventoryCrafting) craftMatrix;
-			for (IRecipe r : ((CraftingManagerAccessor) CraftingManager.getInstance()).getRecipes()) {
-				if (r.matches(inv, world)) {
-					EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(EmiPort.getId(r));
-					if (recipe != null) {
-						EmiSidebars.craft(recipe);
-						return;
-					}
+			IRecipe crafting = ProxyRecipeManager.getFirst((InventoryCrafting) craftMatrix);
+			if (crafting != null) {
+				EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(ProxyRecipeManager.getId(crafting));
+				if (recipe != null) {
+					EmiSidebars.craft(recipe);
 				}
 			}
 		}

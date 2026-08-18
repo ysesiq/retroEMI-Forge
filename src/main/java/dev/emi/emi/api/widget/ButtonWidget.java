@@ -54,7 +54,7 @@ public class ButtonWidget extends Widget {
 	@Override
 	public boolean mouseClicked(int mouseX, int mouseY, int button) {
 		action.click(mouseX, mouseY, button);
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0f));
+		EmiPort.playClickSound();
 		return true;
 	}
 

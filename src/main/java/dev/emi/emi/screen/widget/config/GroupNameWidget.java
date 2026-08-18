@@ -54,7 +54,7 @@ public class GroupNameWidget extends Entry {
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if (isMouseOver(mouseX, mouseY)) {
 			collapsed = !collapsed;
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0f));
+			EmiPort.playClickSound();
 			return true;
 		}
 		return false;

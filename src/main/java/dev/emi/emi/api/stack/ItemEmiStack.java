@@ -177,7 +177,7 @@ public class ItemEmiStack extends EmiStack implements Batchable {
 //			RenderSystem.enableBlend();
 //			RenderHelper.enableGUIStandardItemLighting();
 //			context.matrices().translate(x, y, 100.0f + z + 0);
-//			context.matrices().translate(8.0, 8.0, 0.0);
+//			context.translate(8, 8);
 //			context.matrices().scale(16.0f, -16.0f, 16.0f);
 //			ir.renderItem(stack, model);
 //		} finally {

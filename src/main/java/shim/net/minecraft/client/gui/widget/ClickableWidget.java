@@ -181,7 +181,7 @@ public abstract class ClickableWidget extends Gui implements Drawable, Element {
 	}
 
 	public void playDownSound() {
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0f));
+		EmiPort.playClickSound();
 	}
 
 	public int getWidth() {

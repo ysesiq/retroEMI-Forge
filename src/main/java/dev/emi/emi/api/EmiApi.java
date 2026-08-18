@@ -131,7 +131,18 @@ public class EmiApi {
 		setPages(Collections.singletonMap(category, getRecipeManager().getRecipes(category)), EmiStack.EMPTY);
 	}
 
-	@SideOnly(Side.CLIENT)
+	public static void displayRecipesForWorkstation(EmiIngredient workstation) {
+		EmiRecipeManager manager = getRecipeManager();
+		setPages(
+			manager.getCategories()
+				.stream()
+				.filter(c -> manager.getWorkstations(c).contains(workstation))
+				.collect(Collectors.toMap(c -> c, manager::getRecipes)),
+			workstation
+		);
+	}
+
+    @SideOnly(Side.CLIENT)
 	public static void displayRecipe(EmiRecipe recipe) {
 		setPages(Collections.singletonMap(recipe.getCategory(), Collections.singletonList(recipe)), EmiStack.EMPTY);
 	}

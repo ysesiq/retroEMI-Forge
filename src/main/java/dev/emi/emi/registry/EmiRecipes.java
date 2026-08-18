@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Iterables;
@@ -67,16 +68,7 @@ public class EmiRecipes {
 		byWorkstation.clear();
 		decorators.clear();
 		manager = Manager.EMPTY;
-//		Minecraft client = Minecraft.getMinecraft();
-//		if (client.theWorld != null) {
-//			CraftingManager manager = CraftingManager.getInstance();
-//			recipeIds = new Reference2ObjectOpenHashMap<>();
-//			if (manager != null) {
-//				for (IRecipe entry : (List<IRecipe>) manager.getRecipeList()) {
-//					recipeIds.put(entry, SyntheticIdentifier.generateId(entry));
-//				}
-//			}
-//		}
+		ProxyRecipeManager.bakeIds();
 	}
 
 	public static void bake() {

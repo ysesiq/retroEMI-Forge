@@ -13,13 +13,14 @@ import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.recipe.EmiShapedRecipe;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class EmiShapedOreRecipe extends EmiCraftingRecipe {
 
 	public EmiShapedOreRecipe(ShapedOreRecipe recipe) {
-		super(padIngredients(recipe), EmiStack.of(recipe.getRecipeOutput()), EmiPort.getId(recipe), false);
+		super(padIngredients(recipe), EmiStack.of(recipe.getRecipeOutput()), ProxyRecipeManager.getId(recipe), false);
 		EmiShapedRecipe.setRemainders(input, recipe);
 	}
 

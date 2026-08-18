@@ -885,7 +885,7 @@ public class EmiScreenManager {
 		}
 		if (base.screen() instanceof GuiContainer hs) {
 			context.push();
-			context.matrices().translate(((GuiContainerAccessor) hs).getGuiLeft(), ((GuiContainerAccessor) hs).getGuiTop(), 0);
+			context.translate(((GuiContainerAccessor) hs).getGuiLeft(), ((GuiContainerAccessor) hs).getGuiTop());
 			for (Slot slot : (List<Slot>) hs.inventorySlots.inventorySlots) {
 //				if (!slot.isEnabled()) {
 //					continue;

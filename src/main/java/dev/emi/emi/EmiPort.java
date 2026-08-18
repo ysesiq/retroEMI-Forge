@@ -13,6 +13,7 @@ import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.api.stack.Comparison;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.IResource;
@@ -177,21 +178,6 @@ public final class EmiPort {
 		return getItemRegistry().getKeys().stream().map(EmiPort.getItemRegistry()::getObject);
 	}
 
-	public static ResourceLocation getId(IRecipe recipe) {
-		return SyntheticIdentifier.generateId(recipe);
-	}
-
-	public static @Nullable IRecipe getRecipe(ResourceLocation id) {
-		Minecraft client = Minecraft.getMinecraft();
-		if (client.theWorld != null && id != null) {
-			CraftingManager manager = CraftingManager.getInstance();
-			if (manager != null) {
-				return (IRecipe) manager.getRecipeList().stream().filter(i -> i.equals(id));
-			}
-		}
-		return null;
-	}
-
 	public static Comparison compareStrict() {
 		return Comparison.compareComponents();
 	}
@@ -223,5 +209,9 @@ public final class EmiPort {
 
 	public static void applyModelViewMatrix() {
 		RenderSystem.applyModelViewMatrix();
+	}
+
+	public static void playClickSound() {
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0f));
 	}
 }

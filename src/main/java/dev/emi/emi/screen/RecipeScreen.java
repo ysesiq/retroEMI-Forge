@@ -220,7 +220,7 @@ public class RecipeScreen extends REMIScreen {
 			int mx = mouseX - group.x();
 			int my = mouseY - group.y();
 			context.push();
-			context.matrices().translate(group.x(), group.y(), 0);
+			context.translate(group.x(), group.y());
 			EmiPort.applyModelViewMatrix();
 			try {
 				for (Widget widget : group.widgets) {
@@ -414,7 +414,7 @@ public class RecipeScreen extends REMIScreen {
 		pressedSlot = null;
 		if (mouseX >= x + 19 + buttonOff && mouseY >= y + 5 && mouseX < x + minimumWidth + buttonOff - 19 && mouseY <= y + 5 + 12) {
 			EmiApi.displayAllRecipes();
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0f));
+			EmiPort.playClickSound();
 			return true;
 		}
 		for (WidgetGroup group : currentPage) {
@@ -449,7 +449,7 @@ public class RecipeScreen extends REMIScreen {
 		}
 		RecipeTab rTab = getTabAt(mx, my);
 		if (rTab != null) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(EmiPort.id("gui.button.press"), 1.0f));
+			EmiPort.playClickSound();
 			focusCategory(rTab.category);
 			return true;
 		}
@@ -574,14 +574,6 @@ public class RecipeScreen extends REMIScreen {
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
-	@Nullable
-	public EmiRecipe getCurrentRecipe() {
-		if (tab < tabs.size() && page < tabs.get(tab).getPageCount() && tabs.get(tab).getPage(page).size() > 0) {
-			return tabs.get(tab).getPage(page).get(0).recipe;
-		}
-		return null;
-	}
-
 	public WidgetGroup getGroup(Widget widget) {
 		for (WidgetGroup group : currentPage) {
 			if (group.widgets.contains(widget)) {
@@ -612,5 +604,13 @@ public class RecipeScreen extends REMIScreen {
 			right += 22;
 		}
 		return new Bounds(left, top, right - left, bottom - top);
+	}
+
+	@Nullable
+	public EmiRecipe getCurrentRecipe() {
+		if (tab < tabs.size() && page < tabs.get(tab).getPageCount() && tabs.get(tab).getPage(page).size() > 0) {
+			return tabs.get(tab).getPage(page).get(0).recipe;
+		}
+		return null;
 	}
 }
