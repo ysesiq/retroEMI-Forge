@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.rewindmc.retroemi.RetroEMI;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,16 +71,7 @@ public class EmiRecipes {
 		byWorkstation.clear();
 		decorators.clear();
 		manager = Manager.EMPTY;
-		Minecraft client = Minecraft.getMinecraft();
-		if (client.world != null) {
-            IForgeRegistry<IRecipe> manager = ForgeRegistries.RECIPES;
-			recipeIds = new Reference2ObjectOpenHashMap<>();
-			if (manager != null) {
-				for (IRecipe entry : manager.getValuesCollection()) {
-					recipeIds.put(entry, entry.getRegistryName());
-				}
-			}
-		}
+		ProxyRecipeManager.bakeIds();
 	}
 
 	public static void bake() {
@@ -182,7 +174,7 @@ public class EmiRecipes {
 						byId.put(id, recipe);
 					}
 
-					if (EmiConfig.devMode && !id.getPath().startsWith("/") && !recipeIds.containsValue(id)) {
+					if (EmiConfig.devMode && !id.getPath().startsWith("/") && !ProxyRecipeManager.hasId(id)) {
 						incorrectIds.add(id);
 					}
 				}

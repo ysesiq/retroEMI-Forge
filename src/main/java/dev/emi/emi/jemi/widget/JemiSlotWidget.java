@@ -82,7 +82,7 @@ public class JemiSlotWidget extends SlotWidget {
 			int yOff = bounds.y() + (bounds.height() - 16) / 2 ;
 			context.enableBlend();
 			context.push();
-//  		context.matrices().translate(xOff, yOff, 0);
+//  		context.translate(xOff, yOff);
 			renderer.render(Minecraft.getMinecraft(), xOff, yOff, typed.ingredient());
 			context.pop();
 			return;

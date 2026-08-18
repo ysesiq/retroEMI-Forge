@@ -18,6 +18,7 @@ import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.jemi.impl.JemiIngredients;
 import dev.emi.emi.jemi.impl.JemiRecipeLayoutBuilder;
 import dev.emi.emi.jemi.impl.JemiRecipeSlotBuilder;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import shim.mezz.jei.api.ingredients.ITypedIngredient;
 import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -183,30 +184,19 @@ public class JemiRecipeHandler<T extends Container> implements EmiRecipeHandler<
 //	@SuppressWarnings("unchecked")
 //	private R getRawRecipe(EmiRecipe recipe) {
 //		try {
-//			Minecraft client = Minecraft.getMinecraft();
-//			RecipeManager manager = client.world.getRecipeManager();
 //			if (type != null && type.getRecipeClass() != null) {
 //				if (recipe instanceof JemiRecipe jr && jr.recipe != null) {
 //					if (type.getRecipeClass().isAssignableFrom(jr.recipe.getClass())) {
 //						return type.getRecipeClass().cast(jr.recipe);
 //					}
 //				}
-//				if (manager != null) {
-//					Optional<? extends RecipeEntry<?>> opt = manager.get(recipe.getId());
-//					if (opt.isPresent()) {
-//						RecipeEntry<?> r = opt.get();
-//						if (type.getRecipeClass().isAssignableFrom(r.getClass())) {
-//							return type.getRecipeClass().cast(r);
-//						}
-//					}
+//				RecipeEntry<?> entry = ProxyRecipeManager.getRecipeEntry(recipe.getId());
+//				if (entry != null && type.getRecipeClass().isAssignableFrom(entry.getClass())) {
+//					return type.getRecipeClass().cast(entry);
 //				}
 //			}
-//			if (manager != null) {
-//				Optional<? extends RecipeEntry<?>> opt = manager.get(recipe.getId());
-//				if (opt.isPresent()) {
-//					return (R) opt.get();
-//				}
-//			}
+//			RecipeEntry<?> entry = ProxyRecipeManager.getRecipeEntry(recipe.getId());
+//			return (R) entry;
 //		} catch (Exception e) {
 //		}
 //		return null;

@@ -885,7 +885,7 @@ public class EmiScreenManager {
 		}
 		if (base.screen() instanceof GuiContainer hs) {
 			context.push();
-			context.matrices().translate(hs.getGuiLeft(), hs.getGuiTop(), 0);
+			context.translate(hs.getGuiLeft(), hs.getGuiTop());
 			for (Slot slot : hs.inventorySlots.inventorySlots) {
 				if (!slot.isEnabled()) {
 					continue;
@@ -1134,7 +1134,7 @@ public class EmiScreenManager {
 				return true;
 			}
 		}
-		if (EmiInput.isControlDown() && keyCode == GLFW.GLFW_KEY_Y) {
+		if (EmiConfig.displayAllRecipes.matchesKey(keyCode, scanCode)) {
 			EmiApi.displayAllRecipes();
 			return true;
 		} else {
@@ -1335,7 +1335,7 @@ public class EmiScreenManager {
 			repopulatePanels(SidebarType.FAVORITES);
 			return true;
 		} else if (function.apply(EmiConfig.copyId)) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+			EmiPort.playClickSound();
 			StringSelection ss = new StringSelection("" + recipe.getId());
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, (ClipboardOwner) null);
 			return true;

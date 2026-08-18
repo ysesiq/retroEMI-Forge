@@ -17,6 +17,7 @@ import dev.emi.emi.jemi.impl.JemiRecipeLayoutBuilder;
 import dev.emi.emi.jemi.impl.JemiRecipeSlot;
 import dev.emi.emi.jemi.impl.JemiRecipeSlotBuilder;
 import dev.emi.emi.runtime.EmiLog;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import mezz.jei.api.gui.IDrawable;
 import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 import dev.emi.emi.jemi.widget.JemiSlotWidget;
@@ -110,7 +111,7 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 
 	@Override
 	public @Nullable IRecipe getBackingRecipe() {
-		return EmiPort.getRecipe(originalId);
+		return ProxyRecipeManager.getRecipeEntry(originalId);
 	}
 
 	@Override
@@ -209,7 +210,7 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 			EmiDrawContext context = EmiDrawContext.wrap(draw);
 			Minecraft client = Minecraft.getMinecraft();
 			context.push();
-			context.matrices().translate(x, y, 0);
+			context.translate(x, y);
 			IDrawable background = category.getBackground();
 			if (background != null) {
 				background.draw(client, 0, 0);

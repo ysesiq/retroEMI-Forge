@@ -30,7 +30,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class EmiRegistryImpl implements EmiRegistry {
-	private static final Minecraft client = Minecraft.getMinecraft();
 
 	@Override
 	public <T extends GuiScreen> void addScreenBoundsProvider(Class<T> clazz, EmiScreenBoundsProvider<T> provider) {

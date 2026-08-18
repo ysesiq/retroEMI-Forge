@@ -6,7 +6,6 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.EmiStackProvider;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -14,7 +13,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackInteraction;
 import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.mixin.accessor.SlotCraftingAccessor;
-import net.minecraft.client.Minecraft;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
@@ -22,7 +21,6 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class EmiStackProviders {
 	public static Map<Class<?>, List<EmiStackProvider<?>>> fromClass = Maps.newHashMap();
@@ -58,14 +56,12 @@ public class EmiStackProviders {
 						// Emi be making assumptions
 						try {
 							InventoryCrafting inv = ((SlotCraftingAccessor) craf).getCraftMatrix();
-							Minecraft client = Minecraft.getMinecraft();
-							for (IRecipe r : ForgeRegistries.RECIPES.getValuesCollection()) {
-								if (r.matches(inv, client.world)) {
-									ResourceLocation id = EmiPort.getId(r);
-									EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
-									if (recipe != null) {
-										return new EmiStackInteraction(EmiStack.of(stack), recipe, false);
-									}
+							IRecipe crafting = ProxyRecipeManager.getFirst(inv);
+							if (crafting != null) {
+								ResourceLocation id = ProxyRecipeManager.getId(crafting);
+								EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);
+								if (recipe != null) {
+									return new EmiStackInteraction(EmiStack.of(stack), recipe, false);
 								}
 							}
 						} catch (Exception e) {

@@ -2,13 +2,11 @@ package dev.emi.emi.api.widget;
 
 import java.util.function.BooleanSupplier;
 
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
-import net.minecraft.client.Minecraft;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.audio.PositionedSoundRecord;
 
 public class ButtonWidget extends Widget {
 	protected final int x, y, width, height, u, v;
@@ -54,7 +52,7 @@ public class ButtonWidget extends Widget {
 	@Override
 	public boolean mouseClicked(int mouseX, int mouseY, int button) {
 		action.click(mouseX, mouseY, button);
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+		EmiPort.playClickSound();
 		return true;
 	}
 

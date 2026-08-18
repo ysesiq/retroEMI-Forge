@@ -505,13 +505,13 @@ public class BoMScreen extends REMIScreen {
 				}
 			}
 		} else if (mode.contains(mx, my)) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+			EmiPort.playClickSound();
 			BoM.craftingMode = !BoM.craftingMode;
 			recalculateTree();
 		} else if (batches.contains(mx, my) && BoM.tree != null) {
 			long ideal = BoM.tree.cost.getIdealBatch(BoM.tree.goal, 1, 1);
 			if (ideal != BoM.tree.batches) {
-				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+				EmiPort.playClickSound();
 				BoM.tree.batches = ideal;
 				recalculateTree();
 			}

@@ -24,8 +24,7 @@
 //	@Inject(at = @At("RETURN"), method = "scheduleResourcesRefresh", cancellable = true)
 //	public void reloadResources(CallbackInfoReturnable<ListenableFuture<Object>> info) {
 //		ListenableFuture<Object> future = Futures.transform(info.getReturnValue(), result -> {
-//			Minecraft client = Minecraft.getMinecraft();
-//			if (client.world != null && ForgeRegistries.RECIPES != null) {
+//			if (ProxyRecipeManager.isAvailable()) {
 //				EmiReloadManager.reload();
 //			}
 //			return result;

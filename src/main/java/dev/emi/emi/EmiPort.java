@@ -1,6 +1,5 @@
 package dev.emi.emi;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +12,7 @@ import com.rewindmc.retroemi.EmiResourceManager;
 import dev.emi.emi.api.stack.Comparison;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,11 +33,9 @@ import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.widget.ButtonWidget;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
@@ -186,18 +185,6 @@ public final class EmiPort {
 		return getItemRegistry().getKeys().stream().map(EmiPort.getItemRegistry()::getObject);
 	}
 
-	public static ResourceLocation getId(IRecipe recipe) {
-		return ForgeRegistries.RECIPES.getKey(recipe);
-	}
-
-	public static @Nullable IRecipe getRecipe(ResourceLocation id) {
-		Minecraft client = Minecraft.getMinecraft();
-		if (client.world != null && id != null) {
-			return ForgeRegistries.RECIPES.getValue(id);
-		}
-		return null;
-	}
-
 	public static Comparison compareStrict() {
 		return Comparison.compareComponents();
 	}
@@ -226,5 +213,9 @@ public final class EmiPort {
 
 	public static void applyModelViewMatrix() {
 		RenderSystem.applyModelViewMatrix();
+	}
+
+	public static void playClickSound() {
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
 	}
 }

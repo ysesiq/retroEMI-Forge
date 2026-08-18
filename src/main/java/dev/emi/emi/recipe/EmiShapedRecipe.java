@@ -12,6 +12,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.mixin.accessor.InventoryCraftingAccessor;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.crafting.IShapedRecipe;
@@ -19,7 +20,7 @@ import net.minecraftforge.common.crafting.IShapedRecipe;
 public class EmiShapedRecipe extends EmiCraftingRecipe {
 
 	public EmiShapedRecipe(IShapedRecipe recipe) {
-		super(padIngredients(recipe), EmiStack.of(EmiPort.getOutput(recipe)), EmiPort.getId(recipe), false);
+		super(padIngredients(recipe), EmiStack.of(EmiPort.getOutput(recipe)), ProxyRecipeManager.getId(recipe), false);
 		setRemainders(input, recipe);
 	}
 
@@ -48,7 +49,7 @@ public class EmiShapedRecipe extends EmiCraftingRecipe {
 				Arrays.fill(((InventoryCraftingAccessor) inv).getStackList().toArray(), null);
 			}
 		} catch (Exception e) {
-			EmiLog.error("Exception thrown setting remainders for " + EmiPort.getId(recipe), e);
+			EmiLog.error("Exception thrown setting remainders for " + ProxyRecipeManager.getId(recipe), e);
 		}
 	}
 

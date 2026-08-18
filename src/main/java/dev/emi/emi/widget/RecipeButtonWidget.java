@@ -1,13 +1,11 @@
 package dev.emi.emi.widget;
 
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.runtime.EmiDrawContext;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
 import shim.net.minecraft.client.gui.DrawContext;
 
 public class RecipeButtonWidget extends Widget {
@@ -31,7 +29,7 @@ public class RecipeButtonWidget extends Widget {
 	}
 
 	public void playButtonSound() {
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+		EmiPort.playClickSound();
 	}
 
 	@Override

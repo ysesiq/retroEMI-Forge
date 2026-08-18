@@ -1,9 +1,9 @@
 package dev.emi.emi.mixin;
 
-import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.runtime.EmiSidebars;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.SlotCrafting;
@@ -29,9 +29,9 @@ public class SlotCraftingMixin {
 	private void onCrafted(ItemStack stack, CallbackInfo info) {
 		World world = player.getEntityWorld();
 		if (world.isRemote) {
-			for (IRecipe r : ForgeRegistries.RECIPES.getValuesCollection()) {
-				if (r.matches(craftMatrix, world)) {
-					EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(EmiPort.getId(r));
+			for (IRecipe crafting : ForgeRegistries.RECIPES.getValuesCollection()) {
+				if (crafting.matches(craftMatrix, world)) {
+					EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(ProxyRecipeManager.getId(crafting));
 					if (recipe != null) {
 						EmiSidebars.craft(recipe);
 						return;

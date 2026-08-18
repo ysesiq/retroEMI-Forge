@@ -6,13 +6,14 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.item.crafting.ShapelessRecipes;
 
 public class EmiShapelessRecipe extends EmiCraftingRecipe {
 
 	public EmiShapelessRecipe(ShapelessRecipes recipe) {
 		super(recipe.recipeItems.stream().map(i -> EmiIngredient.of(i)).collect(Collectors.toList()),
-			EmiStack.of(EmiPort.getOutput(recipe)), EmiPort.getId(recipe));
+			EmiStack.of(EmiPort.getOutput(recipe)), ProxyRecipeManager.getId(recipe));
 		EmiShapedRecipe.setRemainders(input, recipe);
 	}
 
