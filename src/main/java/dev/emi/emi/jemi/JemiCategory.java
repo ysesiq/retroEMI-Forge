@@ -16,7 +16,7 @@ public class JemiCategory extends EmiRecipeCategory {
 	public IRecipeCategory<?> category;
 
 	public JemiCategory(IRecipeCategory<?> category) {
-		super(EmiPort.id(category.getUid()), (raw, x, y, delta) -> {});
+		super(EmiPort.id(category.getUid().replace(".", ":")), (raw, x, y, delta) -> {});
 		this.icon = (raw, x, y, delta) -> {
 			EmiDrawContext context = EmiDrawContext.wrap(raw);
 			IDrawable icon = category.getIcon();
