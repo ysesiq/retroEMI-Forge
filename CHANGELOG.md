@@ -4,7 +4,8 @@
 	+ NEIU Only
 	+ Support for conversion recipes
 * Feature: Add built-in modernity pack
-* Improvement: Speeds up scanning for plugins
+* Perf: Speeds up scanning for plugins
+* Remove: Remove `FontRendererMixin` to ensure compatibility (1.7.10 Only)
 * Sync:
   + Introduce some abstractions -- emilyploszaj
   + search all registries in tag queries instead of just items [#1231](https://github.com/emilyploszaj/emi/pull/1231) -- Abbie5
