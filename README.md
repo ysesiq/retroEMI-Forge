@@ -1,7 +1,9 @@
 # retroEMI Forge
 EMI is a featureful and accessible item and recipe viewer for Minecraft.
 
-* Fork form [Rewind/retroEMI](https://git.sleeping.town/Rewind/retroEMI)
+This [fork](https://github.com/dilepton/emi_1.12.2) heavily uses code from this project, thereby violating this project's MIT license (by replacing the project developer Xy_Luce (Xy_Lose) with dilepton) and falsely claims that retroEMI is a compatibility layer. Please do not use it.
+
+Fork form [Rewind/retroEMI](https://git.sleeping.town/Rewind/retroEMI)
 
 exaptations accidentally ported it to 1.4.7 because NEI is a trash heap! Oopsie daisy!
 
@@ -18,8 +20,22 @@ Mixin is provided by [UniMixins](https://github.com/LegacyModdingMC/UniMixins).
 
 Part of the code refers to [Bommels05's EMI 1.7.10 port](https://github.com/Bommels05/emi), such as tag, data, etc
 
-### Note about NEI-Unofficial/HEI compatibility
+## Note about NEI-Unofficial/HEI(JEI) compatibility
 
-Stay tuned, it's not something that will happen for a while, and I've been under a lot of pressure to study lately.
+Nemi and Jemi are compatibility layers used for synchronizing recipes, obtaining screen exclusion area, and proxying drag-and-drop operations, among other things.
 
-Now, only UI compatibility is supported
+However, the NEI/JEI plugins made by developers are not necessarily standard-compliant. Nemi/Jemi are difficult to predict and may encounter conversion failures.
+
+When facing conversion issues, the best solution is to write a plugin that implements `EmiPlugin`, rather than denouncing retroEMI Forge as absolute garbage.
+
+### Nemi
+
+Does not support NEI; only supports NEI-Unofficial (GTNH-NEI).
+
+Note: This does not mean GTNH is fully supported yet. There are still many issues with GTNH at present—please use with caution.
+
+### Jemi
+
+Supports both JEI and HEI.
+
+Does not support NEI when it runs as a JEI addon, due to screen conflicts.
