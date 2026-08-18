@@ -154,7 +154,7 @@ public class EmiReloadManager {
 						break;
 					}
 					// No entrypoint, this step takes a long time
-					step(EmiPort.literal("Finding plugins"));
+					step(EmiPort.literal("Scanning plugins"));
 					List<EmiPluginContainer> plugins = Lists.newArrayList();
 					plugins.addAll(EmiAgnos.getPlugins().stream()
 						.sorted((a, b) -> Integer.compare(entrypointPriority(a), entrypointPriority(b))).collect(java.util.stream.Collectors.toList()));
