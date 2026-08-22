@@ -29,7 +29,7 @@ public class GuiContainerMixin extends GuiScreen {
 		}
 	}
 
-	@Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiScreen;drawScreen(IIF)V"))
+	@Inject(method = "drawScreen", at = @At("RETURN"))
 	private void emiRender(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
 		EmiDrawContext context = EmiDrawContext.instance();
 		context.push();
