@@ -52,6 +52,7 @@ import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.gui.GuiScreenHelper;
 import mezz.jei.gui.elements.GuiIconButton;
+import mezz.jei.input.GuiContainerWrapper;
 import mezz.jei.input.IClickedIngredient;
 import mezz.jei.plugins.jei.info.IngredientInfoRecipe;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -163,7 +164,8 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 			EmiStack stack = EmiStack.EMPTY;
 			GuiScreenHelper helper = ((IngredientListOverlayAccessor) runtime.getIngredientListOverlay()).getGuiScreenHelper();
 			if (helper != null && screen instanceof GuiContainer) {
-				IClickedIngredient<?> clicked = helper.getPluginsIngredientUnderMouse((GuiContainer) screen, x, y);
+				GuiContainerWrapper wrapper = new GuiContainerWrapper(helper);
+				IClickedIngredient<?> clicked = wrapper.getIngredientUnderMouse(x, y);
 				if (clicked != null) {
 					stack = JemiUtil.getStack(clicked.getValue());
 				}
@@ -382,11 +384,12 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 					}));
 				}
 			}
+			if (!(subtypeRegistry instanceof IJeiSubtypeRegistry fluidRegistry)) return;
 			for (Fluid fluid : EmiPort.getFluidRegistry().values()) {
-				if (subtypeRegistry.hasSubtypeInterpreter(new FluidStack(fluid, 1000))) {
+				if (fluidRegistry.hasSubtypeInterpreter(new FluidStack(fluid, 1000))) {
 					registry.setDefaultComparison(fluid, Comparison.compareData(stack -> {
 						if (stack.getKey() instanceof Fluid f) {
-							return subtypeRegistry.getSubtypeInfo(new FluidStack(f, 1000));
+							return fluidRegistry.getSubtypeInfo(new FluidStack(f, 1000));
 						}
 						return null;
 					}));

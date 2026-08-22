@@ -20,7 +20,7 @@ public class JemiTankWidget extends TankWidget {
 	private final JemiSlotWidget jsw;
 
 	public JemiTankWidget(JemiRecipeSlot slot, EmiRecipe recipe) {
-		super(slot.stack, slot.x - 1, slot.y - 1,
+		super(slot.getStack(), slot.x - 1, slot.y - 1,
 				(slot.tankInfo != null ? slot.tankInfo.width() : slot.width) + 2,
 				(slot.tankInfo != null ? slot.tankInfo.height() : slot.height) + 2,
 				slot.tankInfo != null ? slot.tankInfo.capacity() : slot.stack.getAmount());

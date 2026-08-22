@@ -28,6 +28,8 @@ public class JemiRecipeSlotBuilder {
 	public OffsetDrawable background, overlay;
 	public Map<IIngredientType<?>, IngredientRenderer<?>> renderers;
 	public TankInfo tankInfo;
+	public int slotIndex = 0;
+	public IIngredientType<?> ingredientType;
 
 	public JemiRecipeSlotBuilder(RecipeIngredientRole role, int x, int y) {
 		this.acceptor = new JemiIngredientAcceptor(role);

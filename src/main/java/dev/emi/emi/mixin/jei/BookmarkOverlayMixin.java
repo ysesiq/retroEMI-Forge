@@ -24,6 +24,7 @@ public class BookmarkOverlayMixin {
 
 	@Inject(method = "updateBounds(Ljava/awt/Rectangle;Ljava/util/Set;)V", at = @At("TAIL"))
 	private void moveBookmarkButton(Rectangle area, Set<Rectangle> guiExclusionAreas, CallbackInfo ci) {
-		((GuiIconToggleButtonAccessor) this.bookmarkButton).getInternalButton().y -= emiButton.visible ? emiButton.getHeight() : 0;
+		if (!emiButton.visible) return;
+		((GuiIconToggleButtonAccessor) this.bookmarkButton).getInternalButton().y -= emiButton.getHeight();
 	}
 }

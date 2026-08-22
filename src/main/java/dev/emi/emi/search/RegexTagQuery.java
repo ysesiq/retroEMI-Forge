@@ -5,12 +5,9 @@ import net.minecraft.item.ItemBlock;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.registry.EmiTags;
-import dev.emi.emi.runtime.EmiTagKey;
 
 public class RegexTagQuery extends Query {
 	private final Set<Object> valid;
@@ -25,10 +22,10 @@ public class RegexTagQuery extends Query {
 			valid = shim.java.Set.of();
 		} else {
 			final Pattern pat = p;
-			valid = Stream.<EmiTagKey<?>>concat(
-				EmiTags.TAGS.stream(),
-				EmiTagKey.fromRegistry(EmiPort.getBlockRegistry())
-			).filter(t -> {
+			valid = /*Stream.<EmiTagKey<?>>concat(*/
+				EmiTags.TAGS.stream()
+				/*EmiTagKey.fromRegistry(EmiPort.getBlockRegistry())*/
+			.filter(t -> {
 				if (t.hasTranslation()) {
 					if (pat.matcher(t.getTagName().getString().toLowerCase()).find()) {
 						return true;

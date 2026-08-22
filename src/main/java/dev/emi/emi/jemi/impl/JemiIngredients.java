@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 
@@ -126,10 +128,14 @@ public class JemiIngredients implements IIngredients {
 	private List<List<?>> expandSubtypes(List<List<?>> ingredients) {
 		if (ingredientRegistry != null) {
 			for (List<?> list : ingredients) {
-				if (list.size() > 1) {
-					IIngredientHelper helper = ingredientRegistry.getIngredientHelper(list.get(0));
+				if (list == null) {
+					continue;
+				}
+				List<Object> nonNull = list.stream().filter(Objects::nonNull).collect(Collectors.toList());
+				if (nonNull.size() > 1) {
+					IIngredientHelper helper = ingredientRegistry.getIngredientHelper(nonNull.get(0));
 					List expanded = helper.expandSubtypes(list);
-					if (expanded != list) {
+					if (expanded != nonNull) {
 						List<List<?>> ret = Lists.newArrayList(ingredients);
 						ret.set(ingredients.indexOf(list), expanded);
 						return ret;

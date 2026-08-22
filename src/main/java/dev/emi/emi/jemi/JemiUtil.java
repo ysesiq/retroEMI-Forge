@@ -52,6 +52,9 @@ public class JemiUtil {
 	}
 
 	public static EmiStack getStack(IIngredientType<?> type, Object ingredient) {
+		if (ingredient == null || (type != null && !type.getIngredientClass().isInstance(ingredient))) {
+			return EmiStack.EMPTY;
+		}
 		if (type == VanillaTypes.ITEM && ingredient instanceof ItemStack) {
 			return EmiStack.of((ItemStack) ingredient);
 		} else if (type == getFluidType() || ingredient instanceof FluidStack) {
@@ -91,13 +94,6 @@ public class JemiUtil {
 			set.add(mod);
 		}
 		return set;
-	}
-
-	public static boolean matchesType(ITypedIngredient<?> t, IIngredientType<?> ingredientType) {
-		if (ingredientType == VanillaTypes.FLUID) {
-			return t.type() != VanillaTypes.ITEM;
-		}
-		return t.type() == ingredientType;
 	}
 
 	public static GuiIconButton getConfigButton(IJeiRuntime runtime) {

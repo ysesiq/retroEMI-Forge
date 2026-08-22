@@ -1,5 +1,6 @@
 package dev.emi.emi.jemi;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -11,7 +12,6 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.mixin.jei.accessor.RecipesGuiAccessor;
 import dev.emi.emi.screen.RecipeScreen;
-import dev.emi.emi.screen.WidgetGroup;
 import mezz.jei.api.IRecipesGui;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IRecipeCategory;
@@ -19,7 +19,6 @@ import mezz.jei.gui.recipes.RecipeLayout;
 import mezz.jei.gui.recipes.RecipesGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import shim.mezz.jei.api.ingredients.ITypedIngredient;
 
 public class JemiScreenSwitch {
 
@@ -35,13 +34,18 @@ public class JemiScreenSwitch {
 	private static boolean toJei(RecipeScreen rs) {
 		Object value = focusValue(rs);
 		IRecipeCategory<?> category = getJeiCategory(rs.getFocusedCategory());
-		return Optional.ofNullable(value).map(v -> {
-			rs.close();
-			IRecipesGui gui = JemiPlugin.runtime.getRecipesGui();
-			gui.show(JemiPlugin.runtime.getRecipeRegistry().createFocus(IFocus.Mode.OUTPUT, v));
+		if (value == null && category == null) {
+			return false;
+		}
+		rs.close();
+		IRecipesGui gui = JemiPlugin.runtime.getRecipesGui();
+		if (value != null) {
+			gui.show(JemiPlugin.runtime.getRecipeRegistry().createFocus(IFocus.Mode.OUTPUT, value));
 			Optional.ofNullable(category).ifPresent(c -> ((RecipesGuiAccessor) gui).getRecipeGuiLogic().setRecipeCategory(c));
-			return true;
-		}).orElse(false);
+		} else {
+			gui.showCategories(Collections.singletonList(category.getUid()));
+		}
+		return true;
 	}
 
 	private static boolean toEmi(RecipesGui rg) {

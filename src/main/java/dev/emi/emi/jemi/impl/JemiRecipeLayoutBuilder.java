@@ -127,6 +127,7 @@ public class JemiRecipeLayoutBuilder implements IRecipeLayout {
 		protected final List<JemiRecipeSlotBuilder> slotBuilders = Lists.newArrayList();
 		protected final Map<Integer, JemiRecipeSlotBuilder> slotsByIndex = Maps.newHashMap();
 		protected final Set<Integer> inputSlots = Sets.newHashSet();
+		protected ITooltipCallback<T> tooltipCallback;
 
 		public Group(JemiRecipeLayoutBuilder parent, IIngredientType<T> type) {
 			this.parent = parent;
@@ -142,6 +143,8 @@ public class JemiRecipeLayoutBuilder implements IRecipeLayout {
 		public void init(int slotIndex, boolean input, IIngredientRenderer<T> ingredientRenderer, int x, int y,
 				int width, int height, int paddingX, int paddingY) {
 			JemiRecipeSlotBuilder builder = new JemiRecipeSlotBuilder(input ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT, x, y);
+			builder.slotIndex = slotIndex;
+			builder.ingredientType = type;
 			if (width > 18 || height > 18) {
 				builder.large = true;
 			}
@@ -154,6 +157,7 @@ public class JemiRecipeLayoutBuilder implements IRecipeLayout {
 			parent.ingredients.add(builder.acceptor);
 			slotBuilders.add(builder);
 			slotsByIndex.put(slotIndex, builder);
+			builder.tooltipCallback = tooltipCallback;
 			if (input) {
 				inputSlots.add(slotIndex);
 			}
@@ -209,6 +213,7 @@ public class JemiRecipeLayoutBuilder implements IRecipeLayout {
 
 		@Override
 		public void addTooltipCallback(ITooltipCallback<T> tooltipCallback) {
+			this.tooltipCallback = tooltipCallback;
 			for (JemiRecipeSlotBuilder builder : slotBuilders) {
 				builder.tooltipCallback = tooltipCallback;
 			}

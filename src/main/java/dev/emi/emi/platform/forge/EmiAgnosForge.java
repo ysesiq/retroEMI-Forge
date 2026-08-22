@@ -1,6 +1,7 @@
 package dev.emi.emi.platform.forge;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -198,16 +199,17 @@ public class EmiAgnosForge extends EmiAgnos {
 			}
 			try {
 				if (ibr instanceof AbstractBrewingRecipe recipe) {
-					for (ItemStack is : ((Ingredient) recipe.getIngredient()).getMatchingStacks()) {
+					List<ItemStack> ingredientStacks = getIngredientStacks(recipe.getIngredient());
+					EmiIngredient ingredient = EmiIngredient.of(ingredientStacks.stream().map(EmiStack::of).collect(Collectors.toList()));
+					for (ItemStack is : ingredientStacks) {
 						for (Item container : potionTypes) {
 							for (PotionType potion : ForgeRegistries.POTION_TYPES.getValuesCollection()) {
 								if (potion == PotionTypes.EMPTY) continue;
 								EmiStack input = EmiStack.of(EmiPort.setPotion(container.getDefaultInstance(), potion));
-								EmiIngredient ingredient = EmiIngredient.of((Ingredient) recipe.getIngredient());
 								EmiStack output = EmiStack.of(recipe.getOutput(input.getItemStack(), is));
 								if (output.isEmpty()) continue;
 								ResourceLocation id = EmiPort.id("emi", "/brewing/forge/"
-									+ EmiUtil.subId(input.getId()) + "_" + ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(input.getItemStack()))+ "/"
+									+ EmiUtil.subId(input.getId()) + "_" + ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(input.getItemStack())) + "/"
 									+ EmiUtil.subId(ingredient.getEmiStacks().get(0).getId()) + "/"
 									+ EmiUtil.subId(output.getId()) + "_" + ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(output.getItemStack())));
 								registry.addRecipe(new EmiBrewingRecipe(input, ingredient, output, id));
@@ -219,6 +221,21 @@ public class EmiAgnosForge extends EmiAgnos {
 				EmiLog.error("Error registering brewing recipe", e);
 			}
 		}
+	}
+
+	private static List<ItemStack> getIngredientStacks(Object ingredient) {
+		if (ingredient instanceof Ingredient ing) {
+			return Arrays.asList(ing.getMatchingStacks());
+		} else if (ingredient instanceof ItemStack stack) {
+			return shim.java.List.of(stack);
+		} else if (ingredient instanceof Iterable iterable) {
+			List<ItemStack> list = Lists.newArrayList();
+			for (Object o : iterable) {
+				list.addAll(getIngredientStacks(o));
+			}
+			return list;
+		}
+		return shim.java.List.of();
 	}
 
 	@Override

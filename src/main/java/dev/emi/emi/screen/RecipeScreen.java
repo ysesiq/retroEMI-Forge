@@ -537,7 +537,7 @@ public class RecipeScreen extends REMIScreen {
 		if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
 			this.close();
 			return true;
-		} else if (EmiConfig.toggleVisibility.matchesKey(keyCode, scanCode) && JemiScreenSwitch.handle()) {
+		} else if (EmiConfig.toggleVisibility.matchesKey(keyCode, scanCode)) {
 			return true;
 		} else if (EmiScreenManager.keyPressed(keyCode, scanCode, modifiers)) {
 			return true;

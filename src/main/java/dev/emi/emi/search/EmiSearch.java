@@ -27,9 +27,8 @@ import dev.emi.emi.screen.EmiScreenManager;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.search.SuffixArray;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Items;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import shim.net.minecraft.text.Text;
 
 public class EmiSearch {
@@ -85,28 +84,11 @@ public class EmiSearch {
 					mods.add(searchStack, id.getNamespace().toLowerCase());
 					names.add(searchStack, id.getPath().toLowerCase());
 				}
-				if (stack instanceof ItemEmiStack && stack.getItemStack().getItem() == Items.ENCHANTED_BOOK) {
-					NBTTagList enchantments = stack.getNbt() != null ?
-						stack.getNbt().getTagList("StoredEnchantments", 10) : null;
-
-					if (enchantments != null) {
-						for (int i = 0; i < enchantments.tagCount(); i++) {
-							NBTTagCompound enchantmentTag = enchantments.getCompoundTagAt(i);
-							int enchantmentId = enchantmentTag.getShort("id");
-							Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentId);
-
-							if (enchantment != null) {
-								String enchantmentName = enchantment.getName();
-								String modId = "minecraft";
-
-								if (enchantmentName.startsWith("enchantment.")) {
-									modId = enchantmentName.split("\\.")[1];
-								}
-
-								if (!modId.equals("minecraft")) {
-									mods.add(searchStack, modId.toLowerCase());
-								}
-							}
+				if (stack.getItemStack().getItem() == Items.ENCHANTED_BOOK) {
+					for (Enchantment e : EnchantmentHelper.getEnchantments(stack.getItemStack()).keySet()) {
+						ResourceLocation eid = EmiPort.getEnchantmentRegistry().getNameForObject(e);
+						if (eid != null && !eid.getNamespace().equals("minecraft")) {
+							mods.add(searchStack, EmiUtil.getModName(eid.getNamespace()).toLowerCase());
 						}
 					}
 				}

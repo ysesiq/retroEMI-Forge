@@ -237,6 +237,9 @@ jar {
         if (propertyBool('use_access_transformer')) {
             attribute_map['FMLAT'] = propertyString('access_transformer_locations')
         }
+        if (propertyBool('use_mixins')) {
+	        attribute_map['MixinConfigs'] = propertyString('mixin_configs')
+        }
         attributes(attribute_map)
     }
 }

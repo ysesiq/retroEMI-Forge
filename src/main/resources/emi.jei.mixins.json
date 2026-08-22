@@ -8,6 +8,8 @@
 		"jei.BookmarkOverlayMixin",
 		"jei.InputHandlerMixin",
 		"jei.JemiConfigMixin",
+		"jei.RecipesGuiMixin",
+		"jei.SubtypeRegistryMixin",
 		"jei.accessor.BookmarkOverlayAccessor",
 		"jei.accessor.GuiIconToggleButtonAccessor",
 		"jei.accessor.IngredientFilterAccessor",

@@ -18,7 +18,10 @@ import dev.emi.emi.jemi.impl.JemiRecipeSlot;
 import dev.emi.emi.jemi.impl.JemiRecipeSlotBuilder;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.ProxyRecipeManager;
+import dev.emi.emi.screen.WidgetGroup;
 import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.ingredients.VanillaTypes;
+import net.minecraft.client.renderer.GlStateManager;
 import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 import dev.emi.emi.jemi.widget.JemiSlotWidget;
 import dev.emi.emi.jemi.widget.JemiTankWidget;
@@ -39,6 +42,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 	public List<EmiIngredient> inputs = Lists.newArrayList();
@@ -61,8 +65,7 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 		builder.category = category;
 		try {
 			category.setRecipe(builder, recipe, ingredients);
-		} catch (Throwable t) {
-			EmiLog.error("Exception adding JEI recipe", t);
+		} catch (Throwable ignored) {
 		}
 		for (JemiRecipeSlotBuilder jrsb : builder.slots) {
 			jrsb.acceptor.coerceStacks(jrsb.tooltipCallback, jrsb.renderers);
@@ -152,15 +155,19 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void addWidgets(WidgetHolder widgets) {
-		Optional<IRecipeLayoutDrawable> opt = Optional.ofNullable(RecipeLayout.create(-1, category, recipe, null, 0, 0));
+		int posX = 0, posY = 0;
+		if (widgets instanceof WidgetGroup group) {
+			posX = group.x;
+			posY = group.y;
+		}
+		Optional<IRecipeLayoutDrawable> opt = Optional.ofNullable(RecipeLayout.create(-1, category, recipe, null, posX, posY));
 		JemiIngredients ingredients = new JemiIngredients();
 		recipe.getIngredients(ingredients);
 		JemiRecipeLayoutBuilder builder = new JemiRecipeLayoutBuilder();
 		builder.category = category;
 		try {
 			category.setRecipe(builder, recipe, ingredients);
-		} catch (Throwable t) {
-			EmiLog.error("Exception adding JEI recipe", t);
+		} catch (Throwable ignored) {
 		}
 		for (JemiRecipeSlotBuilder jrsb : builder.slots) {
 			jrsb.acceptor.coerceStacks(jrsb.tooltipCallback, jrsb.renderers);
@@ -169,7 +176,8 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 			widgets.add(new JemiWidget(0, 0, getDisplayWidth(), getDisplayHeight(), opt.get()));
 			for (JemiRecipeSlotBuilder sb : builder.slots) {
 				JemiRecipeSlot slot = new JemiRecipeSlot(sb);
-				if (slot.tankInfo != null || !slot.getIngredients(JemiUtil.getFluidType()).collect(Collectors.toList()).isEmpty()) {
+				slot.layout = opt.get();
+				if ((slot.tankInfo != null && !slot.getIngredients(JemiUtil.getFluidType()).collect(Collectors.toList()).isEmpty()) || (slot.renderers != null && !slot.renderers.containsKey(VanillaTypes.ITEM))) {
 					widgets.add(new JemiTankWidget(slot, this));
 				} else {
 					widgets.add(new JemiSlotWidget(slot, this));
@@ -210,6 +218,8 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 			EmiDrawContext context = EmiDrawContext.wrap(draw);
 			Minecraft client = Minecraft.getMinecraft();
 			context.push();
+			GlStateManager.disableLighting();
+			GlStateManager.enableAlpha();
 			context.translate(x, y);
 			IDrawable background = category.getBackground();
 			if (background != null) {
@@ -217,6 +227,9 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 			}
 			category.drawExtras(client);
 			recipe.drawInfo(client, getDisplayWidth(), getDisplayHeight(), mouseX, mouseY);
+			context.disableBlend();
+			GlStateManager.disableLighting();
+			GlStateManager.disableAlpha();
 			context.resetColor();
 			context.pop();
 		}
@@ -224,18 +237,10 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 		@Override
 		public List<TooltipComponent> getTooltip(int mouseX, int mouseY) {
 			List<TooltipComponent> list = Lists.newArrayList();
-			List<String> categoryTooltips = category.getTooltipStrings(mouseX, mouseY);
-			if (categoryTooltips != null) {
-				for (String s : categoryTooltips) {
-					list.add(TooltipComponent.of(EmiPort.literal(s)));
-				}
-			}
-			List<String> recipeTooltips = recipe.getTooltipStrings(mouseX, mouseY);
-			if (recipeTooltips != null) {
-				for (String s : recipeTooltips) {
-					list.add(TooltipComponent.of(EmiPort.literal(s)));
-				}
-			}
+			list.addAll(Stream.of(
+					Optional.ofNullable(category.getTooltipStrings(mouseX, mouseY)).orElse(shim.java.List.of()),
+					Optional.ofNullable(recipe.getTooltipStrings(mouseX, mouseY)).orElse(shim.java.List.of()))
+					.flatMap(List::stream).map(s -> TooltipComponent.of(EmiPort.literal(s))).collect(Collectors.toList()));
 			return list;
 		}
 

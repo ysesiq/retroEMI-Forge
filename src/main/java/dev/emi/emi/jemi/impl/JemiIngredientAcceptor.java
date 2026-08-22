@@ -19,8 +19,10 @@ import mezz.jei.api.ingredients.IIngredientRenderer;
 import mezz.jei.api.recipe.IIngredientType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.oredict.OreDictionary;
 import shim.mezz.jei.api.ingredients.ITypedIngredient;
 import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 
@@ -82,7 +84,12 @@ public class JemiIngredientAcceptor {
 
 	private void addStack(EmiStack stack) {
 		if (!stack.isEmpty()) {
-			stacks.add(stack);
+			ItemStack itemStack = stack.getItemStack();
+			if (itemStack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+				stacks.addAll(EmiStack.ofPotentialTag(itemStack).getEmiStacks());
+			} else {
+				stacks.add(stack);
+			}
 		}
 	}
 

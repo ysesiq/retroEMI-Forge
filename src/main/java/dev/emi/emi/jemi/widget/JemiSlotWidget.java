@@ -32,7 +32,7 @@ public class JemiSlotWidget extends SlotWidget {
 	public final JemiRecipeSlot slot;
 
 	public JemiSlotWidget(JemiRecipeSlot slot, EmiRecipe recipe) {
-		super(slot.stack, slot.x, slot.y);
+		super(slot.getStack(), slot.x, slot.y);
 		this.slot = slot;
 		slot.widget = this;
 		if (slot.getRole() == RecipeIngredientRole.OUTPUT) {
@@ -40,6 +40,11 @@ public class JemiSlotWidget extends SlotWidget {
 		}
 		this.drawBack(slot.defaultBackground);
 		this.customBackground(null, 0, 0, slot.width, slot.height);
+	}
+
+	@Override
+	public EmiIngredient getStack() {
+		return slot.getStack();
 	}
 
 	private ITypedIngredient<?> getIngredient() {
@@ -126,7 +131,7 @@ public class JemiSlotWidget extends SlotWidget {
 				event.addAll(original);
 				ITypedIngredient<?> typed = JemiUtil.getTyped(stack.getEmiStacks().get(0)).orElse(null);
 				if (typed != null) {
-					((ITooltipCallback) slot.tooltipCallback).onTooltip(0, slot.isInput(), typed.ingredient(), event);
+					((ITooltipCallback) slot.tooltipCallback).onTooltip(slot.slotIndex, slot.isInput(), typed.ingredient(), event);
 				}
 				int index = Math.min(list.size(), 1);
 				if (!event.isEmpty()) {
