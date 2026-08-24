@@ -23,6 +23,7 @@ public class JemiRecipeSlotBuilder {
 	public boolean large = false, defaultBackground = false;
 	public int x, y;
 	public int width = 18, height = 18;
+	public int paddingX, paddingY;
 	public Optional<String> name = Optional.empty();
 	public ITooltipCallback<?> tooltipCallback;
 	public OffsetDrawable background, overlay;

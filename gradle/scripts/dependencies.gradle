@@ -29,6 +29,10 @@ repositories {
         name = "Spongepowered"
         url = "https://repo.spongepowered.org/repository/maven-public/"
     }
+	maven {
+		name = "blamejared"
+		url = "https://maven.blamejared.com/"
+	}
     mavenLocal() // Must be last for caching to work
 }
 
@@ -79,9 +83,9 @@ dependencies {
 //    implementation('it.unimi.dsi:fastutil:8.5.18')
 //	runtimeOnly 'mezz:jei:4.34.3:dev'//hei
 //	compileOnly 'mezz:jei:4.34.3:dev'//hei
-	runtimeOnly 'maven.modrinth:jei:4.16.5.1029'//jei
-	compileOnly 'maven.modrinth:jei:4.16.5.1029'//jei
-	runtimeOnly'maven.modrinth:mekanism:9.8.3.390'// just test jemi
+	runtimeOnly 'mezz.jei:jei_1.12.2:4.16.5.1029'//jei
+	compileOnly 'mezz.jei:jei_1.12.2:4.16.5.1029'//jei
+//	runtimeOnly'maven.modrinth:mekanism:9.8.3.390'// just test jemi
 //	compileOnly('maven.modrinth:fermiumbooter:1.4.1')
 }
 

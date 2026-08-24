@@ -42,6 +42,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.gui.IGlobalGuiHandler;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -62,6 +63,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import org.jspecify.annotations.NonNull;
 import shim.mezz.jei.api.ingredients.ITypedIngredient;
 import shim.net.minecraft.text.Text;
 
@@ -73,6 +75,8 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 	public static IJeiRuntime runtime;
 //	public static BiPredicate<IIngredientTypeWithSubtypes<? extends Object, ? extends Object>, Object> hasSubtype = (a, b) -> true;
 	public static IIngredientRegistry ingredientRegistry;
+
+
 
 //	@Override
 //	public ResourceLocation getPluginUid() {
@@ -88,6 +92,21 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 	public void register(IModRegistry registry) {
 		ingredientRegistry = registry.getIngredientRegistry();
 		JemiIngredients.ingredientRegistry = ingredientRegistry;
+		registry.addGlobalGuiHandlers(new IGlobalGuiHandler() {
+			@Override
+			public @NonNull List<Rectangle> getGuiExtraAreas() {
+				List<Rectangle> areas = Lists.newArrayList();
+				GuiIconButton configButton = JemiUtil.getConfigButton(runtime);
+				if (configButton.visible) {
+					areas.add(new Rectangle(configButton.x, configButton.y, configButton.width, configButton.height));
+				}
+				GuiIconButton bookmarkButton = JemiUtil.getBookmarkButton(runtime);
+				if (bookmarkButton.visible) {
+					areas.add(new Rectangle(bookmarkButton.x, bookmarkButton.y, bookmarkButton.width, bookmarkButton.height));
+				}
+				return areas;
+			}
+		});
 	}
 
 //    @Override
@@ -384,12 +403,11 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 					}));
 				}
 			}
-			if (!(subtypeRegistry instanceof IJeiSubtypeRegistry fluidRegistry)) return;
 			for (Fluid fluid : EmiPort.getFluidRegistry().values()) {
-				if (fluidRegistry.hasSubtypeInterpreter(new FluidStack(fluid, 1000))) {
+				if (JemiReflection.hasFluidSubtype(subtypeRegistry, new FluidStack(fluid, 1000))) {
 					registry.setDefaultComparison(fluid, Comparison.compareData(stack -> {
 						if (stack.getKey() instanceof Fluid f) {
-							return fluidRegistry.getSubtypeInfo(new FluidStack(f, 1000));
+							return JemiReflection.getFluidSubtype(subtypeRegistry, new FluidStack(f, 1000));
 						}
 						return null;
 					}));

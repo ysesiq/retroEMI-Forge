@@ -17,11 +17,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.BakedItemModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.google.common.collect.Lists;
 
-import com.rewindmc.retroemi.EmiModAnnotationScanner;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
@@ -122,19 +122,14 @@ public class EmiAgnosForge extends EmiAgnos {
 	@Override
 	protected List<String> getModsWithPluginsAgnos() {
 		List<String> mods = Lists.newArrayList();
-		for (ModContainer modContainer : Loader.instance().getModList()) {
-			if (modContainer instanceof DummyModContainer || (modContainer instanceof InjectedModContainer container && container.wrappedContainer instanceof DummyModContainer)) {
-				continue;
-			}
-			try {
-				ClassLoader classLoader = modContainer.getClass().getClassLoader();
-				List<Class<?>> annotatedClasses = EmiModAnnotationScanner.scanForAnnotatedClasses(modContainer, classLoader, EmiEntrypoint.class);
-
-				if (!annotatedClasses.isEmpty()) {
-					mods.add(modContainer.getModId());
+		ASMDataTable asmDataTable = Loader.instance().discoverer.getASMTable();
+		if (asmDataTable != null) {
+			for (ASMDataTable.ASMData asm : asmDataTable.getAll(EmiEntrypoint.class.getName())) {
+				try {
+					mods.add(asm.getCandidate().getContainedMods().get(0).getModId());
+				} catch (Throwable t) {
+					EmiLog.error("Exception constructing entrypoint:", t);
 				}
-			} catch (Throwable t) {
-				EmiLog.error("Exception constructing entrypoint:", t);
 			}
 		}
 		return mods;
@@ -143,26 +138,22 @@ public class EmiAgnosForge extends EmiAgnos {
 	@Override
 	protected List<EmiPluginContainer> getPluginsAgnos() {
 		List<EmiPluginContainer> containers = Lists.newArrayList();
-		for (ModContainer modContainer : Loader.instance().getModList()) {
-			if (modContainer instanceof DummyModContainer || (modContainer instanceof InjectedModContainer container && container.wrappedContainer instanceof DummyModContainer)) {
-				continue;
-			}
-			try {
-				ClassLoader classLoader = modContainer.getClass().getClassLoader();
-				List<Class<?>> annotatedClasses = EmiModAnnotationScanner.scanForAnnotatedClasses(modContainer, classLoader, EmiEntrypoint.class);
-
-				for (Class<?> clazz : annotatedClasses) {
+		ASMDataTable asmDataTable = Loader.instance().discoverer.getASMTable();
+		if (asmDataTable != null) {
+			for (ASMDataTable.ASMData asm : asmDataTable.getAll(EmiEntrypoint.class.getName())) {
+				try {
+					Class<?> clazz = Class.forName(asm.getClassName());
 					if (EmiPlugin.class.isAssignableFrom(clazz)) {
 						Class<? extends EmiPlugin> pluginClass = clazz.asSubclass(EmiPlugin.class);
 						EmiPlugin plugin = pluginClass.getConstructor().newInstance();
-						String id = modContainer.getModId();
+						String id = asm.getCandidate().getContainedMods().get(0).getModId();
 						containers.add(new EmiPluginContainer(plugin, id));
 					} else {
-						EmiLog.error("EmiEntrypoint " + clazz.getName() + " does not implement EmiPlugin");
+						EmiLog.error("EmiEntrypoint " + asm.getClassName() + " does not implement EmiPlugin");
 					}
+				} catch (Throwable t) {
+					EmiLog.error("Exception constructing entrypoint:", t);
 				}
-			} catch (Throwable t) {
-				EmiLog.error("Exception constructing entrypoint for mod " + modContainer.getModId() + ":", t);
 			}
 		}
 		return containers;

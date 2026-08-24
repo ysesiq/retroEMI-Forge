@@ -43,6 +43,8 @@ import dev.emi.emi.config.SidebarTheme;
 import dev.emi.emi.config.SidebarType;
 import dev.emi.emi.input.EmiBind;
 import dev.emi.emi.input.EmiInput;
+import dev.emi.emi.jemi.JemiPlugin;
+import dev.emi.emi.jemi.JemiUtil;
 import dev.emi.emi.mixin.accessor.PlayerControllerMPAccessor;
 import dev.emi.emi.network.CreateItemC2SPacket;
 import dev.emi.emi.network.EmiNetwork;
@@ -922,7 +924,7 @@ public class EmiScreenManager {
 			if (EmiConfig.searchSidebar == SidebarSide.RIGHT) {
 				search.x = panels.get(1).space.tx;
 				search.y = screen.height - 21;
-				search.setWidth(panels.get(1).space.tw * ENTRY_SIZE);
+				search.setWidth(panels.get(1).space.tw * ENTRY_SIZE - JemiUtil.getConfigButtonWidth(JemiPlugin.runtime));
 			} else {
 				search.x = panels.get(0).space.tx;
 				search.y = screen.height - 21 - 21;
@@ -1377,7 +1379,7 @@ public class EmiScreenManager {
 					command += " " + nbt;
 				}
 				if (command.length() < 256) {
-					((PlayerControllerMPAccessor) client.playerController).getNetClientHandler().sendPacket(new CPacketChatMessage(command));
+					client.playerController.connection.sendPacket(new CPacketChatMessage(command));
 					return true;
 				}
 			}

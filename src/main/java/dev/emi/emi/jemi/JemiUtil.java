@@ -12,8 +12,10 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.mixin.jei.accessor.BookmarkOverlayAccessor;
 import dev.emi.emi.mixin.jei.accessor.GuiIconToggleButtonAccessor;
 import dev.emi.emi.mixin.jei.accessor.IngredientListOverlayAccessor;
+import dev.emi.emi.screen.RecipeScreen;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.gui.elements.GuiIconButton;
+import net.minecraft.client.Minecraft;
 import shim.mezz.jei.api.ingredients.ITypedIngredient;
 import dev.emi.emi.platform.EmiAgnos;
 import mezz.jei.api.ingredients.IIngredientHelper;
@@ -102,5 +104,15 @@ public class JemiUtil {
 
 	public static GuiIconButton getBookmarkButton(IJeiRuntime runtime) {
 		return ((GuiIconToggleButtonAccessor) ((BookmarkOverlayAccessor) runtime.getBookmarkOverlay()).getBookmarkButton()).getInternalButton();
+	}
+
+	public static int getConfigButtonWidth(IJeiRuntime runtime) {
+		try {
+			if (Minecraft.getMinecraft().currentScreen instanceof RecipeScreen) return 0;
+			int width = getConfigButton(runtime).getButtonWidth();
+			return width > 0 ? width : 20;
+		} catch (Exception ignored) {
+			return 0;
+		}
 	}
 }

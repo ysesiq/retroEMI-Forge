@@ -29,6 +29,7 @@ public class JemiRecipeSlot implements IGuiIngredient<Object> {
 	public final boolean large, defaultBackground;
 	public final int x, y;
 	public final int width, height;
+	public final int paddingX, paddingY;
 	public final Optional<String> name;
 	public final ITooltipCallback<?> tooltipCallback;
 //	public final IRecipeSlotRichTooltipCallback richTooltipCallback;
@@ -51,6 +52,8 @@ public class JemiRecipeSlot implements IGuiIngredient<Object> {
 		this.y = builder.y;
 		this.width = builder.width;
 		this.height = builder.height;
+		this.paddingX = builder.paddingX;
+		this.paddingY = builder.paddingY;
 		this.name = builder.name;
 		this.tooltipCallback = builder.tooltipCallback;
 //		this.richTooltipCallback = builder.richTooltipCallback;
@@ -71,6 +74,8 @@ public class JemiRecipeSlot implements IGuiIngredient<Object> {
 		this.y = 0;
 		this.width = 18;
 		this.height = 18;
+		this.paddingX = 0;
+		this.paddingY = 0;
 		this.name = Optional.empty();
 		this.tooltipCallback = null;
 //		this.richTooltipCallback = null;

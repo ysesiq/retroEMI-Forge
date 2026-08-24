@@ -83,8 +83,8 @@ public class JemiSlotWidget extends SlotWidget {
 		if (renderer != null) {
 			ITypedIngredient<?> typed = getIngredient();
 			Bounds bounds = getBounds();
-			int xOff = bounds.x() + (bounds.width() - 16) / 2 ;
-			int yOff = bounds.y() + (bounds.height() - 16) / 2 ;
+			int xOff = bounds.x() + slot.paddingX;
+			int yOff = bounds.y() + slot.paddingY;
 			context.enableBlend();
 			context.push();
 //  		context.translate(xOff, yOff);

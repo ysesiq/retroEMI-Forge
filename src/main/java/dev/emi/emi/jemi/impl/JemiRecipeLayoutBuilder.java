@@ -22,6 +22,7 @@ import mezz.jei.api.recipe.IIngredientType;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.plugins.vanilla.ingredients.fluid.FluidStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import shim.mezz.jei.api.recipe.RecipeIngredientRole;
@@ -150,6 +151,8 @@ public class JemiRecipeLayoutBuilder implements IRecipeLayout {
 			}
 			builder.width = width;
 			builder.height = height;
+			builder.paddingX = paddingX;
+			builder.paddingY = paddingY;
 			if (ingredientRenderer != null) {
 				builder.setCustomRenderer(type, ingredientRenderer);
 			}
@@ -251,9 +254,8 @@ public class JemiRecipeLayoutBuilder implements IRecipeLayout {
 		}
 
 		@Override
-		public void init(int slotIndex, boolean input, int x, int y, int width, int height, int capacityMb,
-				boolean showCapacity, IDrawable overlay) {
-			init(slotIndex, input, null, x, y, width, height, 0, 0);
+		public void init(int slotIndex, boolean input, int x, int y, int width, int height, int capacityMb, boolean showCapacity, IDrawable overlay) {
+			init(slotIndex, input, new FluidStackRenderer(capacityMb, showCapacity, width, height, overlay), x, y, width, height, 0, 0);
 			JemiRecipeSlotBuilder builder = slotsByIndex.get(slotIndex);
 			if (builder != null) {
 				builder.tankInfo = new JemiRecipeSlot.TankInfo(width, height, capacityMb, showCapacity);

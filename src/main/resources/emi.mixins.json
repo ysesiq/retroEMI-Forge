@@ -17,15 +17,13 @@
 		"ResourcePackRepositoryMixin",
 		"SlotCraftingMixin",
 		"accessor.AbstractResourcePackAccessor",
-		"accessor.FallbackResourceManagerAccessor",
 		"accessor.FontRendererAccessor",
 		"accessor.GuiContainerAccessor",
 		"accessor.GuiRecipeBookAccessor",
 		"accessor.GuiTextFieldAccessor",
 		"accessor.LegacyV2AdapterAccessor",
 		"accessor.RenderItemAccessor",
-		"accessor.ResourcePackRepositoryEntryAccessor",
-		"accessor.SimpleReloadableResourceManagerAccessor"
+		"accessor.ResourcePackRepositoryEntryAccessor"
 	],
 	"mixins": [
 		"accessor.InventoryCraftingAccessor",

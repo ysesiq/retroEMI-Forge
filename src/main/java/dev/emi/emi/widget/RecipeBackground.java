@@ -5,6 +5,7 @@ import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.runtime.EmiDrawContext;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.client.gui.DrawContext;
 
@@ -27,6 +28,10 @@ public class RecipeBackground extends Widget {
 	@Override
 	public void render(DrawContext raw, int mouseX, int mouseY, float delta) {
 		EmiDrawContext context = EmiDrawContext.wrap(raw);
+		context.push();
+		GlStateManager.enableAlpha();
 		EmiRenderHelper.drawNinePatch(context, TEXTURE, x, y, width, height, 27, 0, 4, 1);
+		GlStateManager.disableAlpha();
+		context.pop();
 	}
 }

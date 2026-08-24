@@ -16,11 +16,9 @@ import dev.emi.emi.jemi.impl.JemiIngredients;
 import dev.emi.emi.jemi.impl.JemiRecipeLayoutBuilder;
 import dev.emi.emi.jemi.impl.JemiRecipeSlot;
 import dev.emi.emi.jemi.impl.JemiRecipeSlotBuilder;
-import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.ProxyRecipeManager;
 import dev.emi.emi.screen.WidgetGroup;
 import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.ingredients.VanillaTypes;
 import net.minecraft.client.renderer.GlStateManager;
 import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 import dev.emi.emi.jemi.widget.JemiSlotWidget;
@@ -160,7 +158,6 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 			posX = group.x;
 			posY = group.y;
 		}
-		Optional<IRecipeLayoutDrawable> opt = Optional.ofNullable(RecipeLayout.create(-1, category, recipe, null, posX, posY));
 		JemiIngredients ingredients = new JemiIngredients();
 		recipe.getIngredients(ingredients);
 		JemiRecipeLayoutBuilder builder = new JemiRecipeLayoutBuilder();
@@ -172,12 +169,13 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 		for (JemiRecipeSlotBuilder jrsb : builder.slots) {
 			jrsb.acceptor.coerceStacks(jrsb.tooltipCallback, jrsb.renderers);
 		}
+		Optional<IRecipeLayoutDrawable> opt = Optional.ofNullable(RecipeLayout.create(-1, category, recipe, null, posX, posY));
 		if (opt.isPresent()) {
 			widgets.add(new JemiWidget(0, 0, getDisplayWidth(), getDisplayHeight(), opt.get()));
 			for (JemiRecipeSlotBuilder sb : builder.slots) {
 				JemiRecipeSlot slot = new JemiRecipeSlot(sb);
 				slot.layout = opt.get();
-				if ((slot.tankInfo != null && !slot.getIngredients(JemiUtil.getFluidType()).collect(Collectors.toList()).isEmpty()) || (slot.renderers != null && !slot.renderers.containsKey(VanillaTypes.ITEM))) {
+				if ((slot.tankInfo != null && !slot.getIngredients(JemiUtil.getFluidType()).collect(Collectors.toList()).isEmpty())) {
 					widgets.add(new JemiTankWidget(slot, this));
 				} else {
 					widgets.add(new JemiSlotWidget(slot, this));

@@ -147,8 +147,8 @@ public class EmiTagKey<T> {
 		return of(TagKey.of(registry, id));
 	}
 
-	public static <T> Stream<EmiTagKey<T>> fromRegistry(RegistryNamespaced registry) {
-		return registry.getKeys().stream().map(tagKey -> of((TagKey<T>) tagKey));
+	public static <T> Stream<EmiTagKey<T>> fromRegistry(Class<T> type, RegistryNamespaced<ResourceLocation, T> registry) {
+		return registry.getKeys().stream().map(key -> of(TagKey.of(type, key)));
 	}
 
 	public static void reload() {

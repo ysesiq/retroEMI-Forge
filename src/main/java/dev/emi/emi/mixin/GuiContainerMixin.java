@@ -3,6 +3,7 @@ package dev.emi.emi.mixin;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.screen.EmiScreenManager;
+import mezz.jei.gui.recipes.RecipesGui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;

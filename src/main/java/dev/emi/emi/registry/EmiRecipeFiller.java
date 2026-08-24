@@ -83,7 +83,7 @@ public class EmiRecipeFiller {
 			if ((type != null || screenHandler instanceof ContainerPlayer) && handlers.containsKey(type)) {
 				return (List<EmiRecipeHandler<T>>) (List<?>) handlers.get(type);
 			}
-			for (Slot slot : (List<Slot>) screen.inventorySlots.inventorySlots) {
+			for (Slot slot : screen.inventorySlots.inventorySlots) {
 				if (slot instanceof SlotCrafting crs) {
 					var inv = ((SlotCraftingAccessor) crs).getCraftMatrix();
 					if (inv != null && inv.getSizeInventory() > 0) {

@@ -110,6 +110,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 import shim.net.minecraft.item.DyeItem;
@@ -469,7 +470,7 @@ public class VanillaPlugin implements EmiPlugin {
 		for (ItemStack stack : stacks) {
 			if (stack.getItemDamage() != 2 && stack.getItemDamage() != 3) {
 				addRecipeSafe(registry, () -> basicWorld(EmiStack.of(stack).setRemainder(EmiStack.of(stack)), EmiStack.of(Items.DYE, 1, 15), EmiStack.of(stack),
-					synthetic("world/flower_duping", EmiUtil.subId(EmiPort.id(EmiUtil.subId(stack)))), false));
+					synthetic("world/flower_duping", EmiUtil.subId(stack)), false));
 			}
 		}
 		addRecipeSafe(registry, () -> new EmiAnvilRecipe(EmiStack.of(Items.SHIELD), EmiStack.ofPotentialTag(new ItemStack(Blocks.PLANKS, 1, OreDictionary.WILDCARD_VALUE)),
@@ -568,8 +569,8 @@ public class VanillaPlugin implements EmiPlugin {
 
 		EmiPort.getFluidRegistry().entrySet().forEach(entry -> {
 			Fluid fluid = entry.getValue();
-			Item bucket = FluidUtil.getFilledBucket(new FluidStack(fluid, 1000)).getItem();
-			if (fluid.getStill() != null && !fluid.isGaseous() && bucket != Items.AIR && fluid.canBePlacedInWorld()) {
+			ItemStack bucket =  UniversalBucket.getFilledBucket(new UniversalBucket(), fluid);
+			if (fluid.getStill() != null && !fluid.isGaseous() && !bucket.isEmpty() && fluid.canBePlacedInWorld()) {
 				addRecipeSafe(registry, () -> basicWorld(EmiStack.of(Items.BUCKET), EmiStack.of(fluid, FluidUnit.BUCKET), EmiStack.of(bucket),
 					synthetic("emi", "bucket_filling/" + EmiUtil.subId(fluid)), false));
 			}

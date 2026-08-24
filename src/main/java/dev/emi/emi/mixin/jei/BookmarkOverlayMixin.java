@@ -1,17 +1,16 @@
 package dev.emi.emi.mixin.jei;
 
-import java.awt.Rectangle;
-import java.util.Set;
-
 import dev.emi.emi.mixin.jei.accessor.GuiIconToggleButtonAccessor;
 import dev.emi.emi.screen.EmiScreenManager;
-import dev.emi.emi.screen.widget.SizedButtonWidget;
+import dev.emi.emi.screen.RecipeScreen;
 import mezz.jei.gui.elements.GuiIconToggleButton;
 import mezz.jei.gui.overlay.bookmarks.BookmarkOverlay;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,11 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BookmarkOverlayMixin {
 	@Shadow @Final private GuiIconToggleButton bookmarkButton;
 
-	@Unique private SizedButtonWidget emiButton = EmiScreenManager.emi;
-
-	@Inject(method = "updateBounds(Ljava/awt/Rectangle;Ljava/util/Set;)V", at = @At("TAIL"))
-	private void moveBookmarkButton(Rectangle area, Set<Rectangle> guiExclusionAreas, CallbackInfo ci) {
-		if (!emiButton.visible) return;
-		((GuiIconToggleButtonAccessor) this.bookmarkButton).getInternalButton().y -= emiButton.getHeight();
+	@Inject(method = "drawScreen(Lnet/minecraft/client/Minecraft;IIF)V", at = @At("HEAD"))
+	private void repositionBookmarkButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+		GuiScreen current = minecraft.currentScreen;
+		if (!(current instanceof GuiContainer) && !(current instanceof RecipeScreen)) return;
+		if (!EmiScreenManager.emi.visible) return;
+		((GuiIconToggleButtonAccessor) this.bookmarkButton).getInternalButton().y = EmiScreenManager.emi.y - ((GuiIconToggleButtonAccessor) this.bookmarkButton).getInternalButton().height - 2;
 	}
 }
