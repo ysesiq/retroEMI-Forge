@@ -7,6 +7,7 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
 import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.network.EmiNetwork;
+import dev.emi.emi.nemi.NemiRecipe;
 import dev.emi.emi.platform.EmiClient;
 import dev.emi.emi.registry.EmiTags;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -101,6 +102,7 @@ public class EmiClientForge {
 	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase == TickEvent.Phase.START) {
 			RetroEMICommonUtils.tick();
+			NemiRecipe.tickHandlers();
 		}
 	}
 

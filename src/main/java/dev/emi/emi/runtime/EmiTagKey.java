@@ -2,6 +2,7 @@ package dev.emi.emi.runtime;
 
 import com.google.common.collect.Maps;
 import com.rewindmc.retroemi.RetroEMI;
+import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiUtil;
 import dev.emi.emi.registry.EmiTags;
@@ -147,8 +148,8 @@ public class EmiTagKey<T> {
 		return of(TagKey.of(registry, id));
 	}
 
-	public static <T> Stream<EmiTagKey<T>> fromRegistry(RegistryNamespaced registry) {
-		return registry.getKeys().stream().map(tagKey -> of((TagKey<T>) tagKey));
+	public static <T> Stream<EmiTagKey<T>> fromRegistry(Class<T> type, FMLControlledNamespacedRegistry<T> registry) {
+		return registry.getKeys().stream().map(key -> of(TagKey.of(type, EmiPort.id(registry.getNameForObject(key)))));
 	}
 
 	public static void reload() {

@@ -1,6 +1,5 @@
 package dev.emi.emi.platform.forge;
 
-import com.rewindmc.retroemi.RetroEMI;
 import com.rewindmc.retroemi.RetroEMICommonUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dev.emi.emi.nemi.NemiPlugin;
@@ -33,7 +32,7 @@ public class EmiForge {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-
+		EmiAgnosForge.asmDataTable = event.getAsmData();
 	}
 
 	@Mod.EventHandler
@@ -42,7 +41,9 @@ public class EmiForge {
 		EmiPacketHandler.init();
 		if (event.getSide().isClient()) {
 			EmiClientForge.clientInit();
-			MinecraftForge.EVENT_BUS.register(new EmiClientForge());
+			EmiClientForge client = new EmiClientForge();
+			MinecraftForge.EVENT_BUS.register(client);
+			FMLCommonHandler.instance().bus().register(client);
 		}
 		EmiNetwork.initServer((player, packet) -> {
 			EmiPacketHandler.CHANNEL.sendTo(EmiPacketHandler.wrap(packet), player);

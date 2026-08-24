@@ -154,8 +154,6 @@ public class EmiReloadManager {
 						EmiReloadLog.warn("Recipe Manager is null");
 						break;
 					}
-					// No entrypoint, this step takes a long time
-					step(EmiPort.literal("Scanning plugins"));
 					long t = System.currentTimeMillis();
 					List<EmiPluginContainer> plugins = Lists.newArrayList();
 					plugins.addAll(EmiAgnos.getPlugins().stream()

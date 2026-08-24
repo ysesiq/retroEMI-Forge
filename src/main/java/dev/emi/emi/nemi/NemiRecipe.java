@@ -1,10 +1,14 @@
 package dev.emi.emi.nemi;
 
+import java.awt.Point;
+
+import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipeTab;
 import codechicken.nei.recipe.HandlerInfo;
 import codechicken.nei.recipe.Recipe.RecipeId;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -15,16 +19,24 @@ import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.text.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 
 public class NemiRecipe implements EmiRecipe {
     private final EmiRecipeCategory category;
     private final ResourceLocation id;
     private final TemplateRecipeHandler neiHandler;
     private final int recipeIndex;
-    private final List<PositionedStack> ingredientStacks;
+	private static final Set<TemplateRecipeHandler> HANDLERS = Collections.newSetFromMap(new WeakHashMap<>());
+	private final List<PositionedStack> ingredientStacks;
     private final PositionedStack resultStack;
     private final List<PositionedStack> otherStacks;
 
@@ -43,10 +55,16 @@ public class NemiRecipe implements EmiRecipe {
 
         this.inputs = parseInputs();
         this.outputs = parseOutputs();
+        registerHandler(neiHandler);
     }
 
     private static List<PositionedStack> safeList(List<PositionedStack> stacks) {
         return stacks == null ? new ArrayList<>() : stacks;
+    }
+
+    private static PositionedStack safeStack(List<PositionedStack> stacks, int index) {
+        if (stacks == null || index < 0 || index >= stacks.size()) return null;
+        return stacks.get(index);
     }
 
     private List<EmiIngredient> parseInputs() {
@@ -80,7 +98,7 @@ public class NemiRecipe implements EmiRecipe {
         }
     }
 
-    private EmiIngredient parseIngredient(PositionedStack positionedStack) {
+    static EmiIngredient parseIngredient(PositionedStack positionedStack) {
         if (positionedStack == null) {
             return EmiStack.EMPTY;
         }
@@ -137,7 +155,12 @@ public class NemiRecipe implements EmiRecipe {
 	@Override
 	public int getDisplayHeight() {
 		HandlerInfo info = GuiRecipeTab.getHandlerInfo(neiHandler);
-		int recipeHeight = info.getHeight();
+		int recipeHeight = 0;
+//		try {
+//			recipeHeight = neiHandler.getRecipeHeight(recipeIndex);
+//		} catch (Throwable ignored) {
+		recipeHeight = info.getHeight();
+//		}
 		int h = recipeHeight > 0 ? recipeHeight : info.getHeight();
 		return h + info.getYShift() + 4;
 	}
@@ -153,6 +176,33 @@ public class NemiRecipe implements EmiRecipe {
         addInputWidgets(widgets);
         addMainOutputWidget(widgets);
         addSecondaryOutputWidgets(widgets);
+        addRecipeTooltip(widgets);
+    }
+
+    private void addRecipeTooltip(WidgetHolder widgets) {
+        widgets.addTooltip((mouseX, mouseY) -> {
+            try {
+                NemiGuiRecipe gui = NemiGuiRecipe.instance();
+                if (gui == null) {
+                    return new ArrayList<>();
+                }
+                Point global = GuiDraw.getMousePosition();
+                gui.setRecipeOrigin(global.x - mouseX, global.y - mouseY);
+                List<String> tooltip = neiHandler.handleTooltip(gui, new ArrayList<>(), recipeIndex);
+                if (tooltip == null) {
+                    return new ArrayList<>();
+                }
+                return tooltip.stream()
+                        .filter(Objects::nonNull)
+                        .filter(s -> !s.isEmpty())
+                        .map(EmiPort::literal)
+                        .map(EmiPort::ordered)
+                        .map(TooltipComponent::of)
+                        .collect(Collectors.toList());
+            } catch (Exception e) {
+                return new ArrayList<>();
+            }
+        }, 0, 0, getDisplayWidth(), getDisplayHeight());
     }
 
     private void addBackgroundAndExtrasWidget(WidgetHolder widgets) {
@@ -162,8 +212,6 @@ public class NemiRecipe implements EmiRecipe {
                 context.push();
                 context.setColor(1.0F, 1.0F, 1.0F, 1.0F);
                 context.enableBlend();
-
-                neiHandler.cycleticks++; // Progresses NEI's internal animation state
 
                 neiHandler.drawBackground(recipeIndex);
                 neiHandler.drawForeground(recipeIndex);
@@ -177,22 +225,40 @@ public class NemiRecipe implements EmiRecipe {
     }
 
     private void addInputWidgets(WidgetHolder widgets) {
-        for (PositionedStack stack : ingredientStacks) {
-            widgets.addSlot(parseIngredient(stack), stack.relx - 1, stack.rely - 1).drawBack(false);
+        List<PositionedStack> stacks = safeList(neiHandler.getIngredientStacks(recipeIndex));
+        for (int i = 0; i < stacks.size(); i++) {
+            PositionedStack stack = stacks.get(i);
+            int index = i;
+            widgets.add(new NemiSlotWidget(() -> safeStack(neiHandler.getIngredientStacks(recipeIndex), index), neiHandler, recipeIndex, stack.relx - 1, stack.rely - 1).drawBack(false));
         }
     }
 
     private void addMainOutputWidget(WidgetHolder widgets) {
         if (resultStack != null && resultStack.item != null) {
-            widgets.addSlot(parseIngredient(resultStack), resultStack.relx - 1, resultStack.rely - 1).drawBack(false).recipeContext(this);
+            widgets.add(new NemiSlotWidget(() -> neiHandler.getResultStack(recipeIndex), neiHandler, recipeIndex, resultStack.relx - 1, resultStack.rely - 1).drawBack(false).recipeContext(this));
         }
     }
 
     private void addSecondaryOutputWidgets(WidgetHolder widgets) {
-        for (PositionedStack stack : otherStacks) {
+        for (int i = 0; i < otherStacks.size(); i++) {
+            PositionedStack stack = otherStacks.get(i);
             if (stack != null && stack.item != null) {
-                widgets.addSlot(parseIngredient(stack), stack.relx - 1, stack.rely - 1).drawBack(false).recipeContext(this);
+                int index = i;
+                widgets.add(new NemiSlotWidget(() -> safeStack(neiHandler.getOtherStacks(recipeIndex), index), neiHandler, recipeIndex, stack.relx - 1, stack.rely - 1).drawBack(false).recipeContext(this));
             }
         }
     }
+
+	private static void registerHandler(TemplateRecipeHandler handler) {
+		HANDLERS.add(handler);
+	}
+
+	public static void tickHandlers() {
+		for (TemplateRecipeHandler handler : HANDLERS) {
+			try {
+				handler.onUpdate();
+			} catch (Throwable ignored) {
+			}
+		}
+	}
 }

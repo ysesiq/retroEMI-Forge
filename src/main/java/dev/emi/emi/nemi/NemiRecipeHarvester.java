@@ -1,7 +1,14 @@
 package dev.emi.emi.nemi;
 
+import codechicken.nei.recipe.BrewingRecipeHandler;
+import codechicken.nei.recipe.FireworkRecipeHandler;
+import codechicken.nei.recipe.FuelRecipeHandler;
+import codechicken.nei.recipe.FurnaceRecipeHandler;
 import codechicken.nei.recipe.GuiRecipeTab;
 import codechicken.nei.recipe.HandlerInfo;
+import codechicken.nei.recipe.RepairRecipeHandler;
+import codechicken.nei.recipe.ShapedRecipeHandler;
+import codechicken.nei.recipe.ShapelessRecipeHandler;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiRegistry;
@@ -20,11 +27,14 @@ import java.util.Set;
 
 public class NemiRecipeHarvester {
     // These are handlers that EMI natively covers better (e.g., standard crafting/smelting)
-    private static final List<String> BLACKLISTED_CLASSES = shim.java.List.of(
-        "codechicken.nei.recipe.ShapedRecipeHandler",
-        "codechicken.nei.recipe.ShapelessRecipeHandler",
-        "codechicken.nei.recipe.FurnaceRecipeHandler",
-        "codechicken.nei.recipe.BrewingRecipeHandler"
+    private static final List<Class<? extends TemplateRecipeHandler>> BLACKLISTED_CLASSES = shim.java.List.of(
+        ShapedRecipeHandler.class,
+	    ShapelessRecipeHandler.class,
+	    FuelRecipeHandler.class,
+	    FurnaceRecipeHandler.class,
+	    BrewingRecipeHandler.class,
+	    RepairRecipeHandler.class,
+	    FireworkRecipeHandler.class
     );
 
     private static final EmiStack DEFAULT_ICON = EmiStack.of(Blocks.crafting_table);
@@ -39,7 +49,7 @@ public class NemiRecipeHarvester {
     }
 
     public void harvest() {
-        if (BLACKLISTED_CLASSES.contains(baseHandler.getClass().getName())) {
+        if (BLACKLISTED_CLASSES.contains(baseHandler.getClass())) {
             return;
         }
 
@@ -54,15 +64,19 @@ public class NemiRecipeHarvester {
     }
 
     public Set<String> extractRecipeIds() {
+        return recipeTypeIds(baseHandler);
+    }
+
+    public static Set<String> recipeTypeIds(TemplateRecipeHandler handler) {
         Set<String> ids = new HashSet<>();
 
-        String overlayId = baseHandler.getOverlayIdentifier();
+        String overlayId = handler.getOverlayIdentifier();
         if (overlayId != null) {
             ids.add(overlayId);
         }
 
         try {
-            TemplateRecipeHandler tempHandler = baseHandler.newInstance();
+            TemplateRecipeHandler tempHandler = handler.newInstance();
             tempHandler.loadTransferRects();
 
             if (tempHandler.transferRects != null) {

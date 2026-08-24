@@ -1,5 +1,6 @@
 package dev.emi.emi.search;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 
 import java.util.Set;
@@ -18,7 +19,7 @@ public class TagQuery extends Query {
 		String lowerName = name.toLowerCase();
 		valid = Stream.<EmiTagKey<?>>concat(
 			EmiTags.TAGS.stream(),
-			EmiTagKey.fromRegistry(EmiPort.getBlockRegistry())
+			EmiTagKey.fromRegistry(Block.class, EmiPort.getBlockRegistry())
 		).filter(t -> {
 			if (t.hasTranslation()) {
 				if (t.getTagName().getString().toLowerCase().contains(lowerName)) {

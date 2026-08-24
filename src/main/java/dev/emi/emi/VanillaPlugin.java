@@ -481,7 +481,7 @@ public class VanillaPlugin implements EmiPlugin {
 		for (ItemStack stack : stacks) {
 			if (stack.getItemDamage() != 2 && stack.getItemDamage() != 3) {
 				addRecipeSafe(registry, () -> basicWorld(EmiStack.of(stack).setRemainder(EmiStack.of(stack)), EmiStack.of(Items.dye, 1, 15), EmiStack.of(stack),
-					synthetic("world/flower_duping", EmiUtil.subId(EmiPort.id(EmiUtil.subId(stack)))), false));
+					synthetic("world/flower_duping", EmiUtil.subId(stack)), false));
 			}
 		}
 //		addRecipeSafe(registry, () -> new EmiAnvilRecipe(EmiStack.of(Items.SHIELD), EmiStack.ofPotentialTag(new ItemStack(Blocks.PLANKS, 1, OreDictionary.WILDCARD_VALUE)),

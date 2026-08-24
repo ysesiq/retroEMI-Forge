@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -16,8 +17,6 @@ import java.util.zip.ZipFile;
 
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.mixin.accessor.AbstractResourcePackAccessor;
-import dev.emi.emi.mixin.accessor.FallbackResourceManagerAccessor;
-import dev.emi.emi.mixin.accessor.SimpleReloadableResourceManagerAccessor;
 import dev.emi.emi.platform.forge.EmiClientForge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FallbackResourceManager;
@@ -50,13 +49,13 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
 			return shim.java.Map.of();
 		}
 		Map<ResourceLocation, IResource> result = new HashMap<>();
-		for (Map.Entry<String, ?> entry : ((SimpleReloadableResourceManagerAccessor) srm).getDomainResourceManagers().entrySet()) {
-			String namespace = entry.getKey();
-			if (!(entry.getValue() instanceof FallbackResourceManager frm)) {
+		for (String namespace : (Set<String>) manager.getResourceDomains()) {
+			FallbackResourceManager frm = (FallbackResourceManager) srm.domainResourceManagers.get(namespace);
+			if (frm == null) {
 				continue;
 			}
 			String assetPrefix = "assets/" + namespace + "/";
-			for (IResourcePack pack : ((FallbackResourceManagerAccessor) frm).getResourcePacks()) {
+			for (IResourcePack pack : (List<IResourcePack>) frm.resourcePacks) {
 //				if (pack instanceof LegacyV2AdapterAccessor adapter) {
 //					pack = adapter.getUnadaptedPack();
 //				}
@@ -70,9 +69,7 @@ public class EmiResourceManager implements IResourceManagerReloadListener {
 	}
 
 	private void processRelativePaths(Stream<String> relativePaths, String namespace, String startingPath, Predicate<ResourceLocation> allowedPathPredicate, IResourceManager manager, Map<ResourceLocation, IResource> result) {
-		String directoryPrefix = startingPath.isEmpty() ? "" : startingPath + "/";
-		relativePaths
-			.filter(rel -> startingPath.isEmpty() || rel.equals(startingPath) || rel.startsWith(directoryPrefix))
+		relativePaths.filter(rel -> startingPath.isEmpty() || rel.equals(startingPath) || rel.startsWith(startingPath + "/"))
 			.map(rel -> EmiPort.id(namespace, rel))
 			.filter(allowedPathPredicate)
 			.forEach(id -> {

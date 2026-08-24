@@ -13,15 +13,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import java.lang.reflect.Field;
-
 import com.gtnewhorizon.gtnhlib.client.model.baked.BakedModel;
+import cpw.mods.fml.common.discovery.ASMDataTable;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.item.ItemPotion;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +26,6 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import com.google.common.collect.Lists;
 
-import com.rewindmc.retroemi.EmiModAnnotationScanner;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
@@ -37,7 +33,6 @@ import dev.emi.emi.EmiUtil;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
-import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.FluidEmiStack;
 import dev.emi.emi.platform.EmiAgnos;
@@ -45,7 +40,6 @@ import dev.emi.emi.recipe.EmiBrewingRecipe;
 import dev.emi.emi.registry.EmiPluginContainer;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -59,13 +53,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import com.gtnewhorizon.gtnhlib.client.model.loading.ModelRegistry;
-import com.gtnewhorizon.gtnhlib.client.model.loading.ModelDeserializer;
-import com.gtnewhorizon.gtnhlib.client.model.loading.ModelDeserializer.ModelElement;
 import com.gtnewhorizon.gtnhlib.client.model.loading.ResourceLoc;
-import com.gtnewhorizon.gtnhlib.client.model.unbaked.JSONModel;
-import com.gtnewhorizon.gtnhlib.client.renderer.cel.model.quad.properties.ModelQuadFacing;
-import cpw.mods.fml.common.DummyModContainer;
-import cpw.mods.fml.common.InjectedModContainer;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
@@ -80,6 +68,7 @@ public class EmiAgnosForge extends EmiAgnos {
 	static {
 		EmiAgnos.delegate = new EmiAgnosForge();
 	}
+	public static ASMDataTable asmDataTable;
 
 	@Override
 	protected boolean isForgeAgnos() {
@@ -126,19 +115,13 @@ public class EmiAgnosForge extends EmiAgnos {
 	@Override
 	protected List<String> getModsWithPluginsAgnos() {
 		List<String> mods = Lists.newArrayList();
-		for (ModContainer modContainer : Loader.instance().getModList()) {
-			if (modContainer instanceof DummyModContainer || (modContainer instanceof InjectedModContainer container && container.wrappedContainer instanceof DummyModContainer)) {
-				continue;
-			}
-			try {
-				ClassLoader classLoader = modContainer.getClass().getClassLoader();
-				List<Class<?>> annotatedClasses = EmiModAnnotationScanner.scanForAnnotatedClasses(modContainer, classLoader, EmiEntrypoint.class);
-
-				if (!annotatedClasses.isEmpty()) {
-					mods.add(modContainer.getModId());
+		if (asmDataTable != null) {
+			for (ASMDataTable.ASMData asm : asmDataTable.getAll(EmiEntrypoint.class.getName())) {
+				try {
+					mods.add(asm.getCandidate().getContainedMods().get(0).getModId());
+				} catch (Throwable t) {
+					EmiLog.error("Exception constructing entrypoint:", t);
 				}
-			} catch (Throwable t) {
-				EmiLog.error("Exception constructing entrypoint:", t);
 			}
 		}
 		return mods;
@@ -147,26 +130,21 @@ public class EmiAgnosForge extends EmiAgnos {
 	@Override
 	protected List<EmiPluginContainer> getPluginsAgnos() {
 		List<EmiPluginContainer> containers = Lists.newArrayList();
-		for (ModContainer modContainer : Loader.instance().getModList()) {
-			if (modContainer instanceof DummyModContainer || (modContainer instanceof InjectedModContainer container && container.wrappedContainer instanceof DummyModContainer)) {
-				continue;
-			}
-			try {
-				ClassLoader classLoader = modContainer.getClass().getClassLoader();
-				List<Class<?>> annotatedClasses = EmiModAnnotationScanner.scanForAnnotatedClasses(modContainer, classLoader, EmiEntrypoint.class);
-
-				for (Class<?> clazz : annotatedClasses) {
+		if (asmDataTable != null) {
+			for (ASMDataTable.ASMData asm : asmDataTable.getAll(EmiEntrypoint.class.getName())) {
+				try {
+					Class<?> clazz = Class.forName(asm.getClassName());
 					if (EmiPlugin.class.isAssignableFrom(clazz)) {
 						Class<? extends EmiPlugin> pluginClass = clazz.asSubclass(EmiPlugin.class);
 						EmiPlugin plugin = pluginClass.getConstructor().newInstance();
-						String id = modContainer.getModId();
+						String id = asm.getCandidate().getContainedMods().get(0).getModId();
 						containers.add(new EmiPluginContainer(plugin, id));
 					} else {
-						EmiLog.error("EmiEntrypoint " + clazz.getName() + " does not implement EmiPlugin");
+						EmiLog.error("EmiEntrypoint " + asm.getClassName() + " does not implement EmiPlugin");
 					}
+				} catch (Throwable t) {
+					EmiLog.error("Exception constructing entrypoint:", t);
 				}
-			} catch (Throwable t) {
-				EmiLog.error("Exception constructing entrypoint for mod " + modContainer.getModId() + ":", t);
 			}
 		}
 		return containers;
