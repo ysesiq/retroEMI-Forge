@@ -17,7 +17,6 @@ public class TagQuery extends Query {
 
 	public TagQuery(String name) {
 		String lowerName = name.toLowerCase();
-		//TODO
 		valid = Stream.<EmiTagKey<?>>concat(
 			EmiTags.TAGS.stream(),
 			EmiTagKey.fromRegistry(Block.class, EmiPort.getBlockRegistry())

@@ -26,7 +26,6 @@ public class RegexTagQuery extends Query {
 			valid = shim.java.Set.of();
 		} else {
 			final Pattern pat = p;
-			//TODO
 			valid = Stream.<EmiTagKey<?>>concat(
 				EmiTags.TAGS.stream(),
 				EmiTagKey.fromRegistry(Block.class, EmiPort.getBlockRegistry())
