@@ -29,6 +29,7 @@ public class EmiForge {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		EmiAgnosForge.asmDataTable = event.getAsmData();
 	}
 
 	@Mod.EventHandler

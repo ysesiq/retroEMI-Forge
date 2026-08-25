@@ -76,6 +76,7 @@ public class EmiAgnosForge extends EmiAgnos {
 	static {
 		EmiAgnos.delegate = new EmiAgnosForge();
 	}
+	public static ASMDataTable asmDataTable;
 
 	@Override
 	protected boolean isForgeAgnos() {
@@ -122,7 +123,6 @@ public class EmiAgnosForge extends EmiAgnos {
 	@Override
 	protected List<String> getModsWithPluginsAgnos() {
 		List<String> mods = Lists.newArrayList();
-		ASMDataTable asmDataTable = Loader.instance().discoverer.getASMTable();
 		if (asmDataTable != null) {
 			for (ASMDataTable.ASMData asm : asmDataTable.getAll(EmiEntrypoint.class.getName())) {
 				try {
@@ -138,7 +138,6 @@ public class EmiAgnosForge extends EmiAgnos {
 	@Override
 	protected List<EmiPluginContainer> getPluginsAgnos() {
 		List<EmiPluginContainer> containers = Lists.newArrayList();
-		ASMDataTable asmDataTable = Loader.instance().discoverer.getASMTable();
 		if (asmDataTable != null) {
 			for (ASMDataTable.ASMData asm : asmDataTable.getAll(EmiEntrypoint.class.getName())) {
 				try {
