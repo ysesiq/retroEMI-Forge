@@ -23,11 +23,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import dev.emi.emi.EmiPort;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.EmiScreenManager;
+import dev.emi.emi.screen.tooltip.EmiTextTooltipWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -39,7 +41,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.common.MinecraftForge;
 import shim.net.minecraft.client.gui.ParentElement;
+import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
@@ -139,6 +145,19 @@ public class RetroEMI {
 		if (components.isEmpty()) {
 			return;
 		}
+		ItemStack stack = getTooltipStack(components);
+		List<String> lines = components.stream()
+				.filter(c -> c instanceof TextTooltipComponent || c instanceof OrderedTextTooltipComponent)
+				.map(c -> c instanceof TextTooltipComponent ? ((TextTooltipComponent) c).getText() : ((OrderedTextTooltipComponent) c).getText().asString())
+				.collect(Collectors.toList());
+		RenderTooltipEvent.Pre preEvent = new RenderTooltipEvent.Pre(stack, lines, x, y, screen.width, screen.height, maxWidth, textRenderer);
+		if (MinecraftForge.EVENT_BUS.post(preEvent)) {
+			return;
+		}
+		x = preEvent.getX();
+		y = preEvent.getY();
+		maxWidth = preEvent.getMaxWidth();
+		textRenderer = preEvent.getFontRenderer();
 		int i = 0;
 		int j = components.size() == 1 ? -2 : 0;
 		for (TooltipComponent tooltipComponent : components) {
@@ -153,6 +172,9 @@ public class RetroEMI {
 		Vec2i vector2ic = positioner.getPosition(screen, x, y, l, m);
 		int n = vector2ic.x();
 		int o = vector2ic.y();
+		RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(stack, lines, n, o, textRenderer,
+			TooltipBackgroundRenderer.BACKGROUND_COLOR, TooltipBackgroundRenderer.START_Y_BORDER_COLOR, TooltipBackgroundRenderer.END_Y_BORDER_COLOR);
+		MinecraftForge.EVENT_BUS.post(colorEvent);
 		matrix.push();
 		int p = 400;
 		Tessellator tess = Tessellator.getInstance();
@@ -162,7 +184,8 @@ public class RetroEMI {
 		RenderSystem.defaultBlendFunc();
 		TooltipBackgroundRenderer.render(
 				(builder, startX, startY, endX, endY, z, colorStart, colorEnd) -> EmiDrawContext.instance().raw().fillGradient(startX, startY, endX, endY, 300,
-						colorStart, colorEnd), tess, n, o, l, m, 400);
+						colorStart, colorEnd), tess, n, o, l, m, 400, colorEvent.getBackground(), colorEvent.getBorderStart(), colorEvent.getBorderEnd());
+		MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, lines, n, o, textRenderer, l, m));
 		matrix.translate(0.0f, 0.0f, p);
 		int q = o;
 		for (r = 0; r < components.size(); ++r) {
@@ -176,7 +199,23 @@ public class RetroEMI {
 			tooltipComponent2.drawItems(textRenderer, n, q);
 			q += tooltipComponent2.getHeight() + (r == 0 ? 2 : 0);
 		}
+		MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, lines, n, o, textRenderer, l, m));
 		matrix.pop();
+	}
+
+	private static ItemStack getTooltipStack(List<TooltipComponent> components) {
+		for (TooltipComponent component : components) {
+			if (component instanceof EmiTextTooltipWrapper) {
+				EmiIngredient emiStack = ((EmiTextTooltipWrapper) component).stack;
+				for (EmiStack es : emiStack.getEmiStacks()) {
+					ItemStack is = es.getItemStack();
+					if (!is.isEmpty()) {
+						return is;
+					}
+				}
+			}
+		}
+		return ItemStack.EMPTY;
 	}
 
 	public static final IntSet heldButtons = new IntOpenHashSet();
