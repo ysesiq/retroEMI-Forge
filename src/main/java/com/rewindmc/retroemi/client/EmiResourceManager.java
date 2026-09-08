@@ -1,4 +1,4 @@
-package com.rewindmc.retroemi;
+package com.rewindmc.retroemi.client;
 
 import java.io.File;
 import java.io.IOException;

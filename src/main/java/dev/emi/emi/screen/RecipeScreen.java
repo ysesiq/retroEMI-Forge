@@ -10,7 +10,7 @@ import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
 
-import com.rewindmc.retroemi.REMIScreen;
+import com.rewindmc.retroemi.client.REMIScreen;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.EmiApi;
@@ -36,8 +36,6 @@ import dev.emi.emi.runtime.EmiHistory;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.widget.ResolutionButtonWidget;
 import dev.emi.emi.screen.widget.SizedButtonWidget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;

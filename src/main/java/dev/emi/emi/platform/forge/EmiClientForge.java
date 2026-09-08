@@ -1,11 +1,9 @@
 package dev.emi.emi.platform.forge;
 
-import com.rewindmc.retroemi.EmiResourceManager;
-import com.rewindmc.retroemi.RetroEMI;
+import com.rewindmc.retroemi.client.EmiResourceManager;
 import com.rewindmc.retroemi.RetroEMICommonUtils;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;
-import dev.emi.emi.mixin.accessor.GuiContainerAccessor;
 import dev.emi.emi.network.EmiNetwork;
 import dev.emi.emi.nemi.NemiRecipe;
 import dev.emi.emi.platform.EmiClient;
@@ -18,7 +16,6 @@ import dev.emi.emi.screen.EmiScreenManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

@@ -1,4 +1,4 @@
-package com.rewindmc.retroemi;
+package com.rewindmc.retroemi.client;
 
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;

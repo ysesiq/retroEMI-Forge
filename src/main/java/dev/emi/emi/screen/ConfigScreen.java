@@ -14,7 +14,7 @@ import shim.org.lwjgl.glfw.GLFW;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import com.rewindmc.retroemi.REMIScreen;
+import com.rewindmc.retroemi.client.REMIScreen;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;

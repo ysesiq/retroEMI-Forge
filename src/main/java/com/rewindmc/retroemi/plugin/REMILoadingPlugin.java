@@ -1,4 +1,4 @@
-package com.rewindmc.retroemi;
+package com.rewindmc.retroemi.plugin;
 
 import java.util.List;
 import java.util.Map;

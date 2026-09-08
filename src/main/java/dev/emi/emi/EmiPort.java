@@ -1,13 +1,12 @@
 package dev.emi.emi;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.rewindmc.retroemi.EmiResourceManager;
+import com.rewindmc.retroemi.client.EmiResourceManager;
 import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import dev.emi.emi.api.stack.Comparison;
@@ -21,7 +20,6 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -36,7 +34,6 @@ import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Style;
 import shim.net.minecraft.text.Text;
 import shim.net.minecraft.util.Formatting;
-import shim.net.minecraft.util.SyntheticIdentifier;
 
 /**
  * Multiversion quarantine, to avoid excessive git pain
