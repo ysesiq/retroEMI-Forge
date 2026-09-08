@@ -11,21 +11,25 @@ public class TooltipBackgroundRenderer {
 	public static final int field_41690 = 3;
 	public static final int field_41691 = 3;
 	public static final int field_41692 = 3;
-	private static final int BACKGROUND_COLOR = -267386864;
-	private static final int START_Y_BORDER_COLOR = 0x505000FF;
-	private static final int END_Y_BORDER_COLOR = 1344798847;
+	public static final int BACKGROUND_COLOR = -267386864;
+	public static final int START_Y_BORDER_COLOR = 0x505000FF;
+	public static final int END_Y_BORDER_COLOR = 1344798847;
 
 	public static void render(RectangleRenderer renderer, Tessellator buffer, int x, int y, int width, int height, int z) {
+		render(renderer, buffer, x, y, width, height, z, BACKGROUND_COLOR, START_Y_BORDER_COLOR, END_Y_BORDER_COLOR);
+	}
+
+	public static void render(RectangleRenderer renderer, Tessellator buffer, int x, int y, int width, int height, int z, int backgroundColor, int borderStartColor, int borderEndColor) {
 		int i = x - 3;
 		int j = y - 3;
 		int k = width + 3 + 3;
 		int l = height + 3 + 3;
-		TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j - 1, k, z, BACKGROUND_COLOR);
-		TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j + l, k, z, BACKGROUND_COLOR);
-		TooltipBackgroundRenderer.renderRectangle(renderer, buffer, i, j, k, l, z, BACKGROUND_COLOR);
-		TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i - 1, j, l, z, BACKGROUND_COLOR);
-		TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i + k, j, l, z, BACKGROUND_COLOR);
-		TooltipBackgroundRenderer.renderBorder(renderer, buffer, i, j + 1, k, l, z, START_Y_BORDER_COLOR, END_Y_BORDER_COLOR);
+		TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j - 1, k, z, backgroundColor);
+		TooltipBackgroundRenderer.renderHorizontalLine(renderer, buffer, i, j + l, k, z, backgroundColor);
+		TooltipBackgroundRenderer.renderRectangle(renderer, buffer, i, j, k, l, z, backgroundColor);
+		TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i - 1, j, l, z, backgroundColor);
+		TooltipBackgroundRenderer.renderVerticalLine(renderer, buffer, i + k, j, l, z, backgroundColor);
+		TooltipBackgroundRenderer.renderBorder(renderer, buffer, i, j + 1, k, l, z, borderStartColor, borderEndColor);
 	}
 
 	private static void renderBorder(RectangleRenderer renderer, Tessellator buffer, int x, int y, int width, int height, int z, int startYColor, int endYColor) {

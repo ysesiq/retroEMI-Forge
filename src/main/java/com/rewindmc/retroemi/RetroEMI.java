@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
-import com.gtnewhorizon.gtnhlib.client.model.loading.ModelDeserializer;
-import com.gtnewhorizon.gtnhlib.client.model.unbaked.JSONModel;
+import com.gtnewhorizon.gtnhlib.client.event.RenderTooltipEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dev.emi.emi.mixin.accessor.GuiTextFieldAccessor;
 import dev.emi.emi.platform.EmiAgnos;
@@ -20,7 +17,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemBlock;
-import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -28,11 +24,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import dev.emi.emi.EmiPort;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.runtime.EmiDrawContext;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.EmiScreenManager;
+import dev.emi.emi.screen.tooltip.EmiTextTooltipWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -43,10 +41,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.common.MinecraftForge;
 import shim.net.minecraft.client.gui.ParentElement;
+import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
+import shim.net.minecraft.item.ItemStacks;
 import shim.net.minecraft.client.renderer.GlStateManager;
 import shim.net.minecraft.client.util.ITooltipFlag;
 import shim.net.minecraft.client.util.math.MatrixStack;
@@ -90,6 +92,30 @@ public class RetroEMI {
 		if (components.isEmpty()) {
 			return;
 		}
+		ItemStack stack = getTooltipStack(components);
+		List<String> lines = components.stream()
+				.filter(c -> c instanceof TextTooltipComponent || c instanceof OrderedTextTooltipComponent)
+				.map(c -> c instanceof TextTooltipComponent ? ((TextTooltipComponent) c).getText() : ((OrderedTextTooltipComponent) c).getText().asString())
+				.collect(Collectors.toList());
+		int backgroundColor, borderStartColor, borderEndColor;
+		RenderTooltipEvent event = new RenderTooltipEvent(stack, screen, RenderTooltipEvent.ORIGINAL_BG_START,
+				RenderTooltipEvent.ORIGINAL_BG_END, RenderTooltipEvent.ORIGINAL_BORDER_START,
+				RenderTooltipEvent.ORIGINAL_BORDER_END, x, y, textRenderer);
+		if (MinecraftForge.EVENT_BUS.post(event)) {
+			return;
+		}
+		if (event.font != null) {
+			textRenderer = event.font;
+		}
+		if (event.alternativeRenderer != null) {
+			event.alternativeRenderer.accept(lines);
+			return;
+		}
+		x = event.x;
+		y = event.y;
+		backgroundColor = event.backgroundStart;
+		borderStartColor = event.borderStart;
+		borderEndColor = event.borderEnd;
 		int i = 0;
 		int j = components.size() == 1 ? -2 : 0;
 		for (TooltipComponent tooltipComponent : components) {
@@ -113,7 +139,7 @@ public class RetroEMI {
 		RenderSystem.defaultBlendFunc();
 		TooltipBackgroundRenderer.render(
 				(builder, startX, startY, endX, endY, z, colorStart, colorEnd) -> EmiDrawContext.instance().raw().fillGradient(startX, startY, endX, endY, 300,
-						colorStart, colorEnd), tess, n, o, l, m, 400);
+						colorStart, colorEnd), tess, n, o, l, m, 400, backgroundColor, borderStartColor, borderEndColor);
 		matrix.translate(0.0f, 0.0f, p);
 		int q = o;
 		for (r = 0; r < components.size(); ++r) {
@@ -128,6 +154,21 @@ public class RetroEMI {
 			q += tooltipComponent2.getHeight() + (r == 0 ? 2 : 0);
 		}
 		matrix.pop();
+	}
+
+	private static ItemStack getTooltipStack(List<TooltipComponent> components) {
+		for (TooltipComponent component : components) {
+			if (component instanceof EmiTextTooltipWrapper) {
+				EmiIngredient emiStack = ((EmiTextTooltipWrapper) component).stack;
+				for (EmiStack es : emiStack.getEmiStacks()) {
+					ItemStack is = es.getItemStack();
+					if (!ItemStacks.isEmpty(is)) {
+						return is;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public static final IntSet heldButtons = new IntOpenHashSet();
