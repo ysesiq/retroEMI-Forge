@@ -1,11 +1,11 @@
 package com.rewindmc.retroemi;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.util.ResourceLocation;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,13 +18,21 @@ public class EmiJappaResourcePack implements IResourcePack {
 	public EmiJappaResourcePack() {
 	}
 
-	public InputStream getInputStream(ResourceLocation id) {
-		return EmiJappaResourcePack.class.getResourceAsStream("/assets/jappa/" + path(id));
+	public @Nullable InputStream getInputStream(@NonNull ResourceLocation id) {
+		return EmiJappaResourcePack.class.getResourceAsStream("/assets/emi/textures/gui/buttons_modernity.png");
 	}
 
-	public boolean resourceExists(ResourceLocation id) {
-		return EmiJappaResourcePack.class.getResource("/assets/jappa/" + path(id)) != null;
+	public boolean resourceExists(@NonNull ResourceLocation id) {
+		return EmiJappaResourcePack.class.getResource("/assets/emi/textures/gui/buttons_modernity.png") != null;
 	}
+
+//	public InputStream getInputStream(ResourceLocation id) {
+//		return EmiJappaResourcePack.class.getResourceAsStream("/assets/jappa/" + path(id));
+//	}
+//
+//	public boolean resourceExists(ResourceLocation id) {
+//		return EmiJappaResourcePack.class.getResource("/assets/jappa/" + path(id)) != null;
+//	}
 
 	public Set getResourceDomains() {
 		return shim.java.Set.of("emi");
@@ -43,7 +51,7 @@ public class EmiJappaResourcePack implements IResourcePack {
 		return "EMI Modernity Textures";
 	}
 
-	private static String path(ResourceLocation id) {
-		return "assets/" + id.getResourceDomain() + "/" + id.getResourcePath();
-	}
+//	private static String path(ResourceLocation id) {
+//		return "assets/" + id.getResourceDomain() + "/" + id.getResourcePath();
+//	}
 }
