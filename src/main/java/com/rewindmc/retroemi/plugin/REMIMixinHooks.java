@@ -1,5 +1,6 @@
-package com.rewindmc.retroemi;
+package com.rewindmc.retroemi.plugin;
 
+import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.mixin.accessor.FontRendererAccessor;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;

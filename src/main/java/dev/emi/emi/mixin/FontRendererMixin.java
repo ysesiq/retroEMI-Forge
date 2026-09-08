@@ -1,6 +1,6 @@
 package dev.emi.emi.mixin;
 
-import com.rewindmc.retroemi.REMIMixinHooks;
+import com.rewindmc.retroemi.plugin.REMIMixinHooks;
 import net.minecraft.client.gui.FontRenderer;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;

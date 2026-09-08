@@ -1,10 +1,9 @@
-package com.rewindmc.retroemi;
+package com.rewindmc.retroemi.plugin;
 
 import java.util.Collections;
 import java.util.List;
 
 import zone.rong.mixinbooter.ILateMixinLoader;
-import zone.rong.mixinbooter.MixinLoader;
 
 public class REMILateMixinLoader implements ILateMixinLoader {
 	@Override

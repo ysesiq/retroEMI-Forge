@@ -1,6 +1,6 @@
 package dev.emi.emi.platform.forge;
 
-import com.rewindmc.retroemi.EmiResourceManager;
+import com.rewindmc.retroemi.client.EmiResourceManager;
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.data.EmiData;

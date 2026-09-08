@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.rewindmc.retroemi.EmiResourceManager;
+import com.rewindmc.retroemi.client.EmiResourceManager;
 import dev.emi.emi.api.stack.Comparison;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import com.github.bsideup.jabel.Desugar;
 import shim.org.lwjgl.glfw.GLFW;
 
-import com.rewindmc.retroemi.REMIScreen;
+import com.rewindmc.retroemi.client.REMIScreen;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;

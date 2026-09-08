@@ -5,7 +5,7 @@ import java.util.List;
 
 import shim.org.lwjgl.glfw.GLFW;
 
-import com.rewindmc.retroemi.REMIScreen;
+import com.rewindmc.retroemi.client.REMIScreen;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.com.unascribed.qdcss.QDCSS;

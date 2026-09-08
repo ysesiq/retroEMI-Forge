@@ -16,7 +16,7 @@ import com.google.common.collect.Ordering;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.rewindmc.retroemi.REMIMixinHooks;
+import com.rewindmc.retroemi.plugin.REMIMixinHooks;
 import dev.emi.emi.config.EffectLocation;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.platform.EmiAgnos;
