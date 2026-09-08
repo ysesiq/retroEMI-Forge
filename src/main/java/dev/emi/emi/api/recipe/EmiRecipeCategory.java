@@ -3,6 +3,7 @@ package dev.emi.emi.api.recipe;
 import java.util.Comparator;
 import java.util.List;
 
+import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +18,7 @@ import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.data.EmiRecipeCategoryProperties;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.renderer.GlStateManager;
 import shim.net.minecraft.text.Text;
 import shim.net.minecraft.util.Formatting;
 
@@ -64,11 +66,21 @@ public class EmiRecipeCategory implements EmiRenderable {
 
 	@Override
 	public void render(DrawContext draw, int x, int y, float delta) {
+		EmiDrawContext context = EmiDrawContext.wrap(draw);
+		context.push();
+		GlStateManager.enableAlpha();
 		EmiRecipeCategoryProperties.getIcon(this).render(draw, x, y, delta);
+		GlStateManager.disableAlpha();
+		context.pop();
 	}
 
 	public void renderSimplified(DrawContext draw, int x, int y, float delta) {
+		EmiDrawContext context = EmiDrawContext.wrap(draw);
+		context.push();
+		GlStateManager.enableAlpha();
 		EmiRecipeCategoryProperties.getSimplifiedIcon(this).render(draw, x, y, delta);
+		GlStateManager.disableAlpha();
+		context.pop();
 	}
 
 	public List<TooltipComponent> getTooltip() {
