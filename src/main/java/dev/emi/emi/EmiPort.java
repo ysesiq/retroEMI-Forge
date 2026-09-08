@@ -198,6 +198,9 @@ public final class EmiPort {
 	}
 
 	public static ResourceLocation id(String id) {
+		if (id == null) {
+			return new ResourceLocation("unknown", "unknown");
+		}
 		if (id.contains(":")) {
 			String[] parts = id.split(":", 2);
 			String mod = parts[0];//Avoid mods being forced to lowercase and not being able to get them

@@ -236,7 +236,7 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 		CATEGORY_MAP.clear();
 		EmiRecipeFiller.extraHandlers = JemiPlugin::getRecipeHandler;
 
-		List<IRecipeCategory> categories = runtime.getRecipeRegistry().getRecipeCategories();
+		List<IRecipeCategory> categories = Lists.newArrayList(runtime.getRecipeRegistry().getRecipeCategories());
 		for (IRecipeCategory c : categories) {
 			EmiLog.info("[JEMI] Collecting data for " + c.getTitle());
 			EmiReloadManager.step(EmiPort.literal("Loading JEI data for " + c.getTitle()), 5_000);

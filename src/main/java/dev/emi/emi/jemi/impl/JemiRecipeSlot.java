@@ -33,7 +33,8 @@ public class JemiRecipeSlot implements IGuiIngredient<Object> {
 	public final Optional<String> name;
 	public final ITooltipCallback<?> tooltipCallback;
 //	public final IRecipeSlotRichTooltipCallback richTooltipCallback;
-	public final OffsetDrawable background, overlay;
+	public OffsetDrawable background;
+	public final OffsetDrawable overlay;
 	public final Map<IIngredientType<?>, IngredientRenderer<?>> renderers;
 	public final TankInfo tankInfo;
 	public final EmiIngredient stack;
@@ -163,6 +164,9 @@ public class JemiRecipeSlot implements IGuiIngredient<Object> {
 		return stack;
 	}
 
+	public void setBackground(IDrawable background) {
+		this.background = new OffsetDrawable(background, 0, 0);
+	}
 
 	@Desugar
 	public static record OffsetDrawable(IDrawable drawable, int xOff, int yOff){
