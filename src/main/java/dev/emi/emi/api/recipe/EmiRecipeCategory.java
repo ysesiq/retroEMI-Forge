@@ -3,6 +3,8 @@ package dev.emi.emi.api.recipe;
 import java.util.Comparator;
 import java.util.List;
 
+import dev.emi.emi.runtime.EmiDrawContext;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -64,11 +66,21 @@ public class EmiRecipeCategory implements EmiRenderable {
 
 	@Override
 	public void render(DrawContext draw, int x, int y, float delta) {
+		EmiDrawContext context = EmiDrawContext.wrap(draw);
+		context.push();
+		GlStateManager.enableAlpha();
 		EmiRecipeCategoryProperties.getIcon(this).render(draw, x, y, delta);
+		GlStateManager.disableAlpha();
+		context.pop();
 	}
 
 	public void renderSimplified(DrawContext draw, int x, int y, float delta) {
+		EmiDrawContext context = EmiDrawContext.wrap(draw);
+		context.push();
+		GlStateManager.enableAlpha();
 		EmiRecipeCategoryProperties.getSimplifiedIcon(this).render(draw, x, y, delta);
+		GlStateManager.disableAlpha();
+		context.pop();
 	}
 
 	public List<TooltipComponent> getTooltip() {
