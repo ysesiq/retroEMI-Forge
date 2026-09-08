@@ -85,7 +85,7 @@ public class EmiSearch {
 					mods.add(searchStack, id.getResourceDomain().toLowerCase());
 					names.add(searchStack, id.getResourcePath().toLowerCase());
 				}
-				if (stack.getItemStack().getItem() == Items.enchanted_book) {
+				if (stack.getItemStack() != null && stack.getItemStack().getItem() == Items.enchanted_book) {
 					for (int eid : (Set<Integer>) EnchantmentHelper.getEnchantments(stack.getItemStack()).keySet()) {
 						Enchantment e = EmiPort.getEnchantmentRegistry()[eid];
 						if (e != null && e.getName().startsWith("enchantment.")) {

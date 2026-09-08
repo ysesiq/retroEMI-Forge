@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 import com.gtnewhorizon.gtnhlib.client.model.loading.ModelDeserializer;
@@ -45,6 +47,7 @@ import shim.net.minecraft.client.gui.ParentElement;
 import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
+import shim.net.minecraft.client.renderer.GlStateManager;
 import shim.net.minecraft.client.util.ITooltipFlag;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.client.util.math.Vec2i;
@@ -104,7 +107,7 @@ public class RetroEMI {
 		matrix.push();
 		int p = 400;
 		Tessellator tess = Tessellator.instance;
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -237,7 +240,7 @@ public class RetroEMI {
 			return tip;
 		} catch (Throwable e) {
 			EmiLog.error("Error getting tooltip for " + stack, e);
-			return shim.java.List.of(Text.literal(stack.getDisplayName()));
+			return shim.java.List.of(EmiStack.of(stack).getName());
 		}
 	}
 

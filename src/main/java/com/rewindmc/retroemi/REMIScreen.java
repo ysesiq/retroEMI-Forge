@@ -4,8 +4,7 @@ import java.util.List;
 
 import dev.emi.emi.platform.EmiAgnos;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import shim.net.minecraft.client.renderer.GlStateManager;
 import shim.org.lwjgl.glfw.GLFW;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -50,7 +49,7 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 
 	@Override
 	public final void drawScreen(int var1, int var2, float var3) {
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		GlStateManager.enableRescaleNormal();
 		render(DrawContext.INSTANCE, var1, var2, var3);
 		super.drawScreen(var1, var2, var3);
 		if (mouseDown != -1) {
@@ -58,7 +57,7 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 		}
 		lastMouseX = var1;
 		lastMouseY = var2;
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		GlStateManager.disableRescaleNormal();
 	}
 
 	@Override

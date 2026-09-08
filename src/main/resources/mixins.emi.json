@@ -33,7 +33,6 @@
     "accessor.InventoryCraftingAccessor",
     "accessor.ItemBlockAccessor",
     "accessor.ItemToolAccessor",
-    "accessor.LoaderAccessor",
     "accessor.ShapedOreRecipeAccessor",
     "accessor.ShapedRecipesAccessor",
     "accessor.ShapelessRecipesAccessor",

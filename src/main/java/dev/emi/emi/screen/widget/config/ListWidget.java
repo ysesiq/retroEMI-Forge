@@ -24,6 +24,7 @@ import shim.net.minecraft.client.gui.widget.ClickableWidget;
 import shim.net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
+import shim.net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Shamelessly modified vanilla lists to support variable width.
@@ -175,14 +176,14 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 
 
 		{	// Render header & footer separators
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 			draw.fillGradient(this.left, this.top, this.right, this.top + 4, 0xFF000000, 0x00000000);
 			draw.fillGradient(this.left, this.bottom - 4, this.right, this.bottom, 0x00000000, 0xFF000000);
-			GL11.glShadeModel(GL11.GL_FLAT);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
 		}
 
 		if ((o = this.getMaxScroll()) > 0) {
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GlStateManager.disableTexture2D();
 			m = (int)((float)((this.bottom - this.top) * (this.bottom - this.top)) / (float)this.getMaxPosition());
 			m = MathHelper.clamp_int(m, 32, this.bottom - this.top - 8);
 			n = (int)this.getScrollAmount() * (this.bottom - this.top - m) / o + this.top;
@@ -418,7 +419,7 @@ public class ListWidget extends AbstractParentElement implements Drawable {
 			if (this.renderSelection && this.isSelectedEntry(j)) {
 				p = this.left + this.width / 2 - o / 2;
 				int q = this.left + this.width / 2 + o / 2;
-				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GlStateManager.disableTexture2D();
 				float f = this.isFocused() ? 1.0f : 0.5f;
 				RenderSystem.setShaderColor(f, f, f, 1.0f);
 				tessellator.startDrawingQuads();

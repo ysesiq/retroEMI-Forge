@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.renderer.GlStateManager;
 import shim.net.minecraft.client.util.math.MatrixStack;
 import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Text;
@@ -81,7 +82,7 @@ public class DrawContext extends Gui {
 		float a = (float)(color & 255) / 255.0F;
 		Tessellator bufferBuilder = Tessellator.instance;
 		RenderSystem.enableBlend();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		RenderSystem.defaultBlendFunc();
 		this.setShaderColor(g, b, a, r);
 		bufferBuilder.startDrawingQuads();
@@ -90,7 +91,7 @@ public class DrawContext extends Gui {
 		bufferBuilder.addVertex(x2, y1, z);
 		bufferBuilder.addVertex(x1, y1, z);
 		EmiPort.draw(bufferBuilder);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.enableTexture2D();
 		RenderSystem.disableBlend();
 	}
 
@@ -107,11 +108,11 @@ public class DrawContext extends Gui {
 		float ge = (float)(colorEnd >> 16 & 255) / 255.0F;
 		float be = (float)(colorEnd >> 8 & 255) / 255.0F;
 		float ae = (float)(colorEnd & 255) / 255.0F;
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GlStateManager.disableTexture2D();
 		RenderSystem.enableBlend();
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GlStateManager.disableAlpha();
 		RenderSystem.defaultBlendFunc();
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		Tessellator bufferBuilder = Tessellator.instance;
 		bufferBuilder.startDrawingQuads();
 		bufferBuilder.setColorRGBA_F(gs, bs, as, rs);
@@ -121,9 +122,9 @@ public class DrawContext extends Gui {
 		bufferBuilder.addVertex(startX, endY, z);
 		bufferBuilder.addVertex(endX, endY, z);
 		EmiPort.draw(bufferBuilder);
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GlStateManager.enableAlpha();
 		EmiPort.setPositionTexShader();
 	}
 

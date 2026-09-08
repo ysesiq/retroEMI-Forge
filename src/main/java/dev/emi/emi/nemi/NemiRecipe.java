@@ -157,9 +157,9 @@ public class NemiRecipe implements EmiRecipe {
 		HandlerInfo info = GuiRecipeTab.getHandlerInfo(neiHandler);
 		int recipeHeight = 0;
 //		try {
-//			recipeHeight = neiHandler.getRecipeHeight(recipeIndex);
+			recipeHeight = neiHandler.getRecipeHeight(recipeIndex);
 //		} catch (Throwable ignored) {
-		recipeHeight = info.getHeight();
+//		recipeHeight = info.getHeight();
 //		}
 		int h = recipeHeight > 0 ? recipeHeight : info.getHeight();
 		return h + info.getYShift() + 4;
@@ -250,14 +250,18 @@ public class NemiRecipe implements EmiRecipe {
     }
 
 	private static void registerHandler(TemplateRecipeHandler handler) {
-		HANDLERS.add(handler);
+		synchronized (HANDLERS) {
+			HANDLERS.add(handler);
+		}
 	}
 
 	public static void tickHandlers() {
-		for (TemplateRecipeHandler handler : HANDLERS) {
-			try {
-				handler.onUpdate();
-			} catch (Throwable ignored) {
+		synchronized (HANDLERS) {
+			for (TemplateRecipeHandler handler : HANDLERS) {
+				try {
+					handler.onUpdate();
+				} catch (Throwable ignored) {
+				}
 			}
 		}
 	}

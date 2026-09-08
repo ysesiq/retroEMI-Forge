@@ -16,6 +16,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.MathHelper;
 import shim.net.minecraft.client.gui.Drawable;
+import shim.net.minecraft.client.renderer.GlStateManager;
 import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Text;
 
@@ -462,7 +463,7 @@ public class TextFieldWidget extends ClickableWidget implements Drawable {
 			x1 = this.getX() + this.width;
 		}
 		GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
-		GL11.glLogicOp(GL11.GL_OR_REVERSE);
+		GlStateManager.colorLogicOp(GL11.GL_OR_REVERSE);
 		raw.fill(x1, y1, x2, y2, -16776961);
 		GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
 	}

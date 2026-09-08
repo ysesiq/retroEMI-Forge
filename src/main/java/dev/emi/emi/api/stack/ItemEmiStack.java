@@ -23,13 +23,12 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 import shim.net.minecraft.client.item.TooltipType;
 import shim.net.minecraft.client.render.VertexConsumerProvider;
+import shim.net.minecraft.client.renderer.GlStateManager;
 import shim.net.minecraft.item.ItemStacks;
 import shim.net.minecraft.registry.tag.ItemKey;
 import shim.net.minecraft.text.Text;
@@ -128,7 +127,7 @@ public class ItemEmiStack extends EmiStack implements Batchable {
 		EmiDrawContext context = EmiDrawContext.wrap(draw);
 		ItemStack stack = getItemStack();
 		if ((flags & RENDER_ICON) != 0) {
-			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+			GlStateManager.enableRescaleNormal();
 			context.enableDepthTest();
 			RenderHelper.enableGUIStandardItemLighting();
 			if (stack.getItemDamage() == 32767) stack.setItemDamage(0);
@@ -214,7 +213,10 @@ public class ItemEmiStack extends EmiStack implements Batchable {
 		if (isEmpty()) {
 			return EmiPort.literal("");
 		}
-		return Text.literal(getItemStack().getDisplayName());
+		if (getItemStack().hasDisplayName()) {
+			return Text.literal(getItemStack().getDisplayName());
+		}
+		return Text.literal(getItemStack().getUnlocalizedName());
 	}
 
 	@Override
