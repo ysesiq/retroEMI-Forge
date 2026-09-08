@@ -20,6 +20,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.data.EmiAlias;
 import dev.emi.emi.data.EmiData;
+import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.registry.EmiStackList;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.runtime.EmiReloadLog;
@@ -229,7 +230,7 @@ public class EmiSearch {
 		public boolean test(EmiStack stack) {
 			if (fullQuery == null) {
 				return true;
-			} else if (EmiSearch.bakedStacks.contains(stack)) {
+			} else if (!EmiAgnos.isModLoaded("jecharacters") && EmiSearch.bakedStacks.contains(stack)) {
 				return fullQuery.matches(stack);
 			} else {
 				return fullQuery.matchesUnbaked(stack);
