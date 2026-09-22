@@ -1,0 +1,76 @@
+/**
+ * Platform-neutral sources: the EMI port itself and every mixin.
+ * Compiled against Minecraft (via RFG) and consumed by `forge`.
+ */
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'com.gtnewhorizons.retrofuturagradle'
+}
+
+apply from: rootProject.file('gradle/scripts/helpers.gradle')
+// The mixins and the core code need the same Minecraft view as the other subprojects
+apply from: rootProject.file('gradle/scripts/minecraft-base.gradle')
+
+base {
+    archivesName.set("${propertyString('mod_id')}-xplat")
+}
+
+dependencies {
+    compileOnly 'org.jetbrains:annotations:26.1.0'
+    compileOnly 'org.jspecify:jspecify:1.0.0'
+    compileOnly 'mezz.jei:jei_1.12.2:4.16.5.1029'
+
+	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
+	// Workaround for https://github.com/bsideup/jabel/issues/174
+	annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
+	compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.0') {
+		transitive = false
+	}
+
+	compileOnly 'org.jetbrains:annotations:26.1.0'
+
+    if (propertyBool('use_mixins')) {
+        String mixin = modUtils.enableMixins("zone.rong:mixinbooter:${propertyString('mixin_booter_version')}", propertyString('mixin_refmap'))
+        api(mixin) {
+            transitive = false
+        }
+        annotationProcessor 'org.ow2.asm:asm-debug-all:5.2'
+        annotationProcessor 'com.google.guava:guava:24.1.1-jre'
+        annotationProcessor 'com.google.code.gson:gson:2.8.6'
+        annotationProcessor(mixin) {
+            transitive = false
+        }
+    }
+}
+
+// All mod resources live here: the mixin configs, the Access Transformer, mcmod.info and the assets.
+// `forge` merges this task's output into the deployable jar.
+processResources {
+    filesMatching(['mcmod.info', 'pack.mcmeta', 'mixins.*(?!refmap).*\\.json']) {
+        def authors = propertyString('mod_authors').split(',').collect { """\"${ it.trim() }\"""" }.join(', ')
+        expand(
+                'mod_id': propertyString('mod_id'),
+                'mod_name': propertyString('mod_name'),
+                'mod_version': propertyString('mod_version'),
+                'mod_description': propertyString('mod_description'),
+                'mod_authors': "[${authors}]",
+                'mod_credits': propertyString('mod_credits'),
+                'mod_url': propertyString('mod_url'),
+                'mod_update_json': propertyString('mod_update_json'),
+                'mod_logo_path': propertyString('mod_logo_path'),
+                'mixin_refmap': propertyString('mixin_refmap'),
+                'mixin_package': propertyString('mixin_package')
+        )
+    }
+
+    if (propertyBool('use_access_transformer')) {
+        rename '(.+_at.cfg)', 'META-INF/$1'
+    }
+}
+
+// A bare `./gradlew runClient` from the root runs the task in every subproject that has it,
+// which would launch the game twice. Only `forge` is allowed to start the client/server.
+['runClient', 'runServer', 'runObfClient', 'runObfServer', 'runVanillaClient', 'runVanillaServer'].each { taskName ->
+    tasks.named(taskName).configure { enabled = false }
+}

@@ -1,40 +1,6 @@
-apply from: 'gradle/scripts/helpers.gradle'
+apply from: rootProject.file('gradle/scripts/helpers.gradle')
 
-repositories {
-    // Other repositories described by default:
-    // CleanroomMC: https://maven.cleanroommc.com
-    exclusiveContent {
-        forRepository {
-            maven {
-                name 'CleanroomMC CurseMaven'
-                url 'https://curse.cleanroommc.com'
-            }
-        }
-        filter {
-            includeGroup 'curse.maven'
-        }
-    }
-    exclusiveContent {
-        forRepository {
-            maven {
-                name 'Modrinth'
-                url 'https://api.modrinth.com/maven'
-            }
-        }
-        filter {
-            includeGroup 'maven.modrinth'
-        }
-    }
-    maven {
-        name = "Spongepowered"
-        url = "https://repo.spongepowered.org/repository/maven-public/"
-    }
-	maven {
-		name = "blamejared"
-		url = "https://maven.blamejared.com/"
-	}
-    mavenLocal() // Must be last for caching to work
-}
+// Repositories are provided by the root build script for every subproject
 
 configurations {
     shade
@@ -77,7 +43,6 @@ dependencies {
     // implementation ('com.google.code.gson:gson:2.8.6') {
     //     transitive = false
     // }
-    compileOnly('org.jetbrains:annotations:26.1.0')
     compileOnly('org.jspecify:jspecify:1.0.0')
 //    implementation('org.joml:joml:1.10.8')
 //    implementation('it.unimi.dsi:fastutil:8.5.18')

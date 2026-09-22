@@ -1,0 +1,42 @@
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(16))
+        vendor.set(JvmVendorSpec.AZUL)
+    }
+}
+
+minecraft {
+    mcVersion.set(rootProject.ext.minecraftVersion)
+
+    mcpMappingChannel.set(propertyString('mapping_channel'))
+    mcpMappingVersion.set(propertyString('mapping_version'))
+
+    useDependencyAccessTransformers.set(propertyBool('use_dependency_at_files'))
+
+    username.set(propertyString('minecraft_username'))
+
+    extraTweakClasses.addAll(propertyStringList('extra_tweak_classes'))
+}
+
+// Adds Access Transformer files to tasks
+if (propertyBool('use_access_transformer')) {
+    def atFile = new File(rootProject.ext.xplatResources(), propertyString('access_transformer_locations'))
+    if (!atFile.exists()) {
+        throw new GradleException("Access Transformer file [$atFile] does not exist!")
+    }
+    tasks.named('applyJST').configure {
+        accessTransformerFiles.from(atFile)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+	if (it.name in ['compileMcLauncherJava', 'compilePatchedMcJava']) {
+		return
+	}
+	sourceCompatibility = 17
+	options.release.set(8)
+	javaCompiler.set(javaToolchains.compilerFor {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
+}

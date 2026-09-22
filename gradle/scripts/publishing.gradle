@@ -1,4 +1,4 @@
-apply from: 'gradle/scripts/helpers.gradle'
+apply from: rootProject.file('gradle/scripts/helpers.gradle')
 
 setDefaultProperty('publish_to_maven', true, false)
 setDefaultProperty('publish_to_curseforge', true, false)
@@ -101,7 +101,7 @@ if (propertyBool('publish_to_modrinth')) {
             changelog = parserChangelog()
         }
         if (propertyBool('modrinth_sync_readme')) {
-            syncBodyFrom = file('README.md').text
+            syncBodyFrom = rootProject.file('README.md').text
             tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
         }
     }

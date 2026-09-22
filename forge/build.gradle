@@ -1,0 +1,215 @@
+import com.gtnewhorizons.retrofuturagradle.mcp.InjectTagsTask
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.gradle.ext.Gradle
+
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.jetbrains.gradle.plugin.idea-ext'
+    id 'com.gtnewhorizons.retrofuturagradle'
+    id 'com.gradleup.shadow'
+    id 'org.jetbrains.changelog'
+}
+
+apply from: rootProject.file('gradle/scripts/helpers.gradle')
+apply from: rootProject.file('gradle/scripts/minecraft-base.gradle')
+
+// The lower layers are merged into this jar, so they have to be configured first
+evaluationDependsOn(':xplat')
+
+java {
+    if (propertyBool('generate_sources_jar')) {
+        withSourcesJar()
+    }
+    if (propertyBool('generate_javadocs_jar')) {
+        withJavadocJar()
+    }
+}
+
+tasks.decompressDecompiledSources.enabled !propertyBool('change_minecraft_sources') || !layout.buildDirectory.dir('rfg/minecraft-src').get().asFile.exists()
+
+minecraft {
+    // Add various JVM arguments here for runtime
+    def args = ['-ea:' + rootProject.ext.modGroup]
+    if (propertyBool('is_coremod')) {
+        args << '-Dfml.coreMods.load=' + propertyString('coremod_plugin_class_name')
+    }
+    if (propertyBool('use_mixins')) {
+        args << '-Dmixin.hotSwap=true'
+        args << '-Dmixin.checks.interfaces=true'
+        args << '-Dmixin.debug.export=true'
+    }
+    extraRunJvmArguments.addAll(args)
+    extraRunJvmArguments.addAll(propertyStringList('extra_jvm_args'))
+
+    if (propertyBool('use_tags')) {
+        def tagsFile = rootProject.file('tags.properties')
+        if (tagsFile.exists()) {
+            Properties props = new Properties().tap { it.load(tagsFile.newInputStream()); it }
+            if (!props.isEmpty()) {
+                injectedTags.set(props.collectEntries { k, v ->
+                        def interpolated = interpolate(v)
+                        if (interpolated == null || interpolated.isEmpty()) throw new GradleException("Empty tag value found for key: $k")
+                        [(k): interpolated]
+                })
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation project(':xplat')
+}
+
+apply from: rootProject.file('gradle/scripts/dependencies.gradle')
+
+if (propertyBool('use_mixins')) {
+    ['runClient', 'runServer', 'runObfClient', 'runObfServer'].each { taskName ->
+        tasks.named(taskName, JavaExec).configure { JavaExec task ->
+            task.doFirst {
+                if (task.debug) {
+                    task.jvmArgs("-javaagent:${configurations.mixinAgent.singleFile.absolutePath}")
+                }
+            }
+        }
+    }
+}
+
+// The Access Transformer and all other resources live in `xplat` (see xplat/build.gradle);
+// this jar picks them up through `from project(':xplat').sourceSets.main.output` below.
+
+jar {
+    // Merge the platform-neutral code (incl. the generated mixin refmap)
+    from project(':xplat').sourceSets.main.output
+
+    manifest {
+        def attribute_map = [:]
+        if (propertyBool('is_coremod')) {
+            attribute_map['FMLCorePlugin'] = propertyString('coremod_plugin_class_name')
+            if (propertyBool('coremod_includes_mod')) {
+                attribute_map['FMLCorePluginContainsFMLMod'] = true
+                def currentTasks = gradle.startParameter.taskNames
+                if (currentTasks[0] == 'build' || currentTasks[0] == 'prepareObfModsFolder' || currentTasks[0] == 'runObfClient') {
+                    attribute_map['ForceLoadAsMod'] = true
+                }
+            }
+        }
+        if (propertyBool('use_access_transformer')) {
+            attribute_map['FMLAT'] = propertyString('access_transformer_locations')
+        }
+        if (propertyBool('use_mixins')) {
+	        attribute_map['MixinConfigs'] = propertyString('mixin_configs')
+        }
+        attributes(attribute_map)
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
+
+compileTestJava {
+    sourceCompatibility = targetCompatibility = 8
+}
+
+test {
+    useJUnitPlatform()
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(8)
+    })
+    if (propertyBool('show_testing_output')) {
+        testLogging {
+            showStandardStreams = true
+        }
+    }
+}
+
+String parserChangelog() {
+    def changelogFile = rootProject.file('CHANGELOG.md')
+    if (!changelogFile.exists()) {
+        throw new GradleException('publish_with_changelog is true, but CHANGELOG.md does not exist in the workspace!')
+    }
+    String parsedChangelog = changelog.renderItem(
+            changelog.get(propertyString('mod_version')).withHeader(false).withEmptySections(false),
+            Changelog.OutputType.MARKDOWN)
+    if (parsedChangelog.isEmpty()) {
+        throw new GradleException('publish_with_changelog is true, but the changelog for the latest version is empty!')
+    }
+    return parsedChangelog
+}
+
+tasks.register('generateMixinJson') {
+    group 'cleanroom helpers'
+	onlyIf {
+		if (propertyBool('use_mixins') && propertyBool('generate_mixins_json')) {
+			return !rootProject.file("xplat/src/main/resources/mixins.${propertyString('mod_id')}.json").exists()
+		}
+		return false
+	}
+	doLast {
+		def file = rootProject.file("xplat/src/main/resources/mixins.${propertyString('mod_id')}.json")
+		file << """{\n\t"package": "\${mixin_package}",\n\t"required": true,\n\t"refmap": "\${mixin_refmap}",\n\t"target": "@env(DEFAULT)",\n\t"minVersion": "0.8.5",\n\t"compatibilityLevel": "JAVA_8",\n\t"mixins": [],\n\t"server": [],\n\t"client": []\n}"""
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	if (it.name in ['compileMcLauncherJava', 'compilePatchedMcJava']) {
+		return
+	}
+	sourceCompatibility = 17
+	options.release.set(8)
+	javaCompiler.set(javaToolchains.compilerFor {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
+}
+
+tasks.register('cleanroomAfterSync') {
+    group 'cleanroom helpers'
+    dependsOn 'injectTags', 'generateMixinJson'
+}
+
+tasks.withType(Javadoc).configureEach {
+	sourceCompatibility = 17
+}
+
+tasks.named('injectTags', InjectTagsTask).configure {
+    onlyIf {
+        return propertyBool('use_tags') && !it.getTags().get().isEmpty()
+    }
+    it.outputClassName.set(propertyString('tag_class_name'))
+}
+
+tasks.named('prepareObfModsFolder').configure {
+    finalizedBy 'prioritizeCoremods'
+}
+
+tasks.register('prioritizeCoremods') {
+    dependsOn 'prepareObfModsFolder'
+    doLast {
+        fileTree('run/obfuscated').forEach {
+            if (it.isFile() && it.name =~ '(mixinbooter|configanytime)(-)([0-9])+\\.+([0-9])+(.jar)') {
+                it.renameTo(new File(it.parentFile, "!${it.name}"))
+            }
+        }
+    }
+}
+
+if (propertyBool('publish_to_curseforge')) {
+    assertProperty 'curseforge_project_id'
+    apply plugin: 'net.darkhax.curseforgegradle'
+    tasks.register('curseforge', TaskPublishCurseForge) {
+        group 'publishing'
+        description "Uploads CurseForge project ${propertyString('curseforge_project_id')}"
+    }
+}
+
+tasks.register('generateTemplates') {
+}
+
+apply from: rootProject.file('gradle/scripts/publishing.gradle')
+apply from: rootProject.file('gradle/scripts/extra.gradle')

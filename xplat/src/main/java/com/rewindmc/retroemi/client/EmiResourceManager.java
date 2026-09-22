@@ -15,9 +15,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import dev.emi.emi.EmiPort;
+import dev.emi.emi.data.EmiData;
 import dev.emi.emi.mixin.accessor.AbstractResourcePackAccessor;
 import dev.emi.emi.mixin.accessor.LegacyV2AdapterAccessor;
-import dev.emi.emi.platform.forge.EmiClientForge;
+import dev.emi.emi.registry.EmiTags;
+import dev.emi.emi.runtime.EmiReloadManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.FileResourcePack;
@@ -30,6 +32,7 @@ import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.fml.client.FMLFolderResourcePack;
 import org.jetbrains.annotations.NotNull;
+import shim.net.minecraft.resource.ResourceReloader;
 
 public class EmiResourceManager implements ISelectiveResourceReloadListener {
 	public static EmiResourceManager instance = new EmiResourceManager();
@@ -37,11 +40,12 @@ public class EmiResourceManager implements ISelectiveResourceReloadListener {
 
 	@Override
 	public void onResourceManagerReload(@NotNull IResourceManager resourceManager, @NotNull Predicate<IResourceType> predicate) {
-		EmiClientForge.registerResourceReloaders();
-		EmiClientForge.registerAdditionalModels();
-		if (Minecraft.getMinecraft().world != null) {
-			EmiClientForge.tagsReloaded();
-			EmiClientForge.recipesReloaded();
+		Minecraft client = Minecraft.getMinecraft();
+		EmiData.init(ResourceReloader::reload);
+		EmiTags.registerTagModels(client.getResourceManager(), id -> {}, "inventory");
+		if (client.world != null) {
+			EmiReloadManager.reloadTags();
+			EmiReloadManager.reloadRecipes();
 		}
 	}
 

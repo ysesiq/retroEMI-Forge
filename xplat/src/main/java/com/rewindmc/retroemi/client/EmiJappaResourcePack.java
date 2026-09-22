@@ -2,6 +2,7 @@ package com.rewindmc.retroemi.client;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dev.emi.emi.EmiPort;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
@@ -16,16 +17,18 @@ import java.io.InputStream;
 import java.util.Set;
 
 public class EmiJappaResourcePack implements IResourcePack {
+	private static final ResourceLocation BUTTONS = EmiPort.id("emi", "textures/gui/buttons.png");
+	private static final String BUTTONS_MODERNITY = "/assets/emi/textures/gui/buttons_modernity.png";
 
 	public EmiJappaResourcePack() {
 	}
 
 	public @Nullable InputStream getInputStream(@NonNull ResourceLocation id) {
-		return EmiJappaResourcePack.class.getResourceAsStream("/assets/emi/textures/gui/buttons_modernity.png");
+		return BUTTONS.equals(id) ? EmiJappaResourcePack.class.getResourceAsStream(BUTTONS_MODERNITY) : null;
 	}
 
 	public boolean resourceExists(@NonNull ResourceLocation id) {
-		return EmiJappaResourcePack.class.getResource("/assets/emi/textures/gui/buttons_modernity.png") != null;
+		return BUTTONS.equals(id) && EmiJappaResourcePack.class.getResource(BUTTONS_MODERNITY) != null;
 	}
 
 //	public @Nullable InputStream getInputStream(ResourceLocation id) {

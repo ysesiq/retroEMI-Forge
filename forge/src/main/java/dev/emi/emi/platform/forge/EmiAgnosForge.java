@@ -145,6 +145,7 @@ public class EmiAgnosForge extends EmiAgnos {
 					if (EmiPlugin.class.isAssignableFrom(clazz)) {
 						Class<? extends EmiPlugin> pluginClass = clazz.asSubclass(EmiPlugin.class);
 						EmiPlugin plugin = pluginClass.getConstructor().newInstance();
+						if (asm.getCandidate().getContainedMods().isEmpty()) continue;
 						String id = asm.getCandidate().getContainedMods().get(0).getModId();
 						containers.add(new EmiPluginContainer(plugin, id));
 					} else {
