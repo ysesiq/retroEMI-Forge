@@ -11,6 +11,6 @@
 //	public static boolean emiMixin = true;
 //
 //	@Config.Name("Enable JEI Late Mixins")
-//	@MixinConfig.MixinToggle(lateMixin = "emi.jei.mixins.json", defaultValue = true)
+//	@MixinConfig.MixinToggle(lateMixin = "emi-jei.mixins.json", defaultValue = true)
 //	public static boolean emiJeiMixin = true;
 //}

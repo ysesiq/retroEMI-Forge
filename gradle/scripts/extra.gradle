@@ -12,9 +12,9 @@ tasks.named('jar', Jar) {
     from sourceSets.api.output
 }
 
-tasks.named('sourcesJar', Jar) {
-    from sourceSets.api.allSource
-}
+//tasks.named('sourcesJar', Jar) {
+//    from sourceSets.api.allSource
+//}
 
 // tasks.named('javadocJar', Jar) {
    // from sourceSets.api.output

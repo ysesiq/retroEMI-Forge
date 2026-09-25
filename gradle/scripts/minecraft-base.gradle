@@ -6,12 +6,12 @@ java {
 }
 
 minecraft {
-    mcVersion.set(rootProject.ext.minecraftVersion)
+    mcVersion.set(rootProject.ext.minecraft_version)
 
     mcpMappingChannel.set(propertyString('mapping_channel'))
     mcpMappingVersion.set(propertyString('mapping_version'))
 
-    useDependencyAccessTransformers.set(propertyBool('use_dependency_at_files'))
+    useDependencyAccessTransformers.set(true)
 
     username.set(propertyString('minecraft_username'))
 
@@ -19,14 +19,12 @@ minecraft {
 }
 
 // Adds Access Transformer files to tasks
-if (propertyBool('use_access_transformer')) {
-    def atFile = new File(rootProject.ext.xplatResources(), propertyString('access_transformer_locations'))
-    if (!atFile.exists()) {
-        throw new GradleException("Access Transformer file [$atFile] does not exist!")
-    }
-    tasks.named('applyJST').configure {
-        accessTransformerFiles.from(atFile)
-    }
+def atFile = new File(rootProject.ext.xplatResources(), propertyString('access_transformer_locations'))
+if (!atFile.exists()) {
+    throw new GradleException("Access Transformer file [$atFile] does not exist!")
+}
+tasks.named('applyJST').configure {
+    accessTransformerFiles.from(atFile)
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -1,9 +1,5 @@
 apply from: rootProject.file('gradle/scripts/helpers.gradle')
 
-setDefaultProperty('publish_to_maven', true, false)
-setDefaultProperty('publish_to_curseforge', true, false)
-setDefaultProperty('publish_to_modrinth', true, false)
-
 if (propertyBool('publish_to_maven')) {
     assertProperty('maven_name')
     assertProperty('maven_url')
@@ -63,9 +59,7 @@ if (propertyBool('publish_to_curseforge')) {
             mainFile.changelog = parserChangelog()
             mainFile.changelogType = 'markdown'
         }
-        if (propertyBool('use_mixins')) {
-            mainFile.addRequirement 'mixin-booter'
-        }
+        mainFile.addRequirement 'mixin-booter'
         if (propertyBool('use_asset_mover')) {
             mainFile.addRequirement 'assetmover'
         }
@@ -87,14 +81,10 @@ if (propertyBool('publish_to_modrinth')) {
         gameVersions = ['1.12.2']
         loaders = ['forge']
         debugMode = propertyBool('modrinth_debug')
-        if (propertyBool('use_mixins') || propertyBool('use_asset_mover')) {
-            dependencies {
-                if (propertyBool('use_mixins')) {
-                    required.project 'mixinbooter'
-                }
-                if (propertyBool('use_asset_mover')) {
-                    required.project 'assetmover'
-                }
+        dependencies {
+            required.project 'mixinbooter'
+            if (propertyBool('use_asset_mover')) {
+                required.project 'assetmover'
             }
         }
         if (propertyBool('publish_with_changelog')) {

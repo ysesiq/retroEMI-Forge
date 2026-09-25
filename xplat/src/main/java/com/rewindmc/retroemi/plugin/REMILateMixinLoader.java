@@ -8,7 +8,7 @@ import zone.rong.mixinbooter.ILateMixinLoader;
 public class REMILateMixinLoader implements ILateMixinLoader {
 	@Override
 	public List<String> getMixinConfigs() {
-		return Collections.singletonList("emi.jei.mixins.json");
+		return Collections.singletonList("emi-jei.mixins.json");
 	}
 
 	@Override

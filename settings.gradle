@@ -1,25 +1,20 @@
 pluginManagement {
     repositories {
-        maven {
-            // RetroFuturaGradle
-            name 'GTNH Maven'
-            url 'https://nexus.gtnewhorizons.com/repository/public/'
-            mavenContent {
-                includeGroup 'com.gtnewhorizons'
-                includeGroup 'com.gtnewhorizons.retrofuturagradle'
-            }
-        }
+	    maven { url "https://repo.spongepowered.org/repository/maven-public/" }
+	    maven {url "https://nexus.gtnewhorizons.com/repository/public/"}
+	    maven { url "https://maven.cleanroommc.com" }
+	    maven { url "https://curse.cleanroommc.com" }
+	    maven { url "https://api.modrinth.com/maven" }
         gradlePluginPortal()
-        mavenCentral()
-        mavenLocal()
     }
 }
 
 plugins {
     // Automatic toolchain provisioning
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+    id "org.gradle.toolchains.foojay-resolver-convention" version "1.0.0"
 }
 
 include("xplat")
 include("forge")
+
 rootProject.name = "emi"
