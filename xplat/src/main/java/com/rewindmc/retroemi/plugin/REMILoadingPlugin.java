@@ -1,16 +1,13 @@
 package com.rewindmc.retroemi.plugin;
 
-import java.util.List;
 import java.util.Map;
 
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import zone.rong.mixinbooter.IEarlyMixinLoader;
 
 @IFMLLoadingPlugin.Name("RetroEMI")
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
-public class REMILoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
+public class REMILoadingPlugin implements IFMLLoadingPlugin {
 
 //	public REMILoadingPlugin() {
 //		MixinBootstrap.init();
@@ -39,11 +36,5 @@ public class REMILoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 	@Override
 	public String getAccessTransformerClass() {
 		return null;
-	}
-
-	@Override
-	public List<String> getMixinConfigs() {
-		MixinBootstrap.init();
-		return shim.java.List.of("emi.mixins.json");
 	}
 }

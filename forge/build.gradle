@@ -1,7 +1,4 @@
-import com.gtnewhorizons.retrofuturagradle.mcp.InjectTagsTask
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import org.jetbrains.changelog.Changelog
-import org.jetbrains.gradle.ext.Gradle
 
 buildscript {
 	repositories {
@@ -19,7 +16,7 @@ plugins {
 	id 'java-library'
 	id 'maven-publish'
 	id 'org.jetbrains.gradle.plugin.idea-ext'
-	id 'com.gtnewhorizons.retrofuturagradle'
+	id 'gg.essential.loom'
 	id 'com.gradleup.shadow'
 	id 'org.jetbrains.changelog'
 }
@@ -32,62 +29,68 @@ if (System.getenv("CURSEFORGE_TOKEN")) {
 evaluationDependsOn ':xplat'
 
 apply from: rootProject.file('gradle/scripts/helpers.gradle')
-apply from: rootProject.file('gradle/scripts/minecraft-base.gradle')
 
-tasks.decompressDecompiledSources.enabled !propertyBool('change_minecraft_sources') || !layout.buildDirectory.dir('rfg/minecraft-src').get().asFile.exists()
-
-minecraft {
-	// Add various JVM arguments here for runtime
-	def args = ['-ea:' + rootProject.group]
-	args << '-Dfml.coreMods.load=' + propertyString('coremod_plugin_class_name')
-	args << '-Dmixin.hotSwap=true'
-	args << '-Dmixin.checks.interfaces=true'
-	args << '-Dmixin.debug.export=true'
-	extraRunJvmArguments.addAll(args)
-	extraRunJvmArguments.addAll(propertyStringList('extra_jvm_args'))
-
-	def tagsFile = rootProject.file('tags.properties')
-	if (tagsFile.exists()) {
-		Properties props = new Properties().tap { it.load(tagsFile.newInputStream()); it }
-		if (!props.isEmpty()) {
-			injectedTags.set(props.collectEntries { k, v ->
-					def interpolated = interpolate(v)
-					if (interpolated == null || interpolated.isEmpty()) throw new GradleException("Empty tag value found for key: $k")
-					[(k): interpolated]
-			})
+loom {
+	forge {
+		pack200Provider = new dev.architectury.pack200.java.Pack200Adapter()
+		accessTransformer(rootProject.file("xplat/src/main/resources/${propertyString('access_transformer_locations')}"))
+		accessTransformer(provider {
+			zipTree(configurations.jeiAt.singleFile).matching { include 'META-INF/jei_at.cfg' }.singleFile
+		})
+	}
+	mixin {
+		defaultRefmapName.set(propertyString('mixin_refmap'))
+	}
+	runs {
+		client {
+			property('fml.coreMods.load', propertyString('coremod_plugin_class_name'))
+			programArgs('--mixin', propertyString('mixin_configs'))
 		}
+		server {
+			property('fml.coreMods.load', propertyString('coremod_plugin_class_name'))
+			programArgs('--mixin', propertyString('mixin_configs'))
+		}
+	}
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
 	}
 }
 
 dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings "de.oceanlabs.mcp:mcp_stable:${propertyString('mapping_version')}-1.12"
+	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+	modCompileOnly "mezz.jei:${jei_version}"
+
 	implementation project(':xplat')
 
+	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
+	annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
+}
+
+sourceSets.main.output.resourcesDir = file('build/classes/java/main')
+
+processResources {
+	from project(':xplat').sourceSets.main.output.classesDirs
+	from project(':xplat').tasks.named('processResources')
 }
 
 apply from: rootProject.file('gradle/scripts/dependencies.gradle')
 
-['runClient', 'runServer', 'runObfClient', 'runObfServer'].each { taskName ->
-	tasks.named(taskName, JavaExec).configure { JavaExec task ->
-		task.doFirst {
-			if (task.debug) {
-				task.jvmArgs("-javaagent:${configurations.mixinAgent.singleFile.absolutePath}")
-			}
-		}
-	}
-}
-
 jar {
-	// Merge the platform-neutral code (incl. the generated mixin refmap)
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
 	from project(':xplat').sourceSets.main.output
 
 	manifest {
 		def attribute_map = [:]
 		attribute_map['FMLCorePlugin'] = propertyString('coremod_plugin_class_name')
 		attribute_map['FMLCorePluginContainsFMLMod'] = true
-		def currentTasks = gradle.startParameter.taskNames
-		if (currentTasks[0] == 'build' || currentTasks[0] == 'prepareObfModsFolder' || currentTasks[0] == 'runObfClient') {
-			attribute_map['ForceLoadAsMod'] = true
-		}
 		attribute_map['FMLAT'] = propertyString('access_transformer_locations')
 		attribute_map['MixinConfigs'] = propertyString('mixin_configs')
 		attributes(attribute_map)
@@ -100,26 +103,7 @@ idea {
 	}
 }
 
-compileTestJava {
-	sourceCompatibility = targetCompatibility = 8
-}
-
-test {
-	useJUnitPlatform()
-	javaLauncher.set(javaToolchains.launcherFor {
-		languageVersion = JavaLanguageVersion.of(8)
-	})
-	if (propertyBool('show_testing_output')) {
-		testLogging {
-			showStandardStreams = true
-		}
-	}
-}
-
 tasks.withType(JavaCompile).configureEach {
-	if (it.name in ['compileMcLauncherJava', 'compilePatchedMcJava']) {
-		return
-	}
 	sourceCompatibility = 17
 	options.release.set(8)
 	javaCompiler.set(javaToolchains.compilerFor {
@@ -128,36 +112,34 @@ tasks.withType(JavaCompile).configureEach {
 	})
 }
 
-tasks.register('cleanroomAfterSync') {
-	group 'cleanroom helpers'
-	dependsOn 'injectTags', 'generateMixinJson'
-}
-
 tasks.withType(Javadoc).configureEach {
 	sourceCompatibility = 17
 }
 
-tasks.named('injectTags', InjectTagsTask).configure {
-	onlyIf {
-		return !it.getTags().get().isEmpty()
-	}
-	it.outputClassName.set(propertyString('tag_class_name'))
+tasks.withType(JavaExec).configureEach {
+	javaLauncher.set(javaToolchains.launcherFor {
+		languageVersion.set(JavaLanguageVersion.of(8))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
 }
 
-tasks.named('prepareObfModsFolder').configure {
-	finalizedBy 'prioritizeCoremods'
+configurations {
+	devMods
+	jeiAt
 }
 
-tasks.register('prioritizeCoremods') {
-	dependsOn 'prepareObfModsFolder'
-	doLast {
-		fileTree('run/obfuscated').forEach {
-			if (it.isFile() && it.name =~ '(mixinbooter|configanytime)(-)([0-9])+\\.+([0-9])+(.jar)') {
-				it.renameTo(new File(it.parentFile, "!${it.name}"))
-			}
-		}
-	}
+dependencies {
+	devMods 'zone.rong:mixinbooter:10.7'
+	jeiAt "mezz.jei:${jei_version}"
 }
+
+tasks.register('devMods', Copy) {
+	from configurations.devMods
+	into file('run/mods')
+}
+
+tasks.named('runClient') { dependsOn 'devMods' }
+tasks.named('runServer') { dependsOn 'devMods' }
 
 if (propertyBool('publish_to_curseforge')) {
 	assertProperty 'curseforge_project_id'
@@ -166,9 +148,6 @@ if (propertyBool('publish_to_curseforge')) {
 		group 'publishing'
 		description "Uploads CurseForge project ${propertyString('curseforge_project_id')}"
 	}
-}
-
-tasks.register('generateTemplates') {
 }
 
 apply from: rootProject.file('gradle/scripts/publishing.gradle')

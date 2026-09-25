@@ -5,17 +5,5 @@
 apply from: rootProject.file('gradle/scripts/helpers.gradle')
 
 base {
-    archivesName.set(propertyString('mod_artifact_name')) // Consistency
+    archivesName.set(propertyString('archives_base_name')) // Consistency
 }
-
-tasks.named('jar', Jar) {
-    from sourceSets.api.output
-}
-
-//tasks.named('sourcesJar', Jar) {
-//    from sourceSets.api.allSource
-//}
-
-// tasks.named('javadocJar', Jar) {
-   // from sourceSets.api.output
-// }

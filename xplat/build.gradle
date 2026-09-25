@@ -1,44 +1,66 @@
 /**
  * Platform-neutral sources: the EMI port itself and every mixin.
- * Compiled against Minecraft (via RFG) and consumed by `forge`.
+ * Compiled against Minecraft (via Essential Loom) and consumed by `forge`.
  */
 plugins {
 	id 'java'
 	id 'java-library'
-	id 'com.gtnewhorizons.retrofuturagradle'
+	id 'gg.essential.loom'
 }
 
-// The mixins and the core code need the same Minecraft view as the other subprojects
-apply from: rootProject.file('gradle/scripts/minecraft-base.gradle')
+apply from: rootProject.file('gradle/scripts/helpers.gradle')
 
 base {
 	archivesName.set("${propertyString('mod_id')}-xplat")
 }
 
+loom {
+	forge {
+		pack200Provider = new dev.architectury.pack200.java.Pack200Adapter()
+		accessTransformer(rootProject.file("xplat/src/main/resources/${propertyString('access_transformer_locations')}"))
+	}
+	mixin {
+		useLegacyMixinAp = true
+		defaultRefmapName.set(propertyString('mixin_refmap'))
+	}
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	}
+}
+
 dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings "de.oceanlabs.mcp:mcp_stable:${propertyString('mapping_version')}-1.12"
+	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
 	compileOnly 'org.jetbrains:annotations:26.1.0'
 	compileOnly 'org.jspecify:jspecify:1.0.0'
-	compileOnly 'mezz.jei:jei_1.12.2:4.16.5.1029'
+	compileOnly "mezz.jei:${jei_version}"
+	// Mixin runtime + booter APIs (ILateMixinLoader / @MixinLoader)
+	compileOnly "org.spongepowered:mixin:0.8.5-SNAPSHOT"
+	compileOnly "zone.rong:mixinbooter:${propertyString('mixin_booter_version')}"
 
 	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
 	// Workaround for https://github.com/bsideup/jabel/issues/174
 	annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
+	// Registers MixinExtras' injectors with the Mixin AP so @WrapOperation targets land in the refmap
+	annotationProcessor 'io.github.llamalad7:mixinextras-common:0.4.1'
 	compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.0') {
 		transitive = false
 	}
+}
 
-	compileOnly 'org.jetbrains:annotations:26.1.0'
-
-	String mixin = modUtils.enableMixins("zone.rong:mixinbooter:${propertyString('mixin_booter_version')}", propertyString('mixin_refmap'))
-	api(mixin) {
-		transitive = false
-	}
-	annotationProcessor 'org.ow2.asm:asm-debug-all:5.2'
-	annotationProcessor 'com.google.guava:guava:24.1.1-jre'
-	annotationProcessor 'com.google.code.gson:gson:2.8.6'
-	annotationProcessor(mixin) {
-		transitive = false
-	}
+tasks.withType(JavaCompile).configureEach {
+	sourceCompatibility = 17
+	options.release.set(8)
+	javaCompiler.set(javaToolchains.compilerFor {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
 }
 
 // All mod resources live here: the mixin configs, the Access Transformer, mcmod.info and the assets.
@@ -67,5 +89,12 @@ processResources {
 // A bare `./gradlew runClient` from the root runs the task in every subproject that has it,
 // which would launch the game twice. Only `forge` is allowed to start the client/server.
 ['runClient', 'runServer', 'runObfClient', 'runObfServer', 'runVanillaClient', 'runVanillaServer'].each { taskName ->
-	tasks.named(taskName).configure { enabled = false }
+	def task = tasks.findByName(taskName)
+	if (task != null) {
+		task.configure { enabled = false }
+	}
+}
+
+tasks.withType(JavaForkOptions).configureEach {
+	setJvmArgs([])
 }

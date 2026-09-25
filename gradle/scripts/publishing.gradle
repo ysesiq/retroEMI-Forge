@@ -41,8 +41,8 @@ if (propertyBool('publish_to_curseforge')) {
     tasks.named('curseforge') {
         apiToken = System.getenv('CURSEFORGE_TOKEN') == null ? "" : System.getenv('CURSEFORGE_TOKEN')
         debugMode = propertyBool('curseforge_debug')
-        dependsOn tasks.reobfJar
-        def mainFile = upload(propertyString('curseforge_project_id'), tasks.reobfJar)
+        dependsOn tasks.remapJar
+        def mainFile = upload(propertyString('curseforge_project_id'), tasks.remapJar)
         mainFile.displayName = "${propertyString('mod_name')} ${propertyString('mod_version')}"
         mainFile.releaseType = propertyString('release_type')
         mainFile.addJavaVersion 'Java 8'
@@ -77,7 +77,7 @@ if (propertyBool('publish_to_modrinth')) {
         projectId = propertyString('modrinth_project_id')
         versionNumber = propertyString('mod_version')
         versionType = propertyString('release_type')
-        uploadFile = tasks.reobfJar
+        uploadFile = tasks.remapJar
         gameVersions = ['1.12.2']
         loaders = ['forge']
         debugMode = propertyBool('modrinth_debug')

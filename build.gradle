@@ -1,7 +1,7 @@
 plugins {
 	id 'com.diffplug.spotless' version '6.19.0' apply false
 	id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
-	id 'com.gtnewhorizons.retrofuturagradle' version '2.0.3' apply false
+	id 'gg.essential.loom' version '1.15.50' apply false
 	id 'net.darkhax.curseforgegradle' version '1.+' apply false
 	id 'org.jetbrains.changelog' version '2.5.0' apply false
 	id 'com.gradleup.shadow' version '9.6.+' apply false
@@ -9,8 +9,6 @@ plugins {
 }
 
 apply from: 'gradle/scripts/helpers.gradle'
-
-ext.xplatResources = { -> rootProject.file('xplat/src/main/resources') }
 
 subprojects {
 
@@ -24,11 +22,27 @@ subprojects {
 	group = rootProject.maven_group
 
 	repositories {
+		mavenCentral()
 		maven {
 			url 'https://maven.cleanroommc.com'
 		}
 		maven {
 			url = "https://maven.blamejared.com/"
+		}
+		maven {
+			url = "https://repo.essential.gg/repository/maven-public"
+		}
+		maven {
+			url = "https://maven.architectury.dev/"
+		}
+		maven {
+			url = "https://maven.fabricmc.net"
+		}
+		maven {
+			url = "https://maven.minecraftforge.net"
+		}
+		maven {
+			url = "https://repo.spongepowered.org/repository/maven-public/"
 		}
 	}
 
@@ -36,11 +50,13 @@ subprojects {
 		options.encoding = "UTF-8"
 //		options.release = 25
 	})
-}
 
-	java {
-		withSourcesJar()
+	plugins.withId('java') {
+		java {
+			withSourcesJar()
+		}
 	}
+}
 
 //	def synthMixinDir = layout.buildDirectory.dir("generated-class")
 //
