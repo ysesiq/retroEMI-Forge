@@ -40,6 +40,6 @@ jobs:
         with:
           name: Artifacts
           path: |
-#            fabric/build/libs/
-#            neoforge/build/libs/
             forge/build/libs/
+#           fabric/build/libs/
+#           neoforge/build/libs/
