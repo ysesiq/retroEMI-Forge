@@ -1,6 +1,8 @@
 package dev.emi.emi.mixin;
 
 import dev.emi.emi.runtime.EmiLog;
+import dev.emi.emi.runtime.EmiReloadManager;
+import dev.emi.emi.runtime.ProxyRecipeManager;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,5 +15,8 @@ public class NetHandlerPlayClientMixin {
 	@Inject(at = @At("RETURN"), method = "handleJoinGame")
 	private void onGameJoin(CallbackInfo info) {
 		EmiLog.info("Joining server, EMI waiting for data from server...");
+		if (ProxyRecipeManager.isAvailable()) {
+			EmiReloadManager.reload();
+		}
 	}
 }

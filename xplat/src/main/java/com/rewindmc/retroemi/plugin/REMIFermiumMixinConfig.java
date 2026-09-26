@@ -1,4 +1,4 @@
-//package com.rewindmc.retroemi;
+//package com.rewindmc.retroemi.plugin;
 //
 //import fermiumbooter.annotations.MixinConfig;
 //import net.minecraftforge.common.config.Config;

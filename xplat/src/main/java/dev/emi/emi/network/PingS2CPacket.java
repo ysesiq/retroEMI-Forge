@@ -21,7 +21,6 @@ public class PingS2CPacket implements EmiPacket {
 	@Override
 	public void apply(EntityPlayer player) {
 		EmiClient.onServer = true;
-		EmiReloadManager.reload();
 	}
 
 	@Override

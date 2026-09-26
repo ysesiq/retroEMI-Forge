@@ -19,10 +19,10 @@ import net.minecraftforge.common.MinecraftForge;
 @Mod(
 	modid = "emi",
 	name = "EMI",
+	clientSideOnly = true,
 	guiFactory = "dev.emi.emi.platform.forge.EmiGuiFactory",
 	dependencies =
-		"after:mixinbooter;" +
-		"after:fermiumbooter;" +
+		"before:mixinbooter;" +
 		"after:jei;"
 )
 public class EmiForge {
