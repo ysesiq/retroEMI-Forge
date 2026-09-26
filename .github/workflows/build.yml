@@ -1,0 +1,45 @@
+name: Build
+on: [ pull_request, push ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        java: [ 21 ]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: setup JDK${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/loom-cache
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+#      - name: Build Fabric
+#        run: ./gradlew :fabric:build
+
+#      - name: Build NeoForge
+#        run: ./gradlew :neoforge:build
+
+      - name: Build Forge
+        run: ./gradlew :forge:build
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4.4.0
+        with:
+          name: Artifacts
+          path: |
+#            fabric/build/libs/
+#            neoforge/build/libs/
+            forge/build/libs/

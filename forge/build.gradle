@@ -1,5 +1,3 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-
 buildscript {
 	repositories {
 		mavenCentral()
@@ -12,13 +10,10 @@ buildscript {
 }
 
 plugins {
-	id 'java'
-	id 'java-library'
-	id 'maven-publish'
-	id 'org.jetbrains.gradle.plugin.idea-ext'
-	id 'gg.essential.loom'
-	id 'com.gradleup.shadow'
-	id 'org.jetbrains.changelog'
+	id "org.jetbrains.gradle.plugin.idea-ext"
+	id "gg.essential.loom"
+	id "com.gradleup.shadow"
+	id "org.jetbrains.changelog"
 }
 if (System.getenv("MODRINTH_TOKEN")) {
 	apply plugin: "com.modrinth.minotaur"
@@ -28,59 +23,96 @@ if (System.getenv("CURSEFORGE_TOKEN")) {
 }
 evaluationDependsOn ':xplat'
 
-apply from: rootProject.file('gradle/scripts/helpers.gradle')
+//architectury {
+//	platformSetupLoomIde()
+//	forge()
+//}
 
 loom {
+//	accessWidenerPath = project(":xplat").loom.accessWidenerPath
+
+//	mods {
+//		main {
+//			sourceSet project(':xplat').sourceSets.main
+//		}
+//	}
+
 	forge {
+//		convertAccessWideners = true
+//		extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+
 		pack200Provider = new dev.architectury.pack200.java.Pack200Adapter()
-		accessTransformer(rootProject.file("xplat/src/main/resources/${propertyString('access_transformer_locations')}"))
+		accessTransformer(rootProject.file("xplat/src/main/resources/${access_transformer_locations}"))
 		accessTransformer(provider {
 			zipTree(configurations.jeiAt.singleFile).matching { include 'META-INF/jei_at.cfg' }.singleFile
 		})
+
+//		mixinConfig "emi.mixins.json"
+//		mixinConfig "emi-forge.mixins.json"
 	}
+
 	mixin {
-		defaultRefmapName.set(propertyString('mixin_refmap'))
+		defaultRefmapName.set(mixin_refmap)
 	}
+
 	runs {
 		client {
-			property('fml.coreMods.load', propertyString('coremod_plugin_class_name'))
-			programArgs('--mixin', propertyString('mixin_configs'))
+			property('fml.coreMods.load', coremod_plugin_class_name)
+			mixin_configs.split(' ').each { programArgs('--mixin', it) }
 		}
 		server {
-			property('fml.coreMods.load', propertyString('coremod_plugin_class_name'))
-			programArgs('--mixin', propertyString('mixin_configs'))
+			property('fml.coreMods.load', coremod_plugin_class_name)
+			mixin_configs.split(' ').each { programArgs('--mixin', it) }
 		}
 	}
 }
 
-java {
-	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(16))
-		vendor.set(JvmVendorSpec.AZUL)
-	}
+configurations {
+	devMods
+	jeiAt
+
+//	common
+//	shadowCommon
+//	compileClasspath.extendsFrom common
+//	runtimeClasspath.extendsFrom common
+//	developmentForge.extendsFrom common
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${minecraft_version}"
-	mappings "de.oceanlabs.mcp:mcp_stable:${propertyString('mapping_version')}-1.12"
-	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings "de.oceanlabs.mcp:mcp_stable:${rootProject.mapping_version}-1.12"
 
-	modCompileOnly "mezz.jei:${jei_version}"
+	forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
 	implementation project(':xplat')
+//	common(project(path: ":xplat", configuration: "namedElements")) { transitive = false }
+//	shadowCommon(project(path: ":xplat", configuration: "transformProductionForge")) { transitive = false }
+
+	modCompileOnly("mezz.jei:${rootProject.jei_version}") {
+		transitive = false
+	}
+	compileOnly "org.spongepowered:mixin:0.8.5-SNAPSHOT"
 
 	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
 	annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
+
+	devMods 'zone.rong:mixinbooter:10.7'
+	jeiAt "mezz.jei:${jei_version}"
+	runtimeOnly "mezz.jei:${jei_version}"
 }
 
 sourceSets.main.output.resourcesDir = file('build/classes/java/main')
 
 processResources {
+	inputs.property "version", project.version
+
+	filesMatching("mcmod.info") {
+		expand "version": project.version
+	}
+
 	from project(':xplat').sourceSets.main.output.classesDirs
 	from project(':xplat').tasks.named('processResources')
 }
-
-apply from: rootProject.file('gradle/scripts/dependencies.gradle')
 
 jar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -89,17 +121,137 @@ jar {
 
 	manifest {
 		def attribute_map = [:]
-		attribute_map['FMLCorePlugin'] = propertyString('coremod_plugin_class_name')
+		attribute_map['FMLCorePlugin'] = coremod_plugin_class_name
 		attribute_map['FMLCorePluginContainsFMLMod'] = true
-		attribute_map['FMLAT'] = propertyString('access_transformer_locations')
-		attribute_map['MixinConfigs'] = propertyString('mixin_configs')
+		attribute_map['FMLAT'] = access_transformer_locations
+		attribute_map['MixinConfigs'] = mixin_configs.split(' ').join(',')
 		attributes(attribute_map)
 	}
 }
 
-idea {
-	module {
-		inheritOutputDirs = true
+//shadowJar {
+//	exclude "fabric.mod.json"
+//	exclude "architectury.common.json"
+//
+//	configurations = [project.configurations.shadowCommon]
+//	archiveClassifier = "dev-shadow"
+//}
+//
+//remapJar {
+//	inputFile.set shadowJar.archiveFile
+//	dependsOn shadowJar
+//}
+//
+//tasks.named('sourcesJar', Jar).configure { Jar jar ->
+//	def commonSources = project(":xplat").tasks.named("sourcesJar", Jar)
+//	dependsOn commonSources
+//	jar.from zipTree(commonSources.flatMap { it.archiveFile })
+//}
+//
+//def filteredSourcesJar = tasks.register('filteredSourcesJar', Jar, {
+//	archiveClassifier = 'filtered-sources'
+//	def remapSourcesJar = tasks.named('remapSourcesJar', RemapSourcesJarTask)
+//	dependsOn remapSourcesJar
+//	from zipTree(remapSourcesJar.flatMap { it.archiveFile })
+//	exclude 'dev/emi/emi/jemi/**'
+//})
+//
+//def apiJar = tasks.register('apiJar', Jar, {
+//	archiveClassifier = 'api'
+//	def remapJar = tasks.named('remapJar', RemapJarTask)
+//	dependsOn remapJar
+//	from zipTree(remapJar.flatMap { it.archiveFile })
+//	include 'emi.mixins.json'
+//	include 'emi-forge.mixins.json'
+//	include 'emi.accesswidener'
+//	include 'dev/emi/emi/api/**'
+//	exclude 'dev/emi/emi/api/EmiRecipeHandler**'
+//	exclude 'dev/emi/emi/api/stack/FluidEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/ItemEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/EmptyEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/TagEmiIngredient**'
+//	exclude 'dev/emi/emi/api/stack/ListEmiIngredient**'
+//})
+//
+//tasks.named("build").configure {
+//	dependsOn(filteredSourcesJar, apiJar)
+//}
+//
+//components.java {
+//	withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+//		skip()
+//	}
+//}
+
+publishing {
+	publications {
+		register('maven', MavenPublication) {
+			artifactId = "${rootProject.name}-${project.name}"
+			version = project.ext.mavenVersion
+			artifact(remapJar) {
+				builtBy remapJar
+				classifier ''
+			}
+		}
+	}
+	setupRepositories(repositories)
+}
+
+void setupRepositories(RepositoryHandler repositories) {
+	if (project.hasProperty("mavenUrl")) {
+		repositories.maven {
+			url project.mavenUrl
+			credentials {
+				username project.mavenUsername
+				password project.mavenPassword
+			}
+		}
+	}
+}
+
+if (System.getenv("MODRINTH_TOKEN")) {
+	modrinth {
+		token = System.getenv("MODRINTH_TOKEN")
+		projectId = 'emi'
+		versionNumber = project.version
+		versionName = project.version
+		versionType = 'release'
+		uploadFile = remapJar
+		gameVersions = [rootProject.minecraft_version]
+		loaders = ['forge']
+		detectLoaders = false
+		changelog = file('../CHANGELOG.md').text
+	}
+}
+
+if (System.getenv("CURSEFORGE_TOKEN")) {
+	curseforge {
+		apiKey = System.getenv("CURSEFORGE_TOKEN")
+		project {
+			id = '1309244'
+			releaseType = 'release'
+			changelogType = 'markdown'
+			changelog = file('../CHANGELOG.md')
+
+			addGameVersion rootProject.minecraft_version
+			addGameVersion 'Forge'
+
+			mainArtifact(remapJar) {
+				displayName = 'emi-' + project.version
+			}
+		}
+		options {
+			javaIntegration = false
+			forgeGradleIntegration = false
+			javaVersionAutoDetect = false
+		}
+	}
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
 	}
 }
 
@@ -112,9 +264,9 @@ tasks.withType(JavaCompile).configureEach {
 	})
 }
 
-tasks.withType(Javadoc).configureEach {
-	sourceCompatibility = 17
-}
+//tasks.withType(Javadoc).configureEach {
+//	sourceCompatibility = 17
+//}
 
 tasks.withType(JavaExec).configureEach {
 	javaLauncher.set(javaToolchains.launcherFor {
@@ -123,14 +275,10 @@ tasks.withType(JavaExec).configureEach {
 	})
 }
 
-configurations {
-	devMods
-	jeiAt
-}
-
-dependencies {
-	devMods 'zone.rong:mixinbooter:10.7'
-	jeiAt "mezz.jei:${jei_version}"
+idea {
+	module {
+		inheritOutputDirs = true
+	}
 }
 
 tasks.register('devMods', Copy) {
@@ -140,15 +288,3 @@ tasks.register('devMods', Copy) {
 
 tasks.named('runClient') { dependsOn 'devMods' }
 tasks.named('runServer') { dependsOn 'devMods' }
-
-if (propertyBool('publish_to_curseforge')) {
-	assertProperty 'curseforge_project_id'
-	apply plugin: 'net.darkhax.curseforgegradle'
-	tasks.register('curseforge', TaskPublishCurseForge) {
-		group 'publishing'
-		description "Uploads CurseForge project ${propertyString('curseforge_project_id')}"
-	}
-}
-
-apply from: rootProject.file('gradle/scripts/publishing.gradle')
-apply from: rootProject.file('gradle/scripts/extra.gradle')

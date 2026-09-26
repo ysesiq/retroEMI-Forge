@@ -33,7 +33,6 @@
 		"accessor.ShapelessRecipesAccessor",
 		"accessor.SlotAccessor",
 		"accessor.SlotCraftingAccessor",
-		"conversion.FluidMixin",
 		"conversion.ItemMixin",
 		"conversion.ItemStackMixin"
 	],

@@ -1,4 +1,4 @@
-package dev.emi.emi.mixin.conversion;
+package dev.emi.emi.mixin.forge;
 
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.EmiStackConvertible;

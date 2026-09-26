@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "dev.emi.emi.mixin.forge",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"FluidMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

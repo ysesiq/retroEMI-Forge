@@ -1,18 +1,29 @@
 plugins {
-	id 'com.diffplug.spotless' version '6.19.0' apply false
 	id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
 	id 'gg.essential.loom' version '1.15.50' apply false
-	id 'net.darkhax.curseforgegradle' version '1.+' apply false
+	id 'com.diffplug.spotless' version '6.19.0' apply false
 	id 'org.jetbrains.changelog' version '2.5.0' apply false
 	id 'com.gradleup.shadow' version '9.6.+' apply false
-	id 'java'
 }
 
-apply from: 'gradle/scripts/helpers.gradle'
+//architectury {
+//	minecraft = rootProject.minecraft_version
+//}
 
-subprojects {
+//import org.objectweb.asm.ClassReader
+//import org.objectweb.asm.ClassWriter
+//import org.objectweb.asm.tree.ClassNode
 
-	ext.archivesName = rootProject.archives_base_name
+allprojects {
+	apply plugin: "java"
+//	apply plugin: "architectury-plugin"
+	apply plugin: "maven-publish"
+
+//	architectury {
+//		compileOnly()
+//	}
+
+	base.archivesName = rootProject.archives_base_name
 	ext.mavenVersion = "${rootProject.mod_version}"
 	if (System.getenv("RELEASE") == null) {
 		ext.mavenVersion += "-SNAPSHOT"
@@ -48,13 +59,11 @@ subprojects {
 
 	tasks.withType(JavaCompile).configureEach({
 		options.encoding = "UTF-8"
-//		options.release = 25
+//		options.release = 21
 	})
 
-	plugins.withId('java') {
-		java {
-			withSourcesJar()
-		}
+	java {
+		withSourcesJar()
 	}
 }
 

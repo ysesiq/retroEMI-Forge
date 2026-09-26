@@ -1,27 +1,23 @@
-/**
- * Platform-neutral sources: the EMI port itself and every mixin.
- * Compiled against Minecraft (via Essential Loom) and consumed by `forge`.
- */
-plugins {
-	id 'java'
-	id 'java-library'
-	id 'gg.essential.loom'
-}
+//import net.fabricmc.loom.task.RemapJarTask
+//import net.fabricmc.loom.task.RemapSourcesJarTask
 
-apply from: rootProject.file('gradle/scripts/helpers.gradle')
+apply plugin: "gg.essential.loom"
 
-base {
-	archivesName.set("${propertyString('mod_id')}-xplat")
-}
+//architectury {
+//	common(rootProject.enabled_platforms.split(","))
+//}
 
 loom {
+//	accessWidenerPath = file("src/main/resources/emi.accesswidener")
+
 	forge {
 		pack200Provider = new dev.architectury.pack200.java.Pack200Adapter()
-		accessTransformer(rootProject.file("xplat/src/main/resources/${propertyString('access_transformer_locations')}"))
+		accessTransformer(rootProject.file("xplat/src/main/resources/${rootProject.access_transformer_locations}"))
 	}
+
 	mixin {
 		useLegacyMixinAp = true
-		defaultRefmapName.set(propertyString('mixin_refmap'))
+		defaultRefmapName.set(rootProject.mixin_refmap)
 	}
 }
 
@@ -33,21 +29,22 @@ java {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${minecraft_version}"
-	mappings "de.oceanlabs.mcp:mcp_stable:${propertyString('mapping_version')}-1.12"
-	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings "de.oceanlabs.mcp:mcp_stable:${rootProject.mapping_version}-1.12"
+
+	forge "net.minecraftforge:forge:${forge_version}"
+
+	modCompileOnly("mezz.jei:${rootProject.jei_version}") {
+		transitive = false
+	}
 
 	compileOnly 'org.jetbrains:annotations:26.1.0'
 	compileOnly 'org.jspecify:jspecify:1.0.0'
-	compileOnly "mezz.jei:${jei_version}"
-	// Mixin runtime + booter APIs (ILateMixinLoader / @MixinLoader)
 	compileOnly "org.spongepowered:mixin:0.8.5-SNAPSHOT"
-	compileOnly "zone.rong:mixinbooter:${propertyString('mixin_booter_version')}"
+	compileOnly "zone.rong:mixinbooter:${rootProject.mixin_booter_version}"
 
 	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
-	// Workaround for https://github.com/bsideup/jabel/issues/174
 	annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
-	// Registers MixinExtras' injectors with the Mixin AP so @WrapOperation targets land in the refmap
 	annotationProcessor 'io.github.llamalad7:mixinextras-common:0.4.1'
 	compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.0') {
 		transitive = false
@@ -63,31 +60,84 @@ tasks.withType(JavaCompile).configureEach {
 	})
 }
 
-// All mod resources live here: the mixin configs, the Access Transformer, mcmod.info and the assets.
-// `forge` merges this task's output into the deployable jar.
 processResources {
-	filesMatching(['mcmod.info', 'pack.mcmeta', 'mixins.*(?!refmap).*\\.json']) {
-		def authors = propertyString('mod_authors').split(',').collect { """\"${ it.trim() }\"""" }.join(', ')
+	filesMatching(['mixins.*(?!refmap).*\\.json']) {
 		expand(
-				'mod_id': propertyString('mod_id'),
-				'mod_name': propertyString('mod_name'),
-				'mod_version': propertyString('mod_version'),
-				'mod_description': propertyString('mod_description'),
-				'mod_authors': "[${authors}]",
-				'mod_credits': propertyString('mod_credits'),
-				'mod_url': propertyString('mod_url'),
-				'mod_update_json': propertyString('mod_update_json'),
-				'mod_logo_path': propertyString('mod_logo_path'),
-				'mixin_refmap': propertyString('mixin_refmap'),
-				'mixin_package': propertyString('mixin_package')
+				'mixin_refmap': rootProject.mixin_refmap,
+				'mixin_package': rootProject.mixin_package
 		)
 	}
 
 	rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
-// A bare `./gradlew runClient` from the root runs the task in every subproject that has it,
-// which would launch the game twice. Only `forge` is allowed to start the client/server.
+//afterEvaluate {
+//	configurations.default.extendsFrom = [configurations.namedElements]
+//}
+
+//def filteredSourcesJar = tasks.register('filteredSourcesJar', Jar, {
+//	archiveClassifier = 'filtered-sources'
+//	def remapSourcesJar = tasks.named('remapSourcesJar', RemapSourcesJarTask)
+//	dependsOn remapSourcesJar
+//	from zipTree(remapSourcesJar.flatMap { it.archiveFile })
+//	exclude 'dev/emi/emi/jemi/**'
+//})
+//
+//def apiJar = tasks.register('apiJar', Jar, {
+//	archiveClassifier = "api"
+//	def remapJar = tasks.named('remapJar', RemapJarTask)
+//	dependsOn remapJar
+//	from zipTree(remapJar.flatMap { it.archiveFile })
+//	include 'fabric.mod.json'
+//	include 'emi.mixins.json'
+//	include 'emi.accesswidener'
+//	include 'dev/emi/emi/api/**'
+//	exclude 'dev/emi/emi/api/EmiRecipeHandler**'
+//	exclude 'dev/emi/emi/api/stack/FluidEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/ItemEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/EmptyEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/TagEmiIngredient**'
+//	exclude 'dev/emi/emi/api/stack/ListEmiIngredient**'
+//})
+//
+//tasks.named("build").configure {
+//	dependsOn(filteredSourcesJar, apiJar)
+//}
+//
+//publishing {
+//	publications {
+//		register('maven', MavenPublication) {
+//			artifactId = "${rootProject.name}-xplat-intermediary"
+//			version = project.ext.mavenVersion
+//			artifact(remapJar) {
+//				builtBy remapJar
+//				classifier = null
+//			}
+//			artifact(filteredSourcesJar) {
+//				builtBy filteredSourcesJar
+//				classifier = 'sources'
+//			}
+//			artifact(apiJar) {
+//				builtBy apiJar
+//				classifier = 'api'
+//			}
+//		}
+//	}
+//	setupRepositories(repositories)
+//}
+//
+//void setupRepositories(RepositoryHandler repositories) {
+//	if (project.hasProperty("mavenUrl")) {
+//		repositories.maven {
+//			url project.mavenUrl
+//			credentials {
+//				username project.mavenUsername
+//				password project.mavenPassword
+//			}
+//		}
+//	}
+//}
+
 ['runClient', 'runServer', 'runObfClient', 'runObfServer', 'runVanillaClient', 'runVanillaServer'].each { taskName ->
 	def task = tasks.findByName(taskName)
 	if (task != null) {
