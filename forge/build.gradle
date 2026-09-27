@@ -11,7 +11,7 @@ buildscript {
 
 plugins {
 	id "org.jetbrains.gradle.plugin.idea-ext"
-	id "gg.essential.loom"
+	id "com.crystaelix.loom"
 	id "com.gradleup.shadow"
 	id "org.jetbrains.changelog"
 }
@@ -37,11 +37,12 @@ loom {
 //		}
 //	}
 
+	generatedIntermediateMappings()
+
 	forge {
 //		convertAccessWideners = true
 //		extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
-		pack200Provider = new dev.architectury.pack200.java.Pack200Adapter()
 		accessTransformer(rootProject.file("xplat/src/main/resources/${access_transformer_locations}"))
 		accessTransformer(provider {
 			zipTree(configurations.jeiAt.singleFile).matching { include 'META-INF/jei_at.cfg' }.singleFile
@@ -82,7 +83,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
 	mappings "de.oceanlabs.mcp:mcp_stable:${rootProject.mapping_version}-1.12"
 
-	forge "net.minecraftforge:forge:${rootProject.forge_version}"
+	legacyForge "net.minecraftforge:forge:${rootProject.forge_version}"
 
 	implementation project(':xplat')
 //	common(project(path: ":xplat", configuration: "namedElements")) { transitive = false }

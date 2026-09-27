@@ -1,7 +1,7 @@
 //import net.fabricmc.loom.task.RemapJarTask
 //import net.fabricmc.loom.task.RemapSourcesJarTask
 
-apply plugin: "gg.essential.loom"
+apply plugin: "com.crystaelix.loom"
 
 //architectury {
 //	common(rootProject.enabled_platforms.split(","))
@@ -10,8 +10,9 @@ apply plugin: "gg.essential.loom"
 loom {
 //	accessWidenerPath = file("src/main/resources/emi.accesswidener")
 
+	generatedIntermediateMappings()
+
 	forge {
-		pack200Provider = new dev.architectury.pack200.java.Pack200Adapter()
 		accessTransformer(rootProject.file("xplat/src/main/resources/${rootProject.access_transformer_locations}"))
 	}
 
@@ -32,7 +33,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
 	mappings "de.oceanlabs.mcp:mcp_stable:${rootProject.mapping_version}-1.12"
 
-	forge "net.minecraftforge:forge:${forge_version}"
+	legacyForge "net.minecraftforge:forge:${forge_version}"
 
 	modCompileOnly("mezz.jei:${rootProject.jei_version}") {
 		transitive = false

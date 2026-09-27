@@ -1,6 +1,6 @@
 plugins {
 	id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
-	id 'gg.essential.loom' version '1.15.50' apply false
+	id 'com.crystaelix.loom' version '1.17-SNAPSHOT' apply false
 	id 'com.diffplug.spotless' version '6.19.0' apply false
 	id 'org.jetbrains.changelog' version '2.5.0' apply false
 	id 'com.gradleup.shadow' version '9.6.+' apply false
