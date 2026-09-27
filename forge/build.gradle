@@ -1,0 +1,306 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath 'com.modrinth.minotaur:Minotaur:2.4.3'
+		classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
+	}
+}
+
+plugins {
+	id "org.jetbrains.gradle.plugin.idea-ext"
+	id "com.crystaelix.loom"
+	id "ploceus"
+	id "com.gradleup.shadow"
+	id "org.jetbrains.changelog"
+}
+if (System.getenv("MODRINTH_TOKEN")) {
+	apply plugin: "com.modrinth.minotaur"
+}
+if (System.getenv("CURSEFORGE_TOKEN")) {
+	apply plugin: "com.matthewprenger.cursegradle"
+}
+evaluationDependsOn ':xplat'
+
+//architectury {
+//	platformSetupLoomIde()
+//	forge()
+//}
+
+ploceus {
+	disableLibraryUpgrades()
+}
+
+loom {
+//	accessWidenerPath = project(":xplat").loom.accessWidenerPath
+
+//	mods {
+//		main {
+//			sourceSet project(':xplat').sourceSets.main
+//		}
+//	}
+
+	generatedIntermediateMappings()
+
+	forge {
+//		convertAccessWideners = true
+//		extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+
+		accessTransformer(rootProject.file("xplat/src/main/resources/${access_transformer_locations}"))
+		accessTransformer(provider {
+			configurations.atDeps.files.collectMany { jar ->
+				zipTree(jar).matching { include 'META-INF/*_at.cfg' }.files
+			}
+		})
+
+//		mixinConfig "emi.mixins.json"
+//		mixinConfig "emi-forge.mixins.json"
+	}
+
+	mixin {
+		defaultRefmapName.set(mixin_refmap)
+	}
+
+	runs {
+		client {
+			programArg "--username=Dev"
+			mixin_configs.split(' ').each { programArgs('--mixin', it) }
+		}
+		server {
+			mixin_configs.split(' ').each { programArgs('--mixin', it) }
+		}
+	}
+}
+
+configurations {
+	devMods
+	atDeps
+
+//	common
+//	shadowCommon
+//	compileClasspath.extendsFrom common
+//	runtimeClasspath.extendsFrom common
+//	developmentForge.extendsFrom common
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings loom.layered {
+		mcp "de.oceanlabs.mcp:mcp_stable:${rootProject.mapping_version}-1.7.10"
+		mcp "net.minecraftforge:forge:${rootProject.forge_version}:userdev"
+	}
+	exceptions ploceus.raven(rootProject.raven_build)
+	signatures ploceus.sparrow(rootProject.sparrow_build)
+	nests ploceus.nests(rootProject.nests_build)
+
+	legacyForge "net.minecraftforge:forge:${rootProject.forge_version}:universal"
+
+	implementation project(':xplat')
+//	common(project(path: ":xplat", configuration: "namedElements")) { transitive = false }
+//	shadowCommon(project(path: ":xplat", configuration: "transformProductionForge")) { transitive = false }
+
+	api("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${rootProject.unimixins_version}") { transitive = false }
+	annotationProcessor("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${rootProject.unimixins_version}") { transitive = false }
+	implementation "com.crystaelix:mixinconbooter-legacy:${rootProject.mixinconbooter_version}"
+
+	compileOnly('org.jetbrains:annotations:26.0.2')
+	compileOnly('org.jspecify:jspecify:1.0.0')
+
+	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
+	compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.0') { transitive = false }
+
+	atDeps("com.github.GTNewHorizons:GTNHLib:${rootProject.gtnhlib_version}:dev") { transitive = false }
+	atDeps("com.github.GTNewHorizons:NotEnoughItems:${rootProject.nei_version}:dev")
+}
+
+sourceSets.main.output.resourcesDir = file('build/classes/java/main')
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("mcmod.info") {
+		expand "version": project.version
+	}
+
+	from project(':xplat').sourceSets.main.output.classesDirs
+	from project(':xplat').tasks.named('processResources')
+}
+
+jar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	from project(':xplat').sourceSets.main.output
+
+	manifest {
+		def attribute_map = [:]
+		attribute_map['FMLCorePlugin'] = coremod_plugin_class_name
+		attribute_map['FMLCorePluginContainsFMLMod'] = true
+		attribute_map['FMLAT'] = access_transformer_locations
+		attribute_map['MixinConfigs'] = mixin_configs.split(' ').join(',')
+		attribute_map['TweakClass'] = 'org.spongepowered.asm.launch.MixinTweaker'
+		attribute_map['ForceLoadAsMod'] = true
+		attributes(attribute_map)
+	}
+}
+
+//shadowJar {
+//	exclude "fabric.mod.json"
+//	exclude "architectury.common.json"
+//
+//	configurations = [project.configurations.shadowCommon]
+//	archiveClassifier = "dev-shadow"
+//}
+//
+//remapJar {
+//	inputFile.set shadowJar.archiveFile
+//	dependsOn shadowJar
+//}
+//
+//tasks.named('sourcesJar', Jar).configure { Jar jar ->
+//	def commonSources = project(":xplat").tasks.named("sourcesJar", Jar)
+//	dependsOn commonSources
+//	jar.from zipTree(commonSources.flatMap { it.archiveFile })
+//}
+//
+//def filteredSourcesJar = tasks.register('filteredSourcesJar', Jar, {
+//	archiveClassifier = 'filtered-sources'
+//	def remapSourcesJar = tasks.named('remapSourcesJar', RemapSourcesJarTask)
+//	dependsOn remapSourcesJar
+//	from zipTree(remapSourcesJar.flatMap { it.archiveFile })
+//	exclude 'dev/emi/emi/jemi/**'
+//})
+//
+//def apiJar = tasks.register('apiJar', Jar, {
+//	archiveClassifier = 'api'
+//	def remapJar = tasks.named('remapJar', RemapJarTask)
+//	dependsOn remapJar
+//	from zipTree(remapJar.flatMap { it.archiveFile })
+//	include 'emi.mixins.json'
+//	include 'emi-forge.mixins.json'
+//	include 'emi.accesswidener'
+//	include 'dev/emi/emi/api/**'
+//	exclude 'dev/emi/emi/api/EmiRecipeHandler**'
+//	exclude 'dev/emi/emi/api/stack/FluidEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/ItemEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/EmptyEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/TagEmiIngredient**'
+//	exclude 'dev/emi/emi/api/stack/ListEmiIngredient**'
+//})
+//
+//tasks.named("build").configure {
+//	dependsOn(filteredSourcesJar, apiJar)
+//}
+//
+//components.java {
+//	withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+//		skip()
+//	}
+//}
+
+publishing {
+	publications {
+		register('maven', MavenPublication) {
+			artifactId = "${rootProject.name}-${project.name}"
+			version = project.ext.mavenVersion
+			artifact(remapJar) {
+				builtBy remapJar
+				classifier ''
+			}
+		}
+	}
+	setupRepositories(repositories)
+}
+
+void setupRepositories(RepositoryHandler repositories) {
+	if (project.hasProperty("mavenUrl")) {
+		repositories.maven {
+			url project.mavenUrl
+			credentials {
+				username project.mavenUsername
+				password project.mavenPassword
+			}
+		}
+	}
+}
+
+if (System.getenv("MODRINTH_TOKEN")) {
+	modrinth {
+		token = System.getenv("MODRINTH_TOKEN")
+		projectId = 'emi'
+		versionNumber = project.version
+		versionName = project.version
+		versionType = 'release'
+		uploadFile = remapJar
+		gameVersions = [rootProject.minecraft_version]
+		loaders = ['forge']
+		detectLoaders = false
+		changelog = file('../CHANGELOG.md').text
+	}
+}
+
+if (System.getenv("CURSEFORGE_TOKEN")) {
+	curseforge {
+		apiKey = System.getenv("CURSEFORGE_TOKEN")
+		project {
+			id = '1309244'
+			releaseType = 'release'
+			changelogType = 'markdown'
+			changelog = file('../CHANGELOG.md')
+
+			addGameVersion rootProject.minecraft_version
+			addGameVersion 'Forge'
+
+			mainArtifact(remapJar) {
+				displayName = 'emi-' + project.version
+			}
+		}
+		options {
+			javaIntegration = false
+			forgeGradleIntegration = false
+			javaVersionAutoDetect = false
+		}
+	}
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	sourceCompatibility = 17
+	options.release.set(8)
+	javaCompiler.set(javaToolchains.compilerFor {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
+}
+
+//tasks.withType(Javadoc).configureEach {
+//	sourceCompatibility = 17
+//}
+
+tasks.withType(JavaExec).configureEach {
+	javaLauncher.set(javaToolchains.launcherFor {
+		languageVersion.set(JavaLanguageVersion.of(8))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
+}
+
+idea {
+	module {
+		inheritOutputDirs = true
+	}
+}
+
+tasks.register('devMods', Copy) {
+	from configurations.devMods
+	into file('run/mods')
+}
+
+tasks.named('runClient') { dependsOn 'devMods' }
+tasks.named('runServer') { dependsOn 'devMods' }

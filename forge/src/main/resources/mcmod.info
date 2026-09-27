@@ -1,0 +1,25 @@
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "emi",
+		"name": "EMI",
+		"description": "A featureful and accessible item and recipe viewer",
+		"version": "${version}",
+		"mcversion": "1.7.10",
+		"url": "https://github.com/ysesiq/retroEMI-Forge/",
+		"updateUrl": "",
+		"authorList": [
+      "Emi",
+      "Exa",
+      "Xy_Luce"
+    ],
+		"credits": "",
+		"logoFile": "icon.png",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": [],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": true
+	}]
+}

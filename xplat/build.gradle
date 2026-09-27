@@ -1,0 +1,167 @@
+//import net.fabricmc.loom.task.RemapJarTask
+//import net.fabricmc.loom.task.RemapSourcesJarTask
+
+apply plugin: "com.crystaelix.loom"
+apply plugin: "ploceus"
+
+//architectury {
+//	common(rootProject.enabled_platforms.split(","))
+//}
+
+ploceus {
+	disableLibraryUpgrades()
+}
+
+loom {
+//	accessWidenerPath = file("src/main/resources/emi.accesswidener")
+
+	generatedIntermediateMappings()
+
+	forge {
+		accessTransformer(rootProject.file("xplat/src/main/resources/${rootProject.access_transformer_locations}"))
+	}
+
+	legacyForge {
+		mixinConfig rootProject.mixin_configs
+	}
+
+	mixin {
+		useLegacyMixinAp = true
+		defaultRefmapName.set(rootProject.mixin_refmap)
+	}
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+	mappings loom.layered {
+		mcp "de.oceanlabs.mcp:mcp_stable:${rootProject.mapping_version}-1.7.10"
+		mcp "net.minecraftforge:forge:${rootProject.forge_version}:userdev"
+	}
+	exceptions ploceus.raven(rootProject.raven_build)
+	signatures ploceus.sparrow(rootProject.sparrow_build)
+	nests ploceus.nests(rootProject.nests_build)
+
+	legacyForge "net.minecraftforge:forge:${rootProject.forge_version}:universal"
+
+	api("com.github.GTNewHorizons:GTNHLib:${rootProject.gtnhlib_version}:dev") { transitive = false }
+	api("com.github.GTNewHorizons:waila:${rootProject.waila_version}:dev") { transitive = false }
+	api("com.github.GTNewHorizons:NotEnoughItems:${rootProject.nei_version}:dev")
+	compileOnly("com.github.GTNewHorizons:Mobs-Info:${rootProject.mobs_info_version}:dev") { transitive = false }
+
+	api('it.unimi.dsi:fastutil:8.5.15') { transitive = false }
+	api('org.joml:joml:1.10.8') { transitive = false }
+	compileOnly 'org.jetbrains:annotations:26.0.2'
+	compileOnly 'org.jspecify:jspecify:1.0.0'
+
+	api("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${rootProject.unimixins_version}") { transitive = false }
+	annotationProcessor("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${rootProject.unimixins_version}") { transitive = false }
+	implementation "com.crystaelix:mixinconbooter-legacy:${rootProject.mixinconbooter_version}"
+
+	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
+	compileOnly('com.github.bsideup.jabel:jabel-javac-plugin:1.0.0') { transitive = false }
+}
+
+tasks.withType(JavaCompile).configureEach {
+	sourceCompatibility = 17
+	options.release.set(8)
+	javaCompiler.set(javaToolchains.compilerFor {
+		languageVersion.set(JavaLanguageVersion.of(16))
+		vendor.set(JvmVendorSpec.AZUL)
+	})
+}
+
+processResources {
+	filesMatching(['mixins.*(?!refmap).*\\.json']) {
+		expand(
+				'mixin_refmap': rootProject.mixin_refmap,
+				'mixin_package': rootProject.mixin_package
+		)
+	}
+
+	rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+//afterEvaluate {
+//	configurations.default.extendsFrom = [configurations.namedElements]
+//}
+
+//def filteredSourcesJar = tasks.register('filteredSourcesJar', Jar, {
+//	archiveClassifier = 'filtered-sources'
+//	def remapSourcesJar = tasks.named('remapSourcesJar', RemapSourcesJarTask)
+//	dependsOn remapSourcesJar
+//	from zipTree(remapSourcesJar.flatMap { it.archiveFile })
+//	exclude 'dev/emi/emi/jemi/**'
+//})
+//
+//def apiJar = tasks.register('apiJar', Jar, {
+//	archiveClassifier = "api"
+//	def remapJar = tasks.named('remapJar', RemapJarTask)
+//	dependsOn remapJar
+//	from zipTree(remapJar.flatMap { it.archiveFile })
+//	include 'fabric.mod.json'
+//	include 'emi.mixins.json'
+//	include 'emi.accesswidener'
+//	include 'dev/emi/emi/api/**'
+//	exclude 'dev/emi/emi/api/EmiRecipeHandler**'
+//	exclude 'dev/emi/emi/api/stack/FluidEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/ItemEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/EmptyEmiStack**'
+//	exclude 'dev/emi/emi/api/stack/TagEmiIngredient**'
+//	exclude 'dev/emi/emi/api/stack/ListEmiIngredient**'
+//})
+//
+//tasks.named("build").configure {
+//	dependsOn(filteredSourcesJar, apiJar)
+//}
+//
+//publishing {
+//	publications {
+//		register('maven', MavenPublication) {
+//			artifactId = "${rootProject.name}-xplat-intermediary"
+//			version = project.ext.mavenVersion
+//			artifact(remapJar) {
+//				builtBy remapJar
+//				classifier = null
+//			}
+//			artifact(filteredSourcesJar) {
+//				builtBy filteredSourcesJar
+//				classifier = 'sources'
+//			}
+//			artifact(apiJar) {
+//				builtBy apiJar
+//				classifier = 'api'
+//			}
+//		}
+//	}
+//	setupRepositories(repositories)
+//}
+//
+//void setupRepositories(RepositoryHandler repositories) {
+//	if (project.hasProperty("mavenUrl")) {
+//		repositories.maven {
+//			url project.mavenUrl
+//			credentials {
+//				username project.mavenUsername
+//				password project.mavenPassword
+//			}
+//		}
+//	}
+//}
+
+['runClient', 'runServer', 'runObfClient', 'runObfServer', 'runVanillaClient', 'runVanillaServer'].each { taskName ->
+	def task = tasks.findByName(taskName)
+	if (task != null) {
+		task.configure { enabled = false }
+	}
+}
+
+tasks.withType(JavaForkOptions).configureEach {
+	setJvmArgs([])
+}
