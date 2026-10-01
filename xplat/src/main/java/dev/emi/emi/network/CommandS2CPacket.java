@@ -8,6 +8,8 @@ import dev.emi.emi.registry.EmiCommands;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CommandS2CPacket implements EmiPacket {
 	private byte type;
@@ -39,6 +41,7 @@ public class CommandS2CPacket implements EmiPacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void apply(EntityPlayer player) {
 		if (type == EmiCommands.VIEW_RECIPE) {
 			EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);

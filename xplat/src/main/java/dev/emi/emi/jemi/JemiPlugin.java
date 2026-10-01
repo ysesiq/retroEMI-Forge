@@ -318,7 +318,7 @@ public class JemiPlugin implements IModPlugin, EmiPlugin {
 		}
 		for (Map.Entry<List<EmiStack>, List<Text>> group : grouped.entrySet()) {
 			List<EmiStack> stacks = group.getKey();
-			registry.addRecipe(new EmiInfoRecipe(stacks.stream().map(s -> (EmiIngredient) s).collect(Collectors.toList()), group.getValue(), EmiPort.id("jemi", "/info/" + EmiUtil.subId(stacks.get(0)))));
+			registry.addRecipe(new EmiInfoRecipe(stacks.stream().map(s -> (EmiIngredient) s).collect(Collectors.toList()), group.getValue(), null));
 		}
 	}
 

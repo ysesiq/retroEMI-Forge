@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class EmiChessPacket implements EmiPacket {
 	protected UUID uuid;
@@ -52,6 +54,7 @@ public abstract class EmiChessPacket implements EmiPacket {
 		}
 
 		@Override
+		@SideOnly(Side.CLIENT)
 		public void apply(EntityPlayer player) {
 			EmiChess.receiveNetwork(uuid, type, start, end);
 		}

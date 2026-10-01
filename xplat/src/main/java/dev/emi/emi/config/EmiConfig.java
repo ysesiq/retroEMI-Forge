@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import it.unimi.dsi.fastutil.ints.IntList;
+import joptsimple.internal.Strings;
 import shim.org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -27,6 +27,7 @@ import dev.emi.emi.input.EmiInput;
 import dev.emi.emi.platform.EmiAgnos;
 import dev.emi.emi.runtime.EmiLog;
 import shim.net.minecraft.client.util.InputUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Util;
 import com.rewindmc.retroemi.RetroEMI;
 
@@ -604,7 +605,7 @@ public class EmiConfig {
 				String commentText = "";
 				if (comment != null) {
 					commentText += "\t/**\n";
-					for (String line : RetroEMI.wrapLines(comment.value(), 80)) {
+					for (String line : Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(comment.value(), 80)) {
 						commentText += "\t * ";
 						commentText += line;
 						commentText += "\n";
@@ -639,7 +640,7 @@ public class EmiConfig {
 			firstCategory = false;
 
 			ret += "#" + category.getKey() + " {\n";
-			ret += RetroEMI.join(category.getValue(), "\n");
+			ret += Strings.join(category.getValue(), "\n");
 			ret += "}\n";
 		}
 		return ret;

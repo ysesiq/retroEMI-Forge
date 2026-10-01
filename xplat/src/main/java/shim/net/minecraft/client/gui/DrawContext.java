@@ -1,7 +1,7 @@
 package shim.net.minecraft.client.gui;
 
+import com.google.common.collect.Lists;
 import dev.emi.emi.EmiPort;
-import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -13,11 +13,20 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
+import shim.net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
+import shim.net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TextTooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipBackgroundRenderer;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
+import shim.net.minecraft.client.gui.tooltip.TooltipPositioner;
 import shim.net.minecraft.client.util.math.MatrixStack;
+import shim.net.minecraft.client.util.math.Vec2i;
 import shim.net.minecraft.text.OrderedText;
 import shim.net.minecraft.text.Text;
 import shim.net.minecraft.util.math.ColorHelper;
@@ -30,10 +39,19 @@ public class DrawContext extends Gui {
 	private final Minecraft client;
 	private final MatrixStack matrices;
 	public static final DrawContext INSTANCE = new DrawContext(Minecraft.getMinecraft(), MatrixStack.INSTANCE);
+	private ItemStack tooltipStack = ItemStack.EMPTY;
 
 	public DrawContext(Minecraft client, MatrixStack matrices) {
 		this.client = client;
 		this.matrices = matrices;
+	}
+
+	public int getScaledWindowWidth() {
+		return client.displayWidth / EmiPort.getGuiScale(client);
+	}
+
+	public int getScaledWindowHeight() {
+		return client.displayHeight / EmiPort.getGuiScale(client);
 	}
 
 	public MatrixStack getMatrices() {
@@ -378,7 +396,92 @@ public class DrawContext extends Gui {
 		stack.setCount(count);
 	}
 
-	public void drawTooltip(FontRenderer fontRenderer, List<Text> txt, int mouseX, int mouseY) {
-		EmiRenderHelper.drawTooltip(client.currentScreen, EmiDrawContext.instance(), txt.stream().map(TooltipComponent::of).collect(Collectors.toList()), mouseX, mouseY);
+//	public void drawItemTooltip(FontRenderer textRenderer, ItemStack stack, int x, int y) {
+//		this.drawTooltip(textRenderer, Screen.getTooltipFromItem(this.client, stack), stack.getTooltipData(), x, y);
+//	}
+//
+//	public void drawTooltip(FontRenderer textRenderer, List<Text> text, Optional<TooltipData> data, int x, int y) {
+//		List<TooltipComponent> list = (List<TooltipComponent>)text.stream().map(Text::asOrderedText).map(TooltipComponent::of).collect(Util.toArrayList());
+//		data.ifPresent(datax -> list.add(list.isEmpty() ? 0 : 1, TooltipComponent.of(datax)));
+//		this.drawTooltip(textRenderer, list, x, y, HoveredTooltipPositioner.INSTANCE);
+//	}
+
+	public void drawTooltip(FontRenderer textRenderer, Text text, int x, int y) {
+		this.drawOrderedTooltip(textRenderer, shim.java.List.of(text.asOrderedText()), x, y);
+	}
+
+	public void drawTooltip(FontRenderer textRenderer, List<Text> text, int x, int y) {
+		this.drawOrderedTooltip(textRenderer, Lists.transform(text, Text::asOrderedText), x, y);
+	}
+
+	public void drawOrderedTooltip(FontRenderer textRenderer, List<? extends OrderedText> text, int x, int y) {
+		this.drawTooltip(
+			textRenderer, text.stream().map(TooltipComponent::of).collect(Collectors.toList()), x, y, HoveredTooltipPositioner.INSTANCE
+		);
+	}
+
+	public void drawTooltip(FontRenderer textRenderer, List<OrderedText> text, TooltipPositioner positioner, int x, int y) {
+		this.drawTooltip(textRenderer, text.stream().map(TooltipComponent::of).collect(Collectors.toList()), x, y, positioner);
+	}
+
+	public void drawTooltip(FontRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner) {
+		TooltipComponent tooltipComponent2;
+		int r;
+		if (components.isEmpty()) {
+			return;
+		}
+		List<String> lines = components.stream()
+			.filter(c -> c instanceof TextTooltipComponent || c instanceof OrderedTextTooltipComponent)
+			.map(c -> c instanceof TextTooltipComponent ? ((TextTooltipComponent) c).getText() : ((OrderedTextTooltipComponent) c).getText().asString())
+			.collect(Collectors.toList());
+		RenderTooltipEvent.Pre preEvent = new RenderTooltipEvent.Pre(
+			this.tooltipStack, lines, x, y, this.getScaledWindowWidth(), this.getScaledWindowHeight(), this.getScaledWindowWidth() / 2 - 16, textRenderer
+		);
+		if (preEvent.isCanceled()) {
+			return;
+		}
+		int i = 0;
+		int j = components.size() == 1 ? -2 : 0;
+		for (TooltipComponent tooltipComponent : components) {
+			int k = tooltipComponent.getWidth(preEvent.getFontRenderer());
+			if (k > i) {
+				i = k;
+			}
+			j += tooltipComponent.getHeight();
+		}
+		int l = i;
+		int m = j;
+		Vec2i vector2ic = positioner.getPosition(this.getScaledWindowWidth(), this.getScaledWindowHeight(), preEvent.getX(), preEvent.getY(), l, m);
+		int n = vector2ic.x();
+		int o = vector2ic.y();
+		this.matrices.push();
+		int p = 400;
+		RenderTooltipEvent.Color colorEvent = new RenderTooltipEvent.Color(this.tooltipStack, lines, n, o, textRenderer,
+			TooltipBackgroundRenderer.BACKGROUND_COLOR, TooltipBackgroundRenderer.START_Y_BORDER_COLOR, TooltipBackgroundRenderer.END_Y_BORDER_COLOR);
+		MinecraftForge.EVENT_BUS.post(colorEvent);
+		Tessellator tess = Tessellator.getInstance();
+		GlStateManager.disableTexture2D();
+		RenderSystem.enableDepthTest();
+		RenderSystem.enableBlend();
+		RenderSystem.defaultBlendFunc();
+		TooltipBackgroundRenderer.render(
+			(builder, startX, startY, endX, endY, z, colorStart, colorEnd) -> EmiDrawContext.instance().raw().fillGradient(startX, startY, endX, endY, 300,
+				colorStart, colorEnd), tess, n, o, l, m, 400, colorEvent.getBackground(), colorEvent.getBorderStart(), colorEvent.getBorderEnd());
+		MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(this.tooltipStack, lines, n, o, textRenderer, l, m));
+		this.matrices.translate(0.0f, 0.0f, p);
+		int q = o;
+		for (r = 0; r < components.size(); ++r) {
+			tooltipComponent2 = components.get(r);
+			tooltipComponent2.drawText(textRenderer, n, q);
+			q += tooltipComponent2.getHeight() + (r == 0 ? 2 : 0);
+		}
+		q = o;
+		for (r = 0; r < components.size(); ++r) {
+			tooltipComponent2 = components.get(r);
+			tooltipComponent2.drawItems(textRenderer, n, q);
+			q += tooltipComponent2.getHeight() + (r == 0 ? 2 : 0);
+		}
+		MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(this.tooltipStack, lines, n, o, textRenderer, l, m));
+		this.matrices.pop();
 	}
 }

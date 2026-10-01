@@ -17,4 +17,9 @@ public class Vec2i {
 		return y;
 	}
 
+	public Vec2i add(int x, int y) {
+		this.x += x;
+		this.y += y;
+		return this;
+	}
 }

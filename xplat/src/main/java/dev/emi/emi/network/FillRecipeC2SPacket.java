@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import com.rewindmc.retroemi.RetroEMICommonUtils;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import com.rewindmc.retroemi.RetroEMI;
 
 public class FillRecipeC2SPacket implements EmiPacket {
 	private int syncId;
@@ -136,7 +136,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 					if (gotten != stack.getCount()) {
 						if (gotten > 0) {
 							stack.setCount(gotten);
-							RetroEMI.offerOrDrop(player, stack);
+							RetroEMICommonUtils.offerOrDrop(player, stack);
 						}
 						return;
 					} else {
@@ -155,7 +155,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 							}
 							s.putStack(stack);
 						} else {
-							RetroEMI.offerOrDrop(player, stack);
+							RetroEMICommonUtils.offerOrDrop(player, stack);
 						}
 					}
 				}
@@ -168,7 +168,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 				}
 			} finally {
 				for (ItemStack stack : rubble) {
-					RetroEMI.offerOrDrop(player, stack);
+					RetroEMICommonUtils.offerOrDrop(player, stack);
 				}
 			}
 		}
@@ -221,7 +221,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 				return grabbed;
 			}
 			ItemStack r = rubble.get(i);
-			if (RetroEMI.canCombine(stack, r)) {
+			if (RetroEMICommonUtils.canCombine(stack, r)) {
 				int wanted = amount - grabbed;
 				if (r.getCount() <= wanted) {
 					grabbed += r.getCount();
@@ -241,7 +241,7 @@ public class FillRecipeC2SPacket implements EmiPacket {
 				continue;
 			}
 			ItemStack st = s.getStack();
-			if (RetroEMI.canCombine(stack, st)) {
+			if (RetroEMICommonUtils.canCombine(stack, st)) {
 				int wanted = amount - grabbed;
 				if (st.getCount() <= wanted) {
 					grabbed += st.getCount();

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EmiPacketHandler {
 	public static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel("emi");
@@ -58,6 +59,7 @@ public class EmiPacketHandler {
 
 	public static class PingS2CPacketHandler implements IMessageHandler<PingS2CPacket, IMessage> {
 		@Override
+		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(PingS2CPacket packet, MessageContext context) {
 			EntityPlayerSP player = Minecraft.getMinecraft().player;
 			Minecraft.getMinecraft().addScheduledTask(() -> {
@@ -69,6 +71,7 @@ public class EmiPacketHandler {
 
 	public static class CommandS2CPacketHandler implements IMessageHandler<CommandS2CPacket, IMessage> {
 		@Override
+		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(CommandS2CPacket packet, MessageContext context) {
 			packet.apply(Minecraft.getMinecraft().player);
 			return null;
@@ -77,6 +80,7 @@ public class EmiPacketHandler {
 
 	public static class EmiChessS2CPacketHandler implements IMessageHandler<EmiChessPacket.S2C, IMessage> {
 		@Override
+		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(EmiChessPacket.S2C packet, MessageContext context) {
 			packet.apply(Minecraft.getMinecraft().player);
 			return null;

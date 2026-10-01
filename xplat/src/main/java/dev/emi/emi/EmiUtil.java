@@ -50,22 +50,11 @@ public class EmiUtil {
 		return subId(EmiPort.id(fluid.getName()));
 	}
 
-	public static String subId(DyeItem dyeItem) {
-		return String.format("%s#%d", subId(dyeItem.toStack().getItem().getRegistryName()), dyeItem.toStack().getItemDamage());
-	}
-
 	public static String subId(ItemStack stack) {
 		if (stack.getHasSubtypes()) {
-			return String.format("%s#%d", subId(stack.getItem().getRegistryName()), stack.getItemDamage());
+			return subId(stack.getItem().getRegistryName()) + stack.getItemDamage();
 		}
 		return subId(stack.getItem().getRegistryName());
-	}
-
-	public static String subId(EmiStack stack) {
-		if (stack.getItemStack().getHasSubtypes()) {
-			return String.format("%s#%d", subId(stack.getId()), stack.getSubtype());
-		}
-		return subId(stack.getId());
 	}
 
 	public static boolean showAdvancedTooltips() {

@@ -1,10 +1,11 @@
 package dev.emi.emi.network;
 
 import dev.emi.emi.platform.EmiClient;
-import dev.emi.emi.runtime.EmiReloadManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PingS2CPacket implements EmiPacket {
 
@@ -19,6 +20,7 @@ public class PingS2CPacket implements EmiPacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void apply(EntityPlayer player) {
 		EmiClient.onServer = true;
 	}

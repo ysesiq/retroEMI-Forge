@@ -19,7 +19,6 @@ import net.minecraftforge.common.MinecraftForge;
 @Mod(
 	modid = "emi",
 	name = "EMI",
-	clientSideOnly = true,
 	guiFactory = "dev.emi.emi.platform.forge.EmiGuiFactory",
 	dependencies =
 		"before:mixinbooter;" +
@@ -29,6 +28,7 @@ public class EmiForge {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		if (event.getSide().isServer()) return;
 		EmiAgnosForge.asmDataTable = event.getAsmData();
 	}
 
@@ -60,13 +60,6 @@ public class EmiForge {
 	public void playerConnect(PlayerEvent.PlayerLoggedInEvent event) {
 		if (event.player instanceof EntityPlayerMP spe) {
 			EmiNetwork.sendToClient(spe, new PingS2CPacket());
-		}
-	}
-
-	@SubscribeEvent
-	public void onServerTick(TickEvent.ServerTickEvent event) {
-		if (event.phase == TickEvent.Phase.START) {
-			RetroEMI.tick();
 		}
 	}
 }

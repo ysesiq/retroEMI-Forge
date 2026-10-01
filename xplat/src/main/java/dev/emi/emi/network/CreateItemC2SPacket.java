@@ -1,12 +1,10 @@
 package dev.emi.emi.network;
 
+import com.rewindmc.retroemi.RetroEMICommonUtils;
 import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SPacketSetSlot;
-import com.rewindmc.retroemi.RetroEMI;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -50,7 +48,7 @@ public class CreateItemC2SPacket implements EmiPacket {
 			} else {
 				EmiLog.info(player.getName() + " cheated in " + stack);
 				if (mode == 0) {
-					RetroEMI.offerOrDrop(player, stack);
+					RetroEMICommonUtils.offerOrDrop(player, stack);
 				} else if (mode == 1) {
 					player.inventory.setItemStack(stack);
 				}

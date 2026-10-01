@@ -94,13 +94,6 @@ public class EmiClientForge {
 		}
 	}
 
-	@SubscribeEvent
-	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (event.phase == TickEvent.Phase.START) {
-			RetroEMI.tick();
-		}
-	}
-
 //	@SubscribeEvent
 //	public void onClientConnectedToServer(FMLNetworkEvent.ClientConnectedToServerEvent event) {
 //		if (!event.isLocal()) {

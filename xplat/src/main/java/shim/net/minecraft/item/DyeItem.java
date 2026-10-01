@@ -1,8 +1,10 @@
 package shim.net.minecraft.item;
 
 import com.github.bsideup.jabel.Desugar;
+import dev.emi.emi.EmiUtil;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 @Desugar
@@ -15,5 +17,4 @@ public record DyeItem(EnumDyeColor color) {
 	public static DyeItem byColor(EnumDyeColor color) {
 		return new DyeItem(color);
 	}
-
 }

@@ -159,7 +159,7 @@ public class ItemEmiStack extends EmiStack implements Batchable {
 	@Override
 	public boolean isUnbatchable() {
 		ItemStack stack = getItemStack();
-		return unbatchable || stack.isItemEnchanted() || stack.isItemDamaged() || !EmiAgnos.canBatch(stack)
+		return unbatchable || stack.hasEffect() || stack.isItemDamaged() || !EmiAgnos.canBatch(stack)
 			|| client.getRenderItem().getItemModelWithOverrides(getItemStack(), null, null).isBuiltInRenderer();
 	}
 

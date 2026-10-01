@@ -45,7 +45,9 @@ loom {
 
 		accessTransformer(rootProject.file("xplat/src/main/resources/${access_transformer_locations}"))
 		accessTransformer(provider {
-			zipTree(configurations.jeiAt.singleFile).matching { include 'META-INF/jei_at.cfg' }.singleFile
+			configurations.atDeps.files.collectMany { jar ->
+				zipTree(jar).matching { include 'META-INF/*_at.cfg' }.files
+			}
 		})
 
 //		mixinConfig "emi.mixins.json"
@@ -70,7 +72,7 @@ loom {
 
 configurations {
 	devMods
-	jeiAt
+	atDeps
 
 //	common
 //	shadowCommon
@@ -98,7 +100,7 @@ dependencies {
 	annotationProcessor 'net.java.dev.jna:jna-platform:5.13.0'
 
 	devMods 'zone.rong:mixinbooter:10.7'
-	jeiAt "mezz.jei:${jei_version}"
+	atDeps "mezz.jei:${jei_version}"
 	runtimeOnly "mezz.jei:${jei_version}"
 }
 

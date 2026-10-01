@@ -95,7 +95,7 @@ public class JemiRecipe<T extends IRecipeWrapper> implements EmiRecipe {
 				sb.append('/');
 				String ids = ingredient.getEmiStacks().stream()
 					.filter(s -> !s.isEmpty() && s.getId() != null)
-					.map(EmiUtil::subId)
+					.map(s -> s.getId().toString())
 					.map(rl -> rl.replace(':', '.').replaceAll("[^a-z0-9/._-]", "_"))
 					.distinct()
 					.collect(Collectors.joining("+"));

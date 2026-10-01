@@ -254,7 +254,7 @@ public class VanillaPlugin implements EmiPlugin {
 			}
 		});
 
-		Comparison potionComparison = Comparison.of((a, b) -> RetroEMI.getEffects(a).equals(RetroEMI.getEffects(b)));
+		Comparison potionComparison = Comparison.compareData(stack -> PotionUtils.getEffectsFromStack(stack.getItemStack()));
 
 		registry.setDefaultComparison(Items.POTIONITEM, potionComparison);
 		registry.setDefaultComparison(Items.SPLASH_POTION, potionComparison);
@@ -296,7 +296,7 @@ public class VanillaPlugin implements EmiPlugin {
 			} else if (recipe instanceof ShulkerBoxRecipes.ShulkerBoxColoring shulker) {
 				for (EnumDyeColor dye : EnumDyeColor.values()) {
 					DyeItem dyeItem = DyeItem.byColor(dye);
-					ResourceLocation sid = synthetic("crafting/shulker_box_dying", EmiUtil.subId(dyeItem));
+					ResourceLocation sid = synthetic("crafting/shulker_box_dying", EmiUtil.subId(dyeItem.toStack()));
 					addRecipeSafe(registry, () -> new EmiCraftingRecipe(
 						shim.java.List.of(EmiStack.of(Blocks.PURPLE_SHULKER_BOX), EmiStack.of(dyeItem)),
 						EmiStack.of(BlockShulkerBox.getColoredItemStack(dye)), sid), recipe);
