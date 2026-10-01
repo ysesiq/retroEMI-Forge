@@ -23,6 +23,7 @@ import dev.emi.emi.api.stack.serializer.EmiIngredientSerializer;
 import dev.emi.emi.data.RecipeDefaults;
 import dev.emi.emi.runtime.EmiPersistentData;
 import com.rewindmc.retroemi.RetroEMI;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.util.JsonHelper;
 
@@ -36,7 +37,7 @@ public class BoM {
 
 	public static void setDefaults(RecipeDefaults defaults) {
 		BoM.defaults = defaults;
-		RetroEMICommonUtils.executeOnMainThread(() -> reload());
+		Minecraft.getMinecraft().func_152344_a(() -> reload());
 	}
 
 	public static JsonObject saveAdded() {

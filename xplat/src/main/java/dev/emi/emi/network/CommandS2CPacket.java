@@ -1,5 +1,7 @@
 package dev.emi.emi.network;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -46,6 +48,7 @@ public class CommandS2CPacket implements EmiPacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void apply(EntityPlayer player) {
 		if (type == EmiCommands.VIEW_RECIPE) {
 			EmiRecipe recipe = EmiApi.getRecipeManager().getRecipe(id);

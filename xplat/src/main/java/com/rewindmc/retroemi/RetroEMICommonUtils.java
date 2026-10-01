@@ -12,68 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RetroEMICommonUtils {
-    private static final List<Runnable> tickQueue = new ArrayList<>();
-
-    public static void executeOnMainThread(Runnable r) {
-        synchronized (tickQueue) {
-            tickQueue.add(r);
-        }
-    }
-
-    public static void tick() {
-        Runnable[] queue;
-        synchronized (tickQueue) {
-            queue = tickQueue.toArray(new Runnable[tickQueue.size()]);
-            tickQueue.clear();
-        }
-        for (Runnable r : queue) {
-            r.run();
-        }
-    }
-
-    public static List<String> wrapLines(String str, int cols) {
-        ArrayList<String> li = new ArrayList<String>();
-        StringBuilder buf = new StringBuilder();
-        for (String line : str.split("\n")) {
-            int w = -1;
-            for (String word : line.split(" ")) {
-                if (w + 1 + word.length() > cols) {
-                    li.add(buf.toString());
-                    buf.setLength(0);
-                    w = 0;
-                } else {
-                    if (w != -1) buf.append(" ");
-                    w++;
-                }
-                while (word.length() > cols) {
-                    li.add(word.substring(0, cols));
-                    word = word.substring(cols);
-                }
-                buf.append(word);
-                w += word.length();
-            }
-            if (buf.length() > 0) {
-                li.add(buf.toString());
-            }
-            buf.setLength(0);
-        }
-        return li;
-    }
-
-    public static String join(List<String> strs, String delim) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (String s : strs) {
-            if (first) {
-                first = false;
-            } else {
-                sb.append(delim);
-            }
-            sb.append(s);
-        }
-        return sb.toString();
-    }
-
     public static void offerOrDrop(EntityPlayer player, ItemStack stack) {
         if (!player.inventory.addItemStackToInventory(stack)) {
             player.dropPlayerItemWithRandomChoice(stack, false);

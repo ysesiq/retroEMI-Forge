@@ -3,16 +3,15 @@ package dev.emi.emi.network;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import dev.emi.emi.EmiPort;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 
 public class EmiNetwork {
-	public static final ResourceLocation FILL_RECIPE = EmiPort.id("emi:fill_recipe");
-	public static final ResourceLocation CREATE_ITEM = EmiPort.id("emi:create_item");
-	public static final ResourceLocation COMMAND = EmiPort.id("emi:command");
-	public static final ResourceLocation CHESS = EmiPort.id("emi:chess");
-	public static final ResourceLocation PING = EmiPort.id("emi:ping");
+	public static final ResourceLocation FILL_RECIPE = new ResourceLocation("emi", "fill_recipe");
+	public static final ResourceLocation CREATE_ITEM = new ResourceLocation("emi", "create_item");
+	public static final ResourceLocation COMMAND = new ResourceLocation("emi", "command");
+	public static final ResourceLocation CHESS = new ResourceLocation("emi", "chess");
+	public static final ResourceLocation PING = new ResourceLocation("emi", "ping");
 	private static BiConsumer<EntityPlayerMP, EmiPacket> clientSender;
 	private static Consumer<EmiPacket> serverSender;
 

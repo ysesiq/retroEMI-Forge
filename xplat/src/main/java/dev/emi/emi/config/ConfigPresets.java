@@ -3,6 +3,7 @@ package dev.emi.emi.config;
 import java.util.List;
 
 import com.rewindmc.retroemi.RetroEMI;
+import shim.net.minecraft.client.gui.DrawContext;
 import shim.org.lwjgl.glfw.GLFW;
 
 import dev.emi.emi.com.unascribed.qdcss.QDCSS;
@@ -41,7 +42,7 @@ public class ConfigPresets {
 		EmiConfig.leftSidebarHeader = HeaderType.VISIBLE;
 
 		Minecraft client = Minecraft.getMinecraft();
-		if (RetroEMI.getScaledHeight(client) < 260) {
+		if (DrawContext.INSTANCE.getScaledWindowHeight() < 260) {
 			EmiConfig.leftSidebarSize.values.set(0, 10);
 			EmiConfig.leftSidebarSize.values.set(1, 8);
 		} else {

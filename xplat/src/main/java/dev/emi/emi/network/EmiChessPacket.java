@@ -3,6 +3,8 @@ package dev.emi.emi.network;
 import java.io.IOException;
 import java.util.UUID;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dev.emi.emi.chess.EmiChess;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -59,6 +61,7 @@ public abstract class EmiChessPacket implements EmiPacket {
 		}
 
 		@Override
+		@SideOnly(Side.CLIENT)
 		public void apply(EntityPlayer player) {
 			EmiChess.receiveNetwork(uuid, type, start, end);
 		}

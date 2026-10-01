@@ -1,7 +1,8 @@
 package dev.emi.emi.network;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import dev.emi.emi.platform.EmiClient;
-import dev.emi.emi.runtime.EmiReloadManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -19,9 +20,9 @@ public class PingS2CPacket implements EmiPacket {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void apply(EntityPlayer player) {
 		EmiClient.onServer = true;
-		EmiReloadManager.reload();
 	}
 
 	@Override

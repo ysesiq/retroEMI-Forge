@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import com.rewindmc.retroemi.RetroEMICommonUtils;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import com.rewindmc.retroemi.RetroEMICommonUtils;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;

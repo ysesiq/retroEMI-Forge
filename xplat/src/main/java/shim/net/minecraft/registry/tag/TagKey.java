@@ -4,7 +4,6 @@ import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
-import com.rewindmc.retroemi.RetroEMI;
 import com.rewindmc.retroemi.RetroEMICommonUtils;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.mixin.accessor.ItemBlockAccessor;

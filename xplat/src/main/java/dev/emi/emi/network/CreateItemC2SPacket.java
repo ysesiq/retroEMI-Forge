@@ -5,7 +5,6 @@ import dev.emi.emi.runtime.EmiLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import com.rewindmc.retroemi.RetroEMI;
 import net.minecraft.util.ResourceLocation;
 import shim.net.minecraft.item.ItemStacks;
 

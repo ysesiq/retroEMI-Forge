@@ -40,7 +40,7 @@ public class EmiCommands extends CommandBase {
 						if (userInputStrings[2].isEmpty()) {
 							throw new WrongUsageException("commands.emi.id");
 						} else {
-							ResourceLocation id = EmiPort.id(userInputStrings[2]);
+							ResourceLocation id = new ResourceLocation(userInputStrings[2]);
 							send(player, VIEW_RECIPE, id);
 						}
 					} else if (userInputStrings[1].equals("tree")) {
@@ -51,14 +51,14 @@ public class EmiCommands extends CommandBase {
 						if (userInputStrings[2].isEmpty()) {
 							throw new WrongUsageException("commands.emi.id");
 						} else {
-							ResourceLocation id = EmiPort.id(userInputStrings[2]);
+							ResourceLocation id = new ResourceLocation(userInputStrings[2]);
 							send(player, TREE_GOAL, id);
 						}
 					} else if (userInputStrings[1].equals("resolution")) {
 						if (userInputStrings[2].isEmpty()) {
 							throw new WrongUsageException("commands.emi.id");
 						} else {
-							ResourceLocation id = EmiPort.id(userInputStrings[2]);
+							ResourceLocation id = new ResourceLocation(userInputStrings[2]);
 							send(player, TREE_RESOLUTION, id);
 						}
 					}
@@ -86,7 +86,6 @@ public class EmiCommands extends CommandBase {
 		}
 		if (userInputStrings.length == 3) {
 			if (!userInputStrings[1].equals("tree")) {
-				List<EmiRecipe> recipeList = EmiApi.getRecipeManager().getRecipes();
 				return getListOfStringsMatchingLastWord(userInputStrings, "");
 			}
 		}

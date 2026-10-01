@@ -1,6 +1,5 @@
 package dev.emi.emi.platform.forge;
 
-import com.rewindmc.retroemi.RetroEMICommonUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import dev.emi.emi.nemi.NemiPlugin;
 import dev.emi.emi.network.EmiNetwork;
@@ -16,7 +15,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mod(
@@ -32,6 +30,7 @@ public class EmiForge {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		if (event.getSide().isServer()) return;
 		EmiAgnosForge.asmDataTable = event.getAsmData();
 	}
 
@@ -68,13 +67,6 @@ public class EmiForge {
 	public void playerConnect(PlayerEvent.PlayerLoggedInEvent event) {
 		if (event.player instanceof EntityPlayerMP spe) {
 			EmiNetwork.sendToClient(spe, new PingS2CPacket());
-		}
-	}
-
-	@SubscribeEvent
-	public void onServerTick(TickEvent.ServerTickEvent event) {
-		if (event.phase == TickEvent.Phase.START) {
-			RetroEMICommonUtils.tick();
 		}
 	}
 }

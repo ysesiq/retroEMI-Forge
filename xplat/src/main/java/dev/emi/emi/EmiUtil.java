@@ -51,12 +51,12 @@ public class EmiUtil {
 	}
 
 	public static String subId(DyeItem dyeItem) {
-		return String.format("%s#%d", subId(EmiPort.id(EmiPort.getItemRegistry().getNameForObject(dyeItem.toStack().getItem()))), dyeItem.toStack().getItemDamage());
+		return subId(EmiPort.id(EmiPort.getItemRegistry().getNameForObject(dyeItem.toStack().getItem()))) + dyeItem.toStack().getItemDamage();
 	}
 
 	public static String subId(ItemStack stack) {
 		if (stack.getHasSubtypes()) {
-			return String.format("%s#%d", subId(EmiPort.id(EmiPort.getItemRegistry().getNameForObject(stack.getItem()))), stack.getItemDamage());
+			return subId(EmiPort.id(EmiPort.getItemRegistry().getNameForObject(stack.getItem()))) + stack.getItemDamage();
 		}
 		return subId(EmiPort.id(EmiPort.getItemRegistry().getNameForObject(stack.getItem())));
 	}

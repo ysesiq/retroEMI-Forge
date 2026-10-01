@@ -30,6 +30,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fluids.Fluid;
+import shim.net.minecraft.client.gui.DrawContext;
 import shim.net.minecraft.client.gui.tooltip.HoveredTooltipPositioner;
 import shim.net.minecraft.client.gui.tooltip.TextTooltipComponent;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
@@ -149,11 +150,11 @@ public class EmiRenderHelper {
 
 	public static void drawLeftTooltip(GuiScreen screen, EmiDrawContext context, List<TooltipComponent> components, int x, int y) {
 		drawTooltip(screen, context, components, x, y, screen.width / 2 - 16,
-			(screen2, mouseX, mouseY, tooltipWidth, tooltipHeight) -> {
-				Vec2i pos = new Vec2i( mouseX + 12, mouseY - 12);
+			(screenWidth, screenHeight, mouseX, mouseY, tooltipWidth, tooltipHeight) -> {
+				Vec2i pos = new Vec2i(mouseX, mouseY).add(12, -12);
 				pos.x = Math.max(pos.x - 24 - tooltipWidth, 4);
-				if (pos.y + tooltipHeight + 3 > screen.height) {
-					pos.y = screen.height - tooltipHeight - 3;
+				if (pos.y + tooltipHeight + 3 > screenHeight) {
+					pos.y = screenHeight - tooltipHeight - 3;
 				}
 				return pos;
 		});
@@ -195,7 +196,7 @@ public class EmiRenderHelper {
 		RenderSystem.disableLighting();
 		EmiPort.setPositionTexShader();
 		context.resetColor();
-		RetroEMI.renderModernTooltip(screen, mutable, x, y, maxWidth, positioner);
+		DrawContext.INSTANCE.drawTooltip(CLIENT.fontRenderer, mutable, x, y, positioner);
 	}
 
 	public static void drawSlotHightlight(EmiDrawContext context, int x, int y, int w, int h, int z) {
