@@ -12,7 +12,7 @@ buildscript {
 plugins {
 	id "org.jetbrains.gradle.plugin.idea-ext"
 	id "com.crystaelix.loom"
-	id "com.gradleup.shadow"
+//	id "com.gradleup.shadow"
 	id "org.jetbrains.changelog"
 }
 if (System.getenv("MODRINTH_TOKEN")) {
@@ -113,14 +113,17 @@ processResources {
 		expand "version": project.version
 	}
 
-	from project(':xplat').sourceSets.main.output.classesDirs
 	from project(':xplat').tasks.named('processResources')
 }
 
 jar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-	from project(':xplat').sourceSets.main.output
+	def xplatRemapJar = project(':xplat').tasks.named('remapJar')
+	dependsOn xplatRemapJar
+	from(zipTree(xplatRemapJar.flatMap { it.archiveFile })) {
+		exclude 'META-INF/MANIFEST.MF'
+	}
 
 	manifest {
 		def attribute_map = [:]

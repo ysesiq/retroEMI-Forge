@@ -29,7 +29,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
-import shim.net.minecraft.item.DyeItem;
 
 public class EmiUtil {
 	public static final Random RANDOM = new Random();
