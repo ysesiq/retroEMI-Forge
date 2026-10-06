@@ -87,7 +87,7 @@ dependencies {
 
 	legacyForge "net.minecraftforge:forge:${rootProject.forge_version}"
 
-	implementation project(':xplat')
+	implementation project(path: ':xplat', configuration: 'namedElements')
 //	common(project(path: ":xplat", configuration: "namedElements")) { transitive = false }
 //	shadowCommon(project(path: ":xplat", configuration: "transformProductionForge")) { transitive = false }
 
@@ -113,6 +113,7 @@ processResources {
 		expand "version": project.version
 	}
 
+	from project(':xplat').sourceSets.main.output.classesDirs
 	from project(':xplat').tasks.named('processResources')
 }
 

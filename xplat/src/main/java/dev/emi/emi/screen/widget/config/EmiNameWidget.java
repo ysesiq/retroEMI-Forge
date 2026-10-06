@@ -112,7 +112,7 @@ public class EmiNameWidget implements Drawable {
 			}
 			ret += string.charAt(i);
 		}
-		return ret;
+		return ret + "§r";
 	}
 
 	public void render(DrawContext raw, int mouseX, int mouseY, float delta) {
