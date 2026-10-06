@@ -1,4 +1,4 @@
-package dev.emi.emi.nemi;
+package dev.emi.emi.nemi.runtime;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.NEIClientUtils;
@@ -6,8 +6,6 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.drawable.DrawableBuilder;
 import codechicken.nei.drawable.DrawableResource;
 import codechicken.nei.recipe.GuiRecipeButton;
-import codechicken.nei.recipe.GuiRecipeTab;
-import codechicken.nei.recipe.HandlerInfo;
 import codechicken.nei.recipe.Recipe;
 import codechicken.nei.recipe.RecipeHandlerRef;
 import codechicken.nei.recipe.TemplateRecipeHandler;
@@ -15,8 +13,10 @@ import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.EmiApi;
-import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.bom.BoM;
+import dev.emi.emi.nemi.NemiCategory;
+import dev.emi.emi.nemi.NemiPlugin;
+import dev.emi.emi.nemi.NemiRecipe;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
 import shim.com.mojang.blaze3d.systems.RenderSystem;
@@ -24,7 +24,7 @@ import shim.com.mojang.blaze3d.systems.RenderSystem;
 import java.util.List;
 import java.util.Map;
 
-public class GuiTreeButton extends GuiRecipeButton {
+public class NemiTreeButton extends GuiRecipeButton {
 	private static final int BUTTON_ID_START = 14;
 
 	protected static final DrawableResource ICON_OFF = new DrawableBuilder(
@@ -57,7 +57,7 @@ public class GuiTreeButton extends GuiRecipeButton {
 	protected Recipe.RecipeIngredient treeResult = null;
 	protected Recipe.RecipeIngredient selectedResult = null;
 
-	public GuiTreeButton(RecipeHandlerRef handlerRef, int x, int y) {
+	public NemiTreeButton(RecipeHandlerRef handlerRef, int x, int y) {
 		super(handlerRef, x, y, BUTTON_ID_START + handlerRef.recipeIndex, "品");// 难绷4个方形≈品
 		this.recipe = Recipe.of(this.handlerRef);
 
@@ -66,14 +66,8 @@ public class GuiTreeButton extends GuiRecipeButton {
             overlayId = "unknown";
         }
 
-		HandlerInfo info = GuiRecipeTab.getHandlerInfo(this.handlerRef.handler);
-		EmiStack iconStack = (info != null && info.getItemStack() != null)
-			? EmiStack.of(info.getItemStack())
-			: EmiStack.EMPTY;
-
 		this.nemiRecipe = new NemiRecipe(
-            new NemiRecipeCategory(EmiPort.id(NemiPlugin.DOMAIN, overlayId),
-				iconStack, this.handlerRef.handler.getRecipeName()),
+            new NemiCategory((TemplateRecipeHandler) this.handlerRef.handler, overlayId),
 			(TemplateRecipeHandler) this.handlerRef.handler, this.handlerRef.recipeIndex,
             EmiPort.id(NemiPlugin.DOMAIN, overlayId + "/" + this.handlerRef.recipeIndex));
 

@@ -1,4 +1,4 @@
-package dev.emi.emi.nemi;
+package dev.emi.emi.nemi.runtime;
 
 import codechicken.lib.vec.Rectangle4i;
 import codechicken.nei.ButtonCycled;
@@ -12,8 +12,8 @@ import dev.emi.emi.screen.widget.SizedButtonWidget;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
 public class NemiScreenHandler extends INEIGuiAdapter {
-	static SizedButtonWidget emiButton = EmiScreenManager.emi;
-	static SizedButtonWidget treeButton = EmiScreenManager.tree;
+	public static SizedButtonWidget emiButton = EmiScreenManager.emi;
+	public static SizedButtonWidget treeButton = EmiScreenManager.tree;
 
 	@Override
 	public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility) {

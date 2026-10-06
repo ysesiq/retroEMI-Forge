@@ -19,13 +19,16 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.Bounds;
+import dev.emi.emi.nemi.impl.NemiRecipeHarvester;
+import dev.emi.emi.nemi.runtime.NemiScreenHandler;
+import dev.emi.emi.nemi.runtime.NemiTickHandler;
 import dev.emi.emi.runtime.EmiLog;
 import dev.emi.emi.screen.RecipeScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
-import static dev.emi.emi.nemi.NemiScreenHandler.emiButton;
-import static dev.emi.emi.nemi.NemiScreenHandler.treeButton;
+import static dev.emi.emi.nemi.runtime.NemiScreenHandler.emiButton;
+import static dev.emi.emi.nemi.runtime.NemiScreenHandler.treeButton;
 
 public class NemiPlugin implements EmiPlugin {
 	public static final String DOMAIN = "nemi";
@@ -49,6 +52,7 @@ public class NemiPlugin implements EmiPlugin {
 			} catch (Exception e) {
 				EmiLog.error("Failed to register NEI GUI handler via reflection", e);
 			}
+			FMLCommonHandler.instance().bus().register(new NemiTickHandler());
 			isNEILoaded = true;
 		}
 	}
@@ -105,7 +109,7 @@ public class NemiPlugin implements EmiPlugin {
 				NemiRecipeHarvester harvester = new NemiRecipeHarvester(registry, templateHandler);
 				harvester.harvest();
 
-				for (NemiRecipeCategory category : harvester.getCategories().values()) {
+				for (NemiCategory category : harvester.getCategories().values()) {
 					List<PositionedStack> catalysts = RecipeCatalysts.getRecipeCatalysts(templateHandler);
 					if (catalysts != null) {
 						for (PositionedStack stack : catalysts) {

@@ -1,4 +1,4 @@
-package dev.emi.emi.nemi;
+package dev.emi.emi.nemi.widget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,8 @@ import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.SlotWidget;
+import dev.emi.emi.nemi.NemiUtil;
+import dev.emi.emi.nemi.runtime.NemiGuiRecipe;
 import net.minecraft.item.ItemStack;
 import shim.net.minecraft.client.gui.tooltip.TooltipComponent;
 
@@ -27,7 +29,7 @@ public class NemiSlotWidget extends SlotWidget {
 
 	@Override
 	public EmiIngredient getStack() {
-		return NemiRecipe.parseIngredient(stackSupplier.get());
+		return NemiUtil.parseIngredient(stackSupplier.get());
 	}
 
 	@Override

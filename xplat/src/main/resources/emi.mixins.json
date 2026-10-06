@@ -6,6 +6,7 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "dev.emi.emi.mixinsupport.EmiMixinPlugin",
   "client": [
+    "FontRendererMixin",
     "GuiContainerCreativeMixin",
     "GuiContainerMixin",
     "GuiScreenMixin",

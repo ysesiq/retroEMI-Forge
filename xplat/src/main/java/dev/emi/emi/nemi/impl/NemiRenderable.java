@@ -1,4 +1,4 @@
-package dev.emi.emi.nemi;
+package dev.emi.emi.nemi.impl;
 
 import codechicken.nei.drawable.DrawableResource;
 import dev.emi.emi.api.render.EmiRenderable;

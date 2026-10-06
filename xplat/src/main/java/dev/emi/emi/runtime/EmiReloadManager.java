@@ -158,7 +158,7 @@ public class EmiReloadManager {
 					plugins.addAll(EmiAgnos.getPlugins().stream()
 						.sorted((a, b) -> Integer.compare(entrypointPriority(a), entrypointPriority(b))).collect(java.util.stream.Collectors.toList()));
 
-					if (NemiPlugin.isNEILoaded) {
+					if (EmiAgnos.isModLoaded("NotEnoughItems")) {
 						plugins.add(new EmiPluginContainer(new NemiPlugin(), NemiPlugin.DOMAIN));
 					}
 					EmiLog.info("Found plugins in " + (System.currentTimeMillis() - t) + "ms");

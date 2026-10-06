@@ -1,5 +1,7 @@
 package com.rewindmc.retroemi.plugin;
 
+import java.util.regex.Pattern;
+
 import com.rewindmc.retroemi.RetroEMI;
 import dev.emi.emi.mixin.accessor.FontRendererAccessor;
 import dev.emi.emi.runtime.EmiDrawContext;
@@ -14,23 +16,16 @@ public class REMIMixinHooks {
 	private static final Minecraft client = Minecraft.getMinecraft();
 
 	// FontRenderer
+	public static final Pattern CUSTOM_FORMAT_CODE = Pattern.compile("(?:§[0-9a-fA-F]){6}§x");
 
-	public static int applyCustomFormatCodes(FontRenderer subject, String str, boolean shadow, int i) {
-		final char SECTION = '\u00a7';// §
-		EmiDrawContext context = EmiDrawContext.instance();
-		if (i + 14 <= str.length() && str.charAt(i) == SECTION && str.startsWith(SECTION + "x", i + 12)) {
-			int color = 0;
-			for (int j = 0; j < 6; j++) {
-				int p = i + j * 2;
-				int d = Character.digit(str.charAt(p + 1), 16);
-				if (str.charAt(p) != SECTION || d < 0) return i;
-				color = (color << 4) | d;
-			}
-			if (shadow) color = (color & 0xFCFCFC) >> 2 | (color & 0xFF000000);
-			context.setColor((color >> 16) / 255F, (color >> 8 & 255) / 255F, (color & 255) / 255F, ((FontRendererAccessor) subject).getAlpha());
-			return i + 12;
+	public static void applyCustomFormatCodes(FontRenderer subject, String code, boolean shadow) {
+		int color = 0;
+		for (int j = 1; j < 12; j += 2) {
+			color = color << 4 | Character.digit(code.charAt(j), 16);
 		}
-		return i;
+		if (shadow) color = (color & 0xFCFCFC) >> 2 | (color & 0xFF000000);
+		EmiDrawContext context = EmiDrawContext.instance();
+		context.setColor((color >> 16) / 255F, (color >> 8 & 255) / 255F, (color & 255) / 255F, ((FontRendererAccessor) subject).getAlpha());
 	}
 
 	// InventoryEffectRender
