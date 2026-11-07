@@ -60,7 +60,7 @@ public abstract class LocaleMixin {
 	private void loadJsonFile(IResourceManager resourceManager, String fileName) {
 		try {
 			Gson gson = new Gson();
-			for (IResource resource : (List<IResource>) resourceManager.getAllResources(EmiPort.id("emi", fileName))) {
+			for (IResource resource : resourceManager.getAllResources(EmiPort.id("emi", fileName))) {
 				try (InputStream stream = resource.getInputStream(); InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
 					JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
 					jsonObject.entrySet().forEach(x -> this.field_135032_a.put(x.getKey(), (x.getValue()).getAsString()));

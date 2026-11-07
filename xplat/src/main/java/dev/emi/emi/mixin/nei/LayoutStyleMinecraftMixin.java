@@ -1,4 +1,4 @@
-package dev.emi.emi.mixin.nemi;
+package dev.emi.emi.mixin.nei;
 
 import codechicken.nei.LayoutManager;
 import codechicken.nei.LayoutStyleMinecraft;

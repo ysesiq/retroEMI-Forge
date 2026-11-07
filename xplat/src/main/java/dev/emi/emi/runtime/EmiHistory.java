@@ -47,8 +47,7 @@ public class EmiHistory {
 	public static void popUntil(Predicate<GuiScreen> predicate, GuiScreen otherwise) {
 		Minecraft client = Minecraft.getMinecraft();
 		while (!EmiHistory.isEmpty()) {
-//			EmiHistory.pop();
-			HISTORIES.clear();
+			EmiHistory.pop();
 			if (predicate.test(client.currentScreen)) {
 				return;
 			}

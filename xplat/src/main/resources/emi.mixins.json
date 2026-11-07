@@ -22,10 +22,10 @@
     "accessor.PlayerControllerMPAccessor",
     "accessor.ResourcePackRepositoryEntryAccessor",
     "accessor.SimpleReloadableResourceManagerAccessor",
-    "nemi.GuiRecipeMixin",
-    "nemi.LayoutStyleMinecraftMixin",
-    "nemi.NEIRecipeWidgetMixin",
-    "nemi.mobinfo.ScrollbarMixin"
+    "nei.GuiRecipeMixin",
+    "nei.LayoutStyleMinecraftMixin",
+    "nei.NEIRecipeWidgetMixin",
+    "nei.mobinfo.ScrollbarMixin"
   ],
   "mixins": [
     "JSONModelMixin",

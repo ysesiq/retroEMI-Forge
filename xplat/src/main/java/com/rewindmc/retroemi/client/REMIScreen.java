@@ -27,8 +27,6 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 	private int mouseDown = -1;
 	private int lastMouseX, lastMouseY;
 
-	private boolean closing = false;
-
 	protected final Text title;
 	private final List<Element> children = Lists.newArrayList();
 	private final List<Drawable> drawables = Lists.newArrayList();
@@ -39,7 +37,6 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 
 	@Override
 	public void initGui() {
-		closing = false;
 		mouseDown = -1;
 		super.initGui();
 		children.clear();
@@ -121,11 +118,6 @@ public class REMIScreen extends GuiScreen implements ParentElement {
 	@Override
 	public final void onGuiClosed() {
 		mouseDown = -1;
-		if (closing) {
-			return;
-		}
-		closing = true;
-		close();
 	}
 
 

@@ -1,10 +1,9 @@
-package dev.emi.emi.mixin.nemi.mobinfo;
+package dev.emi.emi.mixin.nei.mobinfo;
 
 import codechicken.nei.recipe.GuiRecipe;
 import com.kuba6000.mobsinfo.nei.scrollable.Scrollbar;
 import dev.emi.emi.runtime.EmiDrawContext;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

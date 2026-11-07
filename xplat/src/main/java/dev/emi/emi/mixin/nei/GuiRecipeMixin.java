@@ -1,4 +1,4 @@
-package dev.emi.emi.mixin.nemi;
+package dev.emi.emi.mixin.nei;
 
 import codechicken.nei.recipe.GuiRecipe;
 import dev.emi.emi.config.EmiConfig;
