@@ -149,6 +149,19 @@ jar {
 	}
 }
 
+tasks.named('remapJar') {
+	doFirst {
+		def forgeCache = new File(buildDir, 'loom-cache')
+		new File(project(':xplat').buildDir, 'loom-cache').listFiles()?.each { map ->
+			if (map.name.startsWith('mixin-map-') && map.name.endsWith('.tiny') && map.text.readLines().size() > 1) {
+				def target = new File(forgeCache, map.name)
+				target.parentFile.mkdirs()
+				target.bytes = map.bytes
+			}
+		}
+	}
+}
+
 //shadowJar {
 //	exclude "fabric.mod.json"
 //	exclude "architectury.common.json"
