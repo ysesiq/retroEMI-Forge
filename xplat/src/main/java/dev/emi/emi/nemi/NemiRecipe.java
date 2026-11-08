@@ -76,6 +76,9 @@ public class NemiRecipe implements EmiRecipe {
         for (PositionedStack stack : ingredientStacks) {
             parsedInputs.add(NemiUtil.parseIngredient(stack));
         }
+        if (recipeIndex < handler.arecipes.size()) {
+            parsedInputs.addAll(NemiUtil.parseFluidIngredients(handler.arecipes.get(recipeIndex)));
+        }
         return parsedInputs;
     }
 
