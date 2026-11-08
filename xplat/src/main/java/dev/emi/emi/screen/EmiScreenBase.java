@@ -60,7 +60,7 @@ public class EmiScreenBase {
 	}
 
 	public static EmiScreenBase of(GuiScreen screen) {
-	if (screen == null) {
+		if (screen == null) {
 			return EMPTY;
 		}
 
@@ -89,7 +89,7 @@ public class EmiScreenBase {
 						extra = 177;
 					}
 				}
-				Bounds bounds = new Bounds(hs.getGuiLeft() - extra, hs.getYSize(), hs.getXSize() + extra, hs.getGuiTop());
+				Bounds bounds = new Bounds(hs.getGuiLeft() - extra,  hs.getGuiTop(), hs.getXSize() + extra, hs.getYSize());
 				return new EmiScreenBase(screen, bounds);
 			}
 		} else if (screen instanceof RecipeScreen rs) {
