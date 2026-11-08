@@ -29,7 +29,7 @@ public class ResourcePackRepositoryMixin {
 			if (emiJappaPack == null) {
 				emiJappaPack = new EmiJappaResourcePack();
 			}
-			ResourcePackRepository.Entry entry = ResourcePackRepositoryEntryAccessor.invokeNew((ResourcePackRepository) (Object) this, new File("emi_modernity"));
+			ResourcePackRepository.Entry entry = ((ResourcePackRepository) (Object) this).new Entry(new File("emi_modernity"));
 			ResourcePackRepositoryEntryAccessor accessor = (ResourcePackRepositoryEntryAccessor) entry;
 			accessor.setResourcePack(emiJappaPack);
 			accessor.setMetadata(new PackMetadataSection(new ChatComponentText("Modernity textures for retroEMI Forge"), 1));
