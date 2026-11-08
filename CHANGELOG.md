@@ -1,30 +1,12 @@
-* Improvement: Speeds up find resources
-* Improvement: Speeds up emi reload
-* Improvement: Implemented greater compatibility with the JEI interface (1.12.2)
-* Remove: Removed FermiumBooter support (1.12.2)
-* Fix: Fixed the issue where the recipe screen could not go back
-* Fix: Fixed prefix issues for search tags and tooltips in zh_cn and zh_tw
-* Fix: Fixed incorrect item rendering when highlighting search results (1.7.10)
-* Fix: Fixed a crash caused by Mixin bootstrapping (1.12.2)
-* Fix: Fixed the issue where the game would not launch when loaded together with JEI (1.12.2)
-* Fix: Fixed the issue where Ctrl+O could not switch the EMI interface to the JEI interface in some cases (1.12.2)
-* Fix: Fixed an error when registering brewing recipes (1.12.2)
-* Fix: Fixed an issue where the output slot item was incorrect for bucketable fluid recipes in world interaction types (1.12.2)
-* Fix: Fixed some crashes caused by Jemi (1.12.2)
-* Fix: Fixed the issue where Jemi prevented searching (1.12.2)
-* Fix: Fixed Jemi's inability to render custom ingredients (1.12.2)
-* Fix: Fixed incorrect rendering of some Jemi recipes (1.12.2)
-* Fix: Fixed GL state leaks in Jemi recipes (1.12.2)
-* Fix: Fixed some Jemi elements not displaying correctly (1.12.2)
-* Fix: Fixed Jemi spamming a large number of errors (1.12.2)
-* Fix: Fixed Jemi's inability to display ingredients with variable loop counts (1.12.2)
-* Fix: Fixed Jemi ignoring `ITooltipCallback<ItemStack>` information (1.12.2)
-* Fix: Fixed Jemi using tanks instead of slots for some ingredients (1.12.2)
-* Fix: Fixed the issue where the mod ownership of Jemi recipe types was incorrect (1.12.2)
-* Fix: Fixed Jemi not handling wildcards (1.12.2)
-* Fix: Fixed Nemi not retrieving recipe tooltips (1.7.10)
-* Fix: Fixed Nemi recipes changing too quickly (1.7.10)
-
-### Known bugs that will not be fixed
-* Cannot render Modular Machinery Community Edition's multiblock previews (1.12.2)
-* Duplicate Jemi recipe screen elements converted from Tinker I/O (1.12.2)
+* Improvement: Optimize code
+* Refactor: Refactored the build system to uniformly use Crystaelix Loom
+* Fix: Rendering errors on some recipe screens and tabs
+* Fix: Fixed server crash issues
+* Fix: Fixed some Jemi-related errors (1.12.2)
+* Fix: Fixed crash issues caused by NEIU not being loaded (1.7.10)
+* Fix: Fixed crash issues caused by loading Cleanroom (1.12.2)
+* Fix: Fixed text-related crash issues
+* Fix: Fixed abnormal vanilla tooltip layering issues (1.7.10)
+* Fix: Fixed issues with returning invalid values
+* Fix: Fixed abnormal exclusion zone issues
+* Fix: Fixed the issue where Pinyin search could not be used when jecharacters is loaded (1.12.2)
