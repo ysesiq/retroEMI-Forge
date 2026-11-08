@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.File;
 import java.util.List;
 
 @Mixin(ResourcePackRepository.class)
@@ -27,9 +26,8 @@ public class ResourcePackRepositoryMixin {
 		if (emiJappaPack == null) {
 			emiJappaPack = new EmiJappaResourcePack();
 		}
-		ResourcePackRepository.Entry entry = ResourcePackRepositoryEntryAccessor.invokeNew((ResourcePackRepository) (Object) this, new File("emi_modernity"));
+		ResourcePackRepository.Entry entry = ((ResourcePackRepository) (Object) this).new Entry(emiJappaPack);
 		ResourcePackRepositoryEntryAccessor accessor = (ResourcePackRepositoryEntryAccessor) entry;
-		accessor.setResourcePack(emiJappaPack);
 		accessor.setMetadata(new PackMetadataSection(new TextComponentString("Modernity textures for retroEMI Forge"), 3));
 		accessor.setIcon(new ResourceLocation("emi", "icon.png"));
 		this.repositoryEntriesAll.add(entry);
