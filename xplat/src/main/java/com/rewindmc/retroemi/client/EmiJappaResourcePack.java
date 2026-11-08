@@ -19,20 +19,23 @@ public class EmiJappaResourcePack implements IResourcePack {
 	}
 
 	public @Nullable InputStream getInputStream(@NonNull ResourceLocation id) {
-		return EmiJappaResourcePack.class.getResourceAsStream("/assets/emi/textures/gui/buttons_modernity.png");
+		return EmiJappaResourcePack.class.getResourceAsStream(modernityPath(id));
 	}
 
 	public boolean resourceExists(@NonNull ResourceLocation id) {
-		return EmiJappaResourcePack.class.getResource("/assets/emi/textures/gui/buttons_modernity.png") != null;
+		return EmiJappaResourcePack.class.getResource(modernityPath(id)) != null;
 	}
 
-//	public InputStream getInputStream(ResourceLocation id) {
-//		return EmiJappaResourcePack.class.getResourceAsStream("/assets/jappa/" + path(id));
-//	}
-//
-//	public boolean resourceExists(ResourceLocation id) {
-//		return EmiJappaResourcePack.class.getResource("/assets/jappa/" + path(id)) != null;
-//	}
+	private static String modernityPath(ResourceLocation id) {
+		String path = id.getResourcePath();
+		int i = path.lastIndexOf('.');
+		if (i > path.lastIndexOf('/')) {
+			path = path.substring(0, i) + "_modernity" + path.substring(i);
+		} else {
+			path = path + "_modernity";
+		}
+		return "/assets/" + id.getResourceDomain() + "/" + path;
+	}
 
 	public Set getResourceDomains() {
 		return shim.java.Set.of("emi");
@@ -50,8 +53,4 @@ public class EmiJappaResourcePack implements IResourcePack {
 	public String getPackName() {
 		return "EMI Modernity Textures";
 	}
-
-//	private static String path(ResourceLocation id) {
-//		return "assets/" + id.getResourceDomain() + "/" + id.getResourcePath();
-//	}
 }

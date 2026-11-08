@@ -7,6 +7,7 @@ import codechicken.lib.vec.Rectangle4i;
 import codechicken.nei.ItemsGrid;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.LayoutStyleMinecraft;
+import codechicken.nei.NEIClientConfig;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
@@ -62,7 +63,6 @@ public class NemiPlugin implements EmiPlugin {
 		if (!(isNEILoaded)) return;
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             registerExclusionArea(registry);
-
 			registerNeiRecipes(registry);
         }
 	}
@@ -73,7 +73,7 @@ public class NemiPlugin implements EmiPlugin {
 				return;
 			}
 
-			if (!(Minecraft.getMinecraft().currentScreen instanceof RecipeScreen)) {
+			if (!(Minecraft.getMinecraft().currentScreen instanceof RecipeScreen) && !NEIClientConfig.isHidden()) {
 				int rows = (int) Math.ceil((double) layout.buttonCount / layout.numButtons);
 				int width = layout.numButtons * NEI_BUTTON_SPACING;
 				int height = rows * NEI_BUTTON_SPACING + NEI_OUTER_MARGIN;
