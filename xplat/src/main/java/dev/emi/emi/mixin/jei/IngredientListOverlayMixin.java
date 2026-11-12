@@ -3,7 +3,7 @@ package dev.emi.emi.mixin.jei;
 import dev.emi.emi.config.EmiConfig;
 import dev.emi.emi.config.SidebarSide;
 import dev.emi.emi.mixin.jei.accessor.GuiIconToggleButtonAccessor;
-import mezz.jei.gui.elements.GuiIconToggleButton;
+import mezz.jei.gui.overlay.ConfigButton;
 import mezz.jei.gui.overlay.IngredientListOverlay;
 import mezz.jei.input.GuiTextFieldFilter;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,7 +18,7 @@ import java.awt.*;
 
 @Mixin(value = IngredientListOverlay.class, remap = false)
 public class IngredientListOverlayMixin {
-	@Shadow @Final private GuiIconToggleButton configButton;
+	@Shadow @Final private ConfigButton configButton;
 	@Shadow @Final private GuiTextFieldFilter searchField;
 
 	@Inject(method = "updateScreen(Lnet/minecraft/client/gui/GuiScreen;Z)V", at = @At("TAIL"))

@@ -38,6 +38,9 @@ dependencies {
 	modCompileOnly("mezz.jei:${rootProject.jei_version}") {
 		transitive = false
 	}
+//	modCompileOnly("mezz:jei:${rootProject.hei_version}:dev") {
+//		transitive = false
+//	}
 
 	compileOnly 'org.jetbrains:annotations:26.1.0'
 	compileOnly 'org.jspecify:jspecify:1.0.0'

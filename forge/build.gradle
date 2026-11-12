@@ -94,6 +94,9 @@ dependencies {
 	modCompileOnly("mezz.jei:${rootProject.jei_version}") {
 		transitive = false
 	}
+//	modCompileOnly("mezz:jei:${rootProject.hei_version}:dev") {
+//		transitive = false
+//	}
 	compileOnly "org.spongepowered:mixin:0.8.5-SNAPSHOT"
 
 	annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
@@ -102,6 +105,8 @@ dependencies {
 	devMods 'zone.rong:mixinbooter:10.7'
 	atDeps "mezz.jei:${jei_version}"
 	runtimeOnly "mezz.jei:${jei_version}"
+//	atDeps "mezz:jei:${hei_version}:dev"
+//	runtimeOnly "mezz:jei:${hei_version}:dev"
 }
 
 sourceSets.main.output.resourcesDir = file('build/classes/java/main')
@@ -133,6 +138,16 @@ jar {
 		attribute_map['FMLAT'] = access_transformer_locations
 		attribute_map['MixinConfigs'] = mixin_configs.split(' ').join(',')
 		attributes(attribute_map)
+	}
+}
+
+tasks.named('sourcesJar', Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	def xplatSourcesJar = project(':xplat').tasks.named('sourcesJar', Jar)
+	dependsOn xplatSourcesJar
+	from(zipTree(xplatSourcesJar.flatMap { it.archiveFile })) {
+		exclude 'META-INF/MANIFEST.MF'
 	}
 }
 
