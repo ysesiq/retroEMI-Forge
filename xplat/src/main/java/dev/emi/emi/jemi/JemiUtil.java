@@ -9,6 +9,7 @@ import com.google.common.collect.Sets;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.emi.emi.jemi.impl.JemiIngredients;
 import dev.emi.emi.mixin.jei.accessor.BookmarkOverlayAccessor;
 import dev.emi.emi.mixin.jei.accessor.GuiIconToggleButtonAccessor;
 import dev.emi.emi.mixin.jei.accessor.IngredientListOverlayAccessor;
@@ -113,6 +114,21 @@ public class JemiUtil {
 			return width > 0 ? width : 20;
 		} catch (Exception ignored) {
 			return 0;
+		}
+	}
+
+	public static boolean isDeclared(EmiStack stack, JemiIngredients data, boolean input) {
+		ITypedIngredient<?> typed = JemiUtil.getTyped(stack).orElse(null);
+		return typed != null && isDeclared(typed, input ? data.getInputs(typed.type()) : data.getOutputs(typed.type()));
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private static boolean isDeclared(ITypedIngredient<?> typed, List<? extends List<?>> data) {
+		try {
+			IIngredientHelper helper = JemiIngredients.ingredientRegistry.getIngredientHelper(typed.type());
+			return data.stream().anyMatch(slot -> helper.getMatch(slot, typed.ingredient()) != null);
+		} catch (Throwable ignored) {
+			return false;
 		}
 	}
 }

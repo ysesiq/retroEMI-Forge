@@ -28,7 +28,7 @@ import shim.mezz.jei.api.recipe.RecipeIngredientRole;
 
 public class JemiIngredientAcceptor {
 	public static final Pattern FLUID_END = Pattern.compile("(^|\\s)([\\d,]+)\\s*mB$");
-	public final RecipeIngredientRole role;
+	public RecipeIngredientRole role;
 	public final List<EmiStack> stacks = Lists.newArrayList();
 
 	public JemiIngredientAcceptor(RecipeIngredientRole role) {

@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import dev.emi.emi.jemi.JemiUtil;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiFluidStackGroup;
 import mezz.jei.api.gui.IGuiIngredient;
@@ -66,6 +67,30 @@ public class JemiRecipeLayoutBuilder implements IRecipeLayout {
 	public void addInvisibleIngredients(RecipeIngredientRole role) {
 		JemiIngredientAcceptor acceptor = new JemiIngredientAcceptor(role);
 		ingredients.add(acceptor);
+	}
+
+	public void updateRoles(JemiIngredients data) {
+		if (JemiIngredients.ingredientRegistry == null) {
+			return;
+		}
+		boolean declared = false;
+		List<JemiIngredientAcceptor> dropped = Lists.newArrayList();
+		for (JemiIngredientAcceptor acceptor : ingredients) {
+			if (acceptor.role == RecipeIngredientRole.CATALYST || acceptor.stacks.isEmpty()) {
+				continue;
+			}
+			boolean input = acceptor.stacks.stream().anyMatch(stack -> JemiUtil.isDeclared(stack, data, true));
+			boolean output = acceptor.stacks.stream().anyMatch(stack -> JemiUtil.isDeclared(stack, data, false));
+			declared |= input || output;
+			if (input != output) {
+				acceptor.role = input ? RecipeIngredientRole.INPUT : RecipeIngredientRole.OUTPUT;
+			} else if (!input) {
+				dropped.add(acceptor);
+			}
+		}
+		if (declared) {
+			ingredients.removeAll(dropped);
+		}
 	}
 
 	@Override
