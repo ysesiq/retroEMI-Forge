@@ -12,7 +12,6 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.jemi.impl.JemiIngredients;
 import dev.emi.emi.mixin.jei.accessor.BookmarkOverlayAccessor;
 import dev.emi.emi.mixin.jei.accessor.GuiIconToggleButtonAccessor;
-import dev.emi.emi.mixin.jei.accessor.IngredientListOverlayAccessor;
 import dev.emi.emi.screen.RecipeScreen;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.gui.elements.GuiIconButton;
@@ -100,7 +99,8 @@ public class JemiUtil {
 	}
 
 	public static GuiIconButton getConfigButton(IJeiRuntime runtime) {
-		return ((GuiIconToggleButtonAccessor) ((IngredientListOverlayAccessor) runtime.getIngredientListOverlay()).getConfigButton()).getInternalButton();
+		Object configButton = JemiReflection.getConfigButtonRaw(runtime);
+		return ((GuiIconToggleButtonAccessor) configButton).getInternalButton();
 	}
 
 	public static GuiIconButton getBookmarkButton(IJeiRuntime runtime) {
