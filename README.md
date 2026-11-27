@@ -1,8 +1,6 @@
 # retroEMI Forge
 EMI is a featureful and accessible item and recipe viewer for Minecraft.
 
-This [fork](https://github.com/dilepton/emi_1.12.2) heavily uses code from this project, thereby violating this project's MIT license (by replacing the project developer Xy_Luce (Xy_Lose) with dilepton) and falsely claims that retroEMI is a compatibility layer. Please do not use it.
-
 Fork form [Rewind/retroEMI](https://git.sleeping.town/Rewind/retroEMI)
 
 exaptations accidentally ported it to 1.4.7 because NEI is a trash heap! Oopsie daisy!

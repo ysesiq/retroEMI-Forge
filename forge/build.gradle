@@ -149,6 +149,16 @@ jar {
 	}
 }
 
+tasks.named('sourcesJar', Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	def xplatSourcesJar = project(':xplat').tasks.named('sourcesJar', Jar)
+	dependsOn xplatSourcesJar
+	from(zipTree(xplatSourcesJar.flatMap { it.archiveFile })) {
+		exclude 'META-INF/MANIFEST.MF'
+	}
+}
+
 tasks.named('remapJar') {
 	doFirst {
 		def forgeCache = new File(buildDir, 'loom-cache')
